@@ -29,7 +29,7 @@ Create only what the answers call for:
 ├── wiki/         # always — the fused Obsidian vault (claude-obsidian substrate)
 ├── reports/      # if reports/report focus
 ├── data/         # always — raw research caches/exports
-├── todos/        # always — the review loop
+├── todos/        # always — the review loop (todos.db, created on first capture)
 ├── web/          # only if "new" + Next.js/Tailwind approved
 └── CLAUDE.md     # project memory: focus, market, active brains
 ```
@@ -47,8 +47,15 @@ Create only what the answers call for:
 
 ## 3. Map focus → brains and queue first actions
 
-Translate the chosen focus into concrete brain runs, and write each as a TODO in
-`todos/` so the work is tracked from the start:
+Translate the chosen focus into concrete brain runs, and queue each as a TODO so
+the work is tracked from the start — add them via the CLI (creates `todos/todos.db`
+on first use):
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs" \
+  add "<first action>" --skill=<brain> --priority=high
+```
+
 
 - SEO/content → **marketing-brain**
 - local SEO → **local-seo-brain**

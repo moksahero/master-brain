@@ -17,7 +17,8 @@ bash "$SCRIPTS/brains.sh" status
 
 Also check: is `claude-mem` installed (`~/.claude/plugins/installed_plugins.json`),
 is the current directory a Master Brain project (look for `wiki/`, `todos/`,
-`CLAUDE.md`), and how many open todos exist (`grep -lR 'status: open' todos`).
+`CLAUDE.md`), and how many open todos exist
+(`[ -f todos/todos.db ] && node "$SCRIPTS/todos.mjs" count open`).
 
 ## 2. Report a short dashboard
 

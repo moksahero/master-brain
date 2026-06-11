@@ -66,15 +66,34 @@ Then, in Claude Code:
 
 Installing the plugin activates a `PostToolUse` hook
 ([`hooks/hooks.json`](hooks/hooks.json) → [`scripts/mb-todo.sh`](scripts/mb-todo.sh)).
-Whenever a Hub brain runs, a TODO is written to `./todos/`. You can also capture
-your own follow-ups with `/mb:todos-add`, and generate recurring ones on a cadence
-with `/mb:todos-routine` (ads audit every two weeks, SEO refresh monthly, report
-refresh quarterly — pair it with `/schedule` so it runs itself). `SessionStart`
-reminds you of the open count. Keep the list trustworthy with `/mb:todos-review`
-and clear it with `/mb:todos-execute` — which records an **outcome** on every todo
-it closes. `/mb:todos-log` then turns those outcomes into a chronological project
-history (add `--write` to save it to `reports/PROGRESS.md` for the client). No edits
-to your global `settings.json` — the hook ships with the plugin.
+Whenever a Hub brain runs, a TODO row is written to a SQLite database at
+`todos/todos.db` — using Node's built-in `node:sqlite` module, so there's no
+native dependency and no `sqlite3` CLI to install (needs **Node ≥ 22.5**). Every
+`/mb:todos-*` command reads and writes it through
+[`scripts/todos.mjs`](scripts/todos.mjs). You can also capture your own follow-ups
+with `/mb:todos-add`, and generate recurring ones on a cadence with
+`/mb:todos-routine` (ads audit every two weeks, SEO refresh monthly, report refresh
+quarterly — pair it with `/schedule` so it runs itself). `SessionStart` reminds you
+of the open count. Keep the list trustworthy with `/mb:todos-review` and clear it
+with `/mb:todos-execute` — which records an **outcome** on every todo it closes.
+`/mb:todos-log` then turns those outcomes into a chronological project history (add
+`--write` to save it to `reports/PROGRESS.md` for the client). No edits to your
+global `settings.json` — the hook ships with the plugin.
+
+### TODO dashboard (optional web app)
+
+[`todos/`](todos/) is a small **Next.js 16 + Tailwind** app for browsing the
+backlog and checking todos off in the browser — same SQLite store the hook and
+commands use. Point it at a project's database and run it:
+
+```bash
+cd todos
+npm install
+TODOS_DB=/path/to/your/project/todos/todos.db npm run dev   # http://localhost:3000
+```
+
+It reads the DB live, so todos captured by brain runs show up on refresh, and
+checking a box marks the row `done`. See [`todos/README.md`](todos/README.md).
 
 ## Project shape
 
@@ -86,13 +105,14 @@ to your global `settings.json` — the hook ships with the plugin.
 ├── web/          # optional Next.js + Tailwind site (new builds)
 ├── reports/      # generated PDFs / decks
 ├── data/         # raw research outputs (Firecrawl / DataForSEO caches, exports)
-├── todos/        # auto-captured + manual follow-ups (the review loop)
+├── todos/        # the TODO loop — todos.db (SQLite) + a Next.js dashboard
 └── CLAUDE.md     # project focus, target market, active brains
 ```
 
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
+- **Node ≥ 22.5** → the TODO store uses the built-in `node:sqlite` module (no native build, no `sqlite3` CLI)
 - AI Marketing Hub Pro access + authenticated git (an **SSH public key registered in your GitHub account**, or an HTTPS credential helper)
 - **Firecrawl key** → full site capture + brand-tokens.json + screenshots (website-brain)
 - **DataForSEO credentials** → real search volumes on the keyword map (marketing + local SEO)

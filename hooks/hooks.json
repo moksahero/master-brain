@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "n=$(grep -lR 'status: open' todos 2>/dev/null | wc -l | tr -d ' '); [ \"${n:-0}\" != \"0\" ] && echo \"master-brain: ${n} open todo(s) in ./todos — run /mb:todos-list to review or /mb:todos-execute to work them.\" || true"
+            "command": "[ -f todos/todos.db ] && n=$(node \"${CLAUDE_PLUGIN_ROOT}/scripts/todos.mjs\" count open 2>/dev/null); [ \"${n:-0}\" != \"0\" ] && echo \"master-brain: ${n} open todo(s) — run /mb:todos-list to review or /mb:todos-execute to work them.\" || true"
           }
         ]
       }

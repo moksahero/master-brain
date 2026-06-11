@@ -30,9 +30,12 @@ readable health report. This is the command for "I don't know what's wrong" or
 6. **Tooling** — `git`, `node`/`npm`, `python3`, `firecrawl` CLI (`firecrawl --status`
    if present), and `pandoc` (`pandoc --version`) — pandoc renders the bilingual /
    Japanese report to PDF; note if a CJK-capable LaTeX engine (`xelatex`/`lualatex`)
-   is also missing.
+   is also missing. Check **Node ≥ 22.5** (`node -v`) — the TODO store uses the
+   built-in `node:sqlite` module; older Node means auto-capture silently no-ops.
 7. **This project** — is the cwd an initialized Master Brain project (`wiki/`,
-   `todos/`, `CLAUDE.md`)? Open-todo count (`grep -lR 'status: open' todos`).
+   `todos/`, `CLAUDE.md`)? Open-todo count via
+   `node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs" count open`
+   (the backlog lives in `todos/todos.db`; the `todos/` Next.js app is the optional dashboard).
 8. **The TODO hook** — is the master-brain plugin's hook active (plugin
    installed)? If todos aren't being auto-captured, flag it.
 

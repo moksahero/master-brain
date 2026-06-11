@@ -4,20 +4,22 @@ argument-hint: "[status|due|all] (default: due — generate what's due now)"
 ---
 
 Read the `master-brain` skill. Then run the routine engine: read the project's
-routine schedule, work out what is **due**, and drop a fresh TODO for each due
-routine into `./todos/` so recurring client work (ads audits, SEO refreshes, GBP
-checks, report refreshes) never falls off the radar.
+routine schedule, work out what is **due**, and insert a fresh TODO row for each
+due routine into `todos/todos.db` so recurring client work (ads audits, SEO
+refreshes, GBP checks, report refreshes) never falls off the radar.
+
+```bash
+CLI="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs"
+```
 
 This command is designed to be **scheduled** — point `/schedule` (or `/loop`) at
-`/mb:todos-routine` on whatever heartbeat you like (e.g. weekly or every two weeks) and
-the per-routine cadence below decides what actually gets emitted each run. It only
-*generates* TODOs; `/mb:todos-execute` does the work.
+`/mb:todos-routine` on whatever heartbeat you like (e.g. weekly or every two weeks)
+and the per-routine cadence below decides what actually gets emitted each run. It
+only *generates* TODOs; `/mb:todos-execute` does the work.
 
 ## 1. Load (or seed) the schedule
 
-The schedule lives at `todos/routines.yml`. `/mb:todos-list` ignores it (it only
-reads `*.md`), so it's safe there.
-
+The schedule lives at `todos/routines.yml` (plain config, separate from the DB).
 If the file is missing, create it with sensible defaults and tell the user to edit
 the cadences / client name, then continue:
 
@@ -82,26 +84,14 @@ For each routine, due ⇔ `last_run` is blank OR `today − last_run ≥ every`.
 ## 3. Emit TODOs (idempotent)
 
 For each routine being generated, **skip if an open TODO for the same routine id
-already exists** (check existing `todos/*.md` for a matching `routine:` field) so
-re-running never spams duplicates. Otherwise write
-`todos/<YYYYMMDD-HHMMSS>-<id>.md` with the shared schema plus a `routine:` field:
+already exists** so re-running never spams duplicates:
 
-```markdown
----
-status: open
-priority: <from routine>
-skill: <from routine>
-created: <YYYY-MM-DDTHH:MM:SS>
-source: routine
-routine: <id>
----
-
-# <interpolated title>
-
-Recurring task from the project routine schedule (`every: <cadence>`).
-
-## Next actions
-- [ ] <first concrete step>
+```bash
+# exits 0 (skip) if an open row already carries this routine id, else 1 (emit)
+node "$CLI" has-open-routine <id> && echo "already open — skip" || \
+  node "$CLI" add "<interpolated title>" \
+    --priority=<from routine> --skill=<from routine> \
+    --source=routine --routine=<id>
 ```
 
 Then set that routine's `last_run` to today in `todos/routines.yml`.
@@ -109,7 +99,7 @@ Then set that routine's `last_run` to today in `todos/routines.yml`.
 ## 4. Report
 
 List what was generated (and what was skipped as already-open), show the new open
-count, and print the next-due date for every routine. If anything is due, suggest
-`/mb:todos-execute` to work it. If the user hasn't automated this yet, remind them:
-"Schedule it with `/schedule` → `/mb:todos-routine` (e.g. every two weeks) so this runs
-itself."
+count (`node "$CLI" count open`), and print the next-due date for every routine.
+If anything is due, suggest `/mb:todos-execute` to work it. If the user hasn't
+automated this yet, remind them: "Schedule it with `/schedule` → `/mb:todos-routine`
+(e.g. every two weeks) so this runs itself."

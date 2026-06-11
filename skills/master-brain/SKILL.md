@@ -49,16 +49,19 @@ Brains install into `~/.claude/skills/<name>` (members-only repos; needs Pro acc
 ├── web/          # optional Next.js + Tailwind site (new builds)
 ├── reports/      # generated PDFs / decks
 ├── data/         # raw research outputs (DataForSEO/Firecrawl caches, exports)
-├── todos/        # auto-captured + manual follow-ups (the review loop)
+├── todos/        # the TODO loop — todos.db (SQLite) + the Next.js dashboard
 └── CLAUDE.md     # project focus, target market, which brains are active
 ```
 
 ## The TODO loop (why nothing gets dropped)
 
 When the plugin is installed, a `PostToolUse` hook (`hooks/hooks.json` →
-`scripts/mb-todo.sh`) watches for any Hub brain run and drops a TODO into
-`./todos`. `SessionStart` reminds you of the open count. You can also add your own
-follow-ups manually. Use:
+`scripts/mb-todo.sh`) watches for any Hub brain run and inserts a TODO row into
+the project's SQLite store at `todos/todos.db` (via the built-in `node:sqlite`
+module — no native deps). All the `/mb:todos-*` commands read/write it through
+`scripts/todos.mjs`, and the `todos/` Next.js + Tailwind app is an optional
+dashboard for browsing and checking off todos in the browser. `SessionStart`
+reminds you of the open count. You can also add your own follow-ups manually. Use:
 
 - `/mb:todos-add` — capture a manual follow-up into the backlog.
 - `/mb:todos-routine` — generate recurring TODOs on a cadence (the engine behind `/schedule`).

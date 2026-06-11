@@ -4,25 +4,28 @@ argument-hint: "[all | last <N> | since <YYYY-MM-DD>] [--write]  (default: all)"
 ---
 
 Read the `master-brain` skill. Then produce a **project history** from the TODO
-backlog — a clean, chronological record of what has actually been done, so the
-user (or their client) can see the project's progress at a glance.
+store — a clean, chronological record of what has actually been done, so the user
+(or their client) can see progress at a glance.
+
+```bash
+CLI="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs"
+```
 
 This is read-only by default: it never changes a todo's status. It's the
-counterpart to `/mb:todos-list` (which shows what's *left*) — this shows what's
-*finished*.
+counterpart to `/mb:todos-list` (what's *left*) — this shows what's *finished*.
 
 ## 1. Gather completed work
 
-1. If `./todos/` doesn't exist, say there's no history yet and stop.
-2. Read every `todos/*.md` with `status: done`. For each, pull: the `#` title, the
-   `completed` date (fall back to `created` if absent), `skill`, `priority`,
-   `source` (auto-capture / manual / routine), and the `## Outcome` note.
-3. Apply `$ARGUMENTS`: `last <N>` keeps the N most recent, `since <date>` keeps
-   those completed on/after that date, `all` (default) keeps everything.
+1. If `todos/todos.db` doesn't exist, say there's no history yet and stop.
+2. Run `node "$CLI" log --json` for all completed rows (ordered newest first by
+   `updated`, falling back to `created`). Each row has `title`, `skill`,
+   `priority`, `source` (auto-capture / manual / routine), `outcome`, `updated`.
+   - For `last <N>`: `node "$CLI" log --last=<N> --json`.
+   - For `since <date>`: `node "$CLI" log --since=<YYYY-MM-DD> --json`.
 
 ## 2. Render the timeline
 
-Group by completion date, newest day first. Under each date, one line per item:
+Group by completion date (the `updated` day), newest day first. One line per item:
 
 ```
 ## 2026-06-10
@@ -32,7 +35,7 @@ Group by completion date, newest day first. Under each date, one line per item:
   → Replaced 4 fatigued ads; new set live, CTR baseline reset
 ```
 
-Use the `## Outcome` text for the `→` line (trim to its headline). Lead each item
+Use the `outcome` field for the `→` line (trim to its headline). Lead each item
 with the title in bold, then `skill · source`.
 
 ## 3. Summarize
@@ -40,7 +43,8 @@ with the title in bold, then `skill · source`.
 Footer with the totals that make progress legible:
 - **N tasks completed** total (and this week / this month if dates allow).
 - Breakdown by skill (e.g. `claude-ads ×6 · marketing-brain ×3 · local-seo-brain ×4`).
-- A pointer to what's still moving: open + blocked counts (from `/mb:todos-list`).
+- A pointer to what's still moving: open + blocked counts
+  (`node "$CLI" count open`, `node "$CLI" count blocked`).
 
 ## 4. Optional: persist it
 
