@@ -28,8 +28,10 @@ Then, in Claude Code:
 
 > The brains are **private, members-only** AI-Marketing-Hub repos. You need
 > [AI Marketing Hub Pro](https://www.skool.com/ai-marketing-hub-pro) access and a
-> git account authenticated to GitHub (SSH key or credential helper). Master
-> Brain clones via SSH and falls back to HTTPS.
+> git account authenticated to GitHub. Master Brain clones via SSH and falls back
+> to HTTPS, so you must have an **SSH public key registered in your GitHub account**
+> ([GitHub guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account))
+> — or a credential helper configured for HTTPS. Verify SSH with `ssh -T git@github.com`.
 
 ## Commands
 
@@ -91,7 +93,7 @@ to your global `settings.json` — the hook ships with the plugin.
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
-- AI Marketing Hub Pro access + authenticated git
+- AI Marketing Hub Pro access + authenticated git (an **SSH public key registered in your GitHub account**, or an HTTPS credential helper)
 - **Firecrawl key** → full site capture + brand-tokens.json + screenshots (website-brain)
 - **DataForSEO credentials** → real search volumes on the keyword map (marketing + local SEO)
 - **Playwright MCP** → the browser the live audits log in through (`claude mcp add playwright npx @playwright/mcp@latest`)
