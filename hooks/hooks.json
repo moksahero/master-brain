@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/mb-todo.sh\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "n=$(grep -lR 'status: open' todos 2>/dev/null | wc -l | tr -d ' '); [ \"${n:-0}\" != \"0\" ] && echo \"master-brain: ${n} open todo(s) in ./todos — run /mb:todos-list to review or /mb:todos-execute to work them.\" || true"
+          }
+        ]
+      }
+    ]
+  }
+}

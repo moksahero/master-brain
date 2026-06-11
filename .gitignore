@@ -1,0 +1,16 @@
+# secrets — never commit
+.env
+*.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# project runtime artifacts (when master-brain is used in a project dir)
+data/
+reports/
+wiki/.obsidian/workspace*.json
+
+# node
+node_modules/
