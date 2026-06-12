@@ -14,10 +14,13 @@ Confirm `git` is available. Resolve the scripts directory:
 SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
 ```
 
-Tell the user what's about to happen: "I'll clone/update these into
-`~/.claude/skills`: claude-obsidian, website-brain, marketing-brain,
-local-seo-brain, claude-ads, client-intelligence-report — and install claude-mem
-if it's missing."
+Tell the user what's about to happen: "I'll clone/update the AI Marketing Hub
+brains into `~/.claude/skills` — the canonical fleet (claude-obsidian,
+website-brain, marketing-brain, local-seo-brain, claude-ads,
+client-intelligence-report) **plus any other brain discovered in the
+`AI-Marketing-Hub` org** when `gh` is authenticated — and install claude-mem if
+it's missing." To preview the full resolved list first, run
+`bash "$SCRIPTS/brains.sh" list`.
 
 ## 2. Install / update the brains
 
@@ -25,10 +28,13 @@ if it's missing."
 bash "$SCRIPTS/brains.sh" install
 ```
 
-This is idempotent: it clones what's missing and fast-forwards what's present
-(SSH first, HTTPS fallback). If any clone fails, the most likely causes are (a)
-no AI Marketing Hub Pro access on this GitHub account, or (b) git not
+This is idempotent: it resolves the fleet (canonical list + any `gh`-discovered
+org brains such as `social-hub`), clones what's missing, and fast-forwards what's
+present (SSH first, HTTPS fallback). If any clone fails, the most likely causes
+are (a) no AI Marketing Hub Pro access on this GitHub account, or (b) git not
 authenticated. Surface the failing repo name and the fix; don't fail silently.
+If `gh` isn't installed or logged in, discovery is skipped (canonical list only)
+— note it and suggest `gh auth login`.
 
 ## 3. Install claude-mem if absent
 

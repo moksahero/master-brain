@@ -39,6 +39,13 @@ start. Master Brain answers three questions:
 
 Brains install into `~/.claude/skills/<name>` (members-only repos; needs Pro access + git auth).
 
+This table is the curated core, but the fleet is **not** hard-coded: when `gh` is
+authenticated, `/mb:install` and `/mb:update` walk the whole `AI-Marketing-Hub`
+org and pick up any other brain published there (e.g. `social-hub`) automatically.
+Discovery includes Claude plugins and Obsidian-brain vaults; it skips
+Codex-runtime variants (`codex-*`) and org infra. Run
+`bash scripts/brains.sh discover` to see what the org adds beyond this table.
+
 ## How a project is shaped
 
 `/mb:init` scaffolds a working directory like this:
