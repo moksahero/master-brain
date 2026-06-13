@@ -35,7 +35,32 @@ bash "$SCRIPTS/brains.sh" discover   # prints org brains not in the canonical li
 update still runs against the canonical list. Suggest `gh auth login` so future
 updates auto-pick-up new org brains.)
 
-## 2. Also refresh the plugin brains (claude-ads + claude-mem)
+This updates the **system-wide** brain fleet under `~/.claude/skills` (the
+`brains.sh` banner prints the exact target dir — it is `$HOME/.claude/skills`
+unless `CLAUDE_SKILLS_DIR` is set, never the current project). Brains load from
+there for *every* project, so this step is global, not per-project. Call out the
+resolved path in the report so the scope is unambiguous.
+
+## 2. Sync this project's CLAUDE.md managed section (current directory only)
+
+The brain *code* is global, but the **Persistence conventions** live in each
+project's `CLAUDE.md`. Projects scaffolded before that rule existed never got it.
+Retrofit/refresh it for the current project — and only the current project:
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+bash "$SCRIPTS/claude-md.sh" sync .
+```
+
+This reconciles only the block between the `<!-- mb:managed:start -->` /
+`<!-- mb:managed:end -->` markers to the canonical text — adding it if absent,
+refreshing it if stale, leaving it untouched if current. Everything outside the
+markers (project name, focus, market, active brains, API-key status, report
+language) is project-owned and never modified. If there's no `CLAUDE.md` here,
+it skips with a note (this isn't an `/mb:init` project). Report add / refresh /
+no-change / skip.
+
+## 3. Also refresh the plugin brains (claude-ads + claude-mem)
 
 These ship as plugins, not `skills/` clones, so `brains.sh` doesn't touch them.
 Update whichever is installed:
@@ -47,14 +72,21 @@ claude plugin update claude-mem@thedotmack
 
 (If the plugin CLI isn't available, or a plugin isn't installed, note it and skip.)
 
-## 3. Report what changed
+## 4. Report what changed
 
-Run `bash "$SCRIPTS/brains.sh" status` and show the table. Call out:
+Run `bash "$SCRIPTS/brains.sh" status` and show the table. State the resolved
+**install path** (`~/.claude/skills`) up front so it's clear the brain update was
+system-wide, then call out:
 
 - Any **newly discovered brain** that was just cloned into the fleet (name it and
   say where it came from — "new in the org").
 - Any brain that **failed to update** and why (local changes, not a git checkout,
   missing), with the one-line fix.
 - Any brain that was **behind and is now current**, with the new version.
+- The **CLAUDE.md managed-section** result for this project (added / refreshed /
+  no-change / skipped) from step 2 — so it's clear that part was per-project.
+
+Make the two scopes explicit so they're never confused: brain code = **system-wide**
+(`~/.claude/skills`); the Persistence block = **this project only** (`./CLAUDE.md`).
 
 End with a one-line "fleet is current" or a list of what needs manual attention.

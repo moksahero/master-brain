@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "master-brain: the AI Marketing Hub orchestration layer. Installs, updates, scaffolds, and operates every Hub brain from one place, with a self-maintaining TODO system.",
-    "version": "0.2.1"
+    "version": "0.2.2"
   },
   "plugins": [
     {
       "name": "mb",
       "source": "./",
       "description": "One plugin to rule the AI Marketing Hub brains. /mb:install clones the brains (website-brain, marketing-brain, local-seo-brain, claude-obsidian, client-intelligence-report) and installs the claude-ads + claude-mem plugins. /mb:init asks what you're trying to do and scaffolds the right project (wiki, web, reports, data, todos). /mb:update keeps the fleet current. /mb:report drives the fused multi-brain intelligence report. Every brain run is auto-captured as a TODO under ./todos and kept reviewed so nothing is dropped.",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "author": {
         "name": "AgriciDaniel",
         "url": "https://github.com/AgriciDaniel"

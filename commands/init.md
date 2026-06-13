@@ -20,7 +20,52 @@ Ask these, adapting to anything already given in `$ARGUMENTS`:
 
 Keep it to one round of questions. Don't interrogate.
 
-## 2. Scaffold the workspace
+## 2. Wire up API credentials (ask only if missing)
+
+The research brains need API keys to pull real data:
+
+- **`FIRECRAWL_API_KEY`** — full-site crawl (website-brain, the report's site capture).
+- **`DATAFORSEO_LOGIN` / `DATAFORSEO_PASSWORD`** — keyword volumes, SERP/Local Pack
+  rank, competitor and geo-grid data (marketing-brain, local-seo-brain, the report).
+
+Without them, the brains fall back to a degraded "public-evidence" mode (no real
+volumes, no map-pack rank, no full crawl). So, before scaffolding:
+
+1. **Check what's already set** — they are stored system-wide in
+   `~/.config/ai-marketing-hub/secrets.env` (sourced from `~/.zshenv`):
+   ```bash
+   for v in FIRECRAWL_API_KEY DATAFORSEO_LOGIN DATAFORSEO_PASSWORD; do
+     printf "%s=%s\n" "$v" "${!v:+SET}"   # prints SET or blank — never the value
+   done
+   ```
+   Also check the per-brain fallbacks `~/.config/website-brain/.env` and
+   `~/.config/marketing-brain/.env` in case a key lives there but isn't exported.
+2. **Ask for any that are missing.** Tell the user what each key unlocks and that
+   they can paste it now or skip (the project still works in degraded mode). Get
+   DataForSEO at dataforseo.com, Firecrawl at firecrawl.dev.
+3. **Persist any the user provides — system-wide, never printed:**
+   ```bash
+   mkdir -p ~/.config/ai-marketing-hub
+   SECRETS=~/.config/ai-marketing-hub/secrets.env
+   touch "$SECRETS"; chmod 600 "$SECRETS"
+   # upsert each KEY=value WITHOUT echoing the value to the transcript
+   # (write via a heredoc/printf the user can't see, or have them paste into the file)
+   # then ensure ~/.zshenv sources it for every shell:
+   grep -qF 'ai-marketing-hub secrets' ~/.zshenv 2>/dev/null || cat >> ~/.zshenv <<'EOF'
+   # >>> ai-marketing-hub secrets >>>
+   if [ -f "$HOME/.config/ai-marketing-hub/secrets.env" ]; then
+     set -a; . "$HOME/.config/ai-marketing-hub/secrets.env"; set +a
+   fi
+   # <<< ai-marketing-hub secrets <<<
+   EOF
+   ```
+   Keep `secrets.env` at perms `600`. Never echo a key value into the chat or a
+   committed file. Confirm with a masked check (`SET` / not set) only.
+
+Note in `CLAUDE.md` which keys are wired vs missing, so future runs know whether
+they're in full or degraded mode.
+
+## 3. Scaffold the workspace
 
 Create only what the answers call for:
 
@@ -44,32 +89,23 @@ Create only what the answers call for:
   market, primary URL, **report language**, and the list of brains this project
   will use. Downstream report runs (`/mb:report`) should honor this
   language.
-- The scaffolded `CLAUDE.md` **must include a "Persistence" conventions block**
+- The scaffolded `CLAUDE.md` **must include the "Persistence" conventions block**
   so every future session in this directory writes work back to the vault rather
-  than only to `reports/`/`web/`. Embed this verbatim (adapt the report-language
-  line to the chosen language):
+  than only to `reports/`/`web/`. Don't retype it — after writing the
+  project-specific `CLAUDE.md` (name, focus, market, brains, language, API-key
+  status), append the canonical managed section by running the single-source
+  script (the same one `/mb:update` uses to keep it current):
 
-  ```markdown
-  ## Persistence — keep the work in the vault
-  This project is a Master Brain workspace. `wiki/` and `data/` are its durable
-  memory: **work that isn't written there is lost when the session ends.** So, as
-  a standing rule for every session in this directory:
-
-  - **`wiki/`** — the lasting knowledge. Any finding, decision, number, competitor
-    fact, or deliverable summary worth more than this one chat → a note under
-    `wiki/` (`entities/`, `concepts/`, `sources/`, `deliverables/`), a one-line
-    entry in `wiki/log.md`, and a link from `wiki/index.md`. Update existing notes
-    instead of duplicating.
-  - **`data/`** — the raw evidence behind that knowledge: API dumps
-    (DataForSEO/Firecrawl), scrapes, exports, CSVs. Regenerable, but cite-able.
-  - **`reports/`** — rendered deliverables (PDF/HTML). Output, not memory.
-
-  Before finishing a substantive piece of work, write it back: update `wiki/`,
-  drop raw artifacts in `data/`, append `wiki/log.md`. Don't leave the vault
-  frozen at bootstrap while results pile up only in `reports/` or `web/`.
+  ```bash
+  SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+  bash "$SCRIPTS/claude-md.sh" sync .   # adds the mb:managed Persistence block
   ```
 
-## 3. Map focus → brains and queue first actions
+  The block is wrapped in `<!-- mb:managed:start -->` / `<!-- mb:managed:end -->`
+  markers; everything you write outside those markers is project-owned and is
+  never touched by later syncs.
+
+## 4. Map focus → brains and queue first actions
 
 Translate the chosen focus into concrete brain runs, and queue each as a TODO so
 the work is tracked from the start — add them via the CLI (creates `todos/todos.db`
@@ -87,7 +123,7 @@ node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs
 - website capture → **website-brain**
 - report → **client-intelligence-report** (`/mb:report`)
 
-## 4. Confirm
+## 5. Confirm
 
 Show what was created (tree), which brains are active, and the queued todos.
 End with: "Want me to start with [most relevant brain] now?"
