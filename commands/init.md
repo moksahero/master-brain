@@ -26,12 +26,12 @@ Create only what the answers call for:
 
 ```
 <project>/
-├── wiki/         # always — the fused Obsidian vault (claude-obsidian substrate)
-├── reports/      # if reports/report focus
-├── data/         # always — raw research caches/exports
+├── wiki/         # always — the fused Obsidian vault; the project's durable memory
+├── reports/      # if reports/report focus — rendered deliverables
+├── data/         # always — raw research caches/exports (the evidence behind wiki/)
 ├── todos/        # always — the review loop (todos.db, created on first capture)
 ├── web/          # only if "new" + Next.js/Tailwind approved
-└── CLAUDE.md     # project memory: focus, market, active brains
+└── CLAUDE.md     # project memory: focus, market, active brains, persistence rule
 ```
 
 - Always create `wiki/`, `data/`, `todos/`, and `CLAUDE.md`.
@@ -44,6 +44,30 @@ Create only what the answers call for:
   market, primary URL, **report language**, and the list of brains this project
   will use. Downstream report runs (`/mb:report`) should honor this
   language.
+- The scaffolded `CLAUDE.md` **must include a "Persistence" conventions block**
+  so every future session in this directory writes work back to the vault rather
+  than only to `reports/`/`web/`. Embed this verbatim (adapt the report-language
+  line to the chosen language):
+
+  ```markdown
+  ## Persistence — keep the work in the vault
+  This project is a Master Brain workspace. `wiki/` and `data/` are its durable
+  memory: **work that isn't written there is lost when the session ends.** So, as
+  a standing rule for every session in this directory:
+
+  - **`wiki/`** — the lasting knowledge. Any finding, decision, number, competitor
+    fact, or deliverable summary worth more than this one chat → a note under
+    `wiki/` (`entities/`, `concepts/`, `sources/`, `deliverables/`), a one-line
+    entry in `wiki/log.md`, and a link from `wiki/index.md`. Update existing notes
+    instead of duplicating.
+  - **`data/`** — the raw evidence behind that knowledge: API dumps
+    (DataForSEO/Firecrawl), scrapes, exports, CSVs. Regenerable, but cite-able.
+  - **`reports/`** — rendered deliverables (PDF/HTML). Output, not memory.
+
+  Before finishing a substantive piece of work, write it back: update `wiki/`,
+  drop raw artifacts in `data/`, append `wiki/log.md`. Don't leave the vault
+  frozen at bootstrap while results pile up only in `reports/` or `web/`.
+  ```
 
 ## 3. Map focus → brains and queue first actions
 

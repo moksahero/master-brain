@@ -1,5 +1,5 @@
 ---
-description: Install the whole AI Marketing Hub fleet — every brain plus claude-mem — in one shot.
+description: Install the whole AI Marketing Hub fleet — every brain plus the claude-ads and claude-mem plugins — in one shot.
 ---
 
 Read the `master-brain` skill. Then run the install workflow. The brains are
@@ -16,10 +16,10 @@ SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
 
 Tell the user what's about to happen: "I'll clone/update the AI Marketing Hub
 brains into `~/.claude/skills` — the canonical fleet (claude-obsidian,
-website-brain, marketing-brain, local-seo-brain, claude-ads,
+website-brain, marketing-brain, local-seo-brain,
 client-intelligence-report) **plus any other brain discovered in the
-`AI-Marketing-Hub` org** when `gh` is authenticated — and install claude-mem if
-it's missing." To preview the full resolved list first, run
+`AI-Marketing-Hub` org** when `gh` is authenticated — and install the
+claude-ads + claude-mem plugins if they're missing." To preview the full resolved list first, run
 `bash "$SCRIPTS/brains.sh" list`.
 
 ## 2. Install / update the brains
@@ -36,10 +36,25 @@ authenticated. Surface the failing repo name and the fix; don't fail silently.
 If `gh` isn't installed or logged in, discovery is skipped (canonical list only)
 — note it and suggest `gh auth login`.
 
-## 3. Install claude-mem if absent
+## 3. Install the plugin brains (claude-ads + claude-mem)
 
-Check `~/.claude/plugins/installed_plugins.json` for a `claude-mem@thedotmack`
-entry. If it's missing, install it the documented way:
+Two brains ship as Claude **plugins**, not `~/.claude/skills` clones, so they're
+installed separately. Check `~/.claude/plugins/installed_plugins.json` for each
+entry and install whichever is missing.
+
+**claude-ads** (`claude-ads@ai-marketing-hub-claude-ads`) — the paid-media brain.
+It's a multi-skill repo that only loads as a plugin (a bare `skills/` clone has no
+top-level `SKILL.md` and won't load), so it is **not** cloned by `brains.sh`:
+
+```bash
+claude plugin marketplace add AI-Marketing-Hub/claude-ads
+claude plugin install claude-ads@ai-marketing-hub-claude-ads
+```
+
+It's a private, members-only repo, so this needs the same Pro access + git auth as
+the cloned brains.
+
+**claude-mem** (`claude-mem@thedotmack`) — cross-session memory (public):
 
 ```bash
 claude plugin marketplace add thedotmack/claude-mem
@@ -47,8 +62,9 @@ claude plugin install claude-mem@thedotmack
 ```
 
 If the `claude` CLI plugin commands aren't available in this environment, fall
-back to the npm installer (`npx claude-mem@latest install`) and tell the user.
-If claude-mem is already installed, say so and skip.
+back to each project's documented installer (for claude-mem,
+`npx claude-mem@latest install`) and tell the user. If a plugin is already
+installed, say so and skip.
 
 ## 4. Configure prerequisites (API keys + tools)
 
@@ -106,7 +122,7 @@ fix. It's fine for the user to skip some now and add them later — note that
 ## 5. Verify and report
 
 Run `bash "$SCRIPTS/brains.sh" status` and show the result as a clean table:
-each brain, installed yes/no, version, last commit. Confirm claude-mem status,
+each brain, installed yes/no, version, last commit. Confirm claude-ads + claude-mem plugin status,
 and restate the prerequisite checklist from Step 4 (configured vs still needed).
 
 Close with the next step: "All set — run `/mb:init` to scaffold your

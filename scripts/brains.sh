@@ -31,14 +31,14 @@ SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
 #   website-brain               crawl a site into an Obsidian vault
 #   marketing-brain             competitors + keywords + growth (SEO) plan
 #   local-seo-brain             GBP / map pack / citations / reviews
-#   claude-ads                  paid media audit + creative (Google/Meta/TikTok/...)
 #   client-intelligence-report  the fused multi-brain client report (Mega-Brain)
+# claude-ads is intentionally NOT here: it ships as a Claude plugin
+# (claude-ads@ai-marketing-hub-claude-ads), installed by /mb:install, not cloned.
 BRAINS=(
   "claude-obsidian"
   "website-brain"
   "marketing-brain"
   "local-seo-brain"
-  "claude-ads"
   "client-intelligence-report"
 )
 
@@ -46,6 +46,9 @@ BRAINS=(
 # asset dumps, and master-brain itself. Codex-runtime variants (codex-*) are
 # excluded separately by prefix. Edit this list to tune what discovery picks up.
 DENY_EXACT=(
+  # claude-ads is a real brain but ships as a Claude plugin, not a skills/ clone,
+  # so exclude it from gh-discovery to avoid a dead duplicate in ~/.claude/skills.
+  "claude-ads"
   ".github"
   "classroom-assets"
   "marketing-os"

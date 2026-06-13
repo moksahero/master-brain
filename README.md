@@ -21,7 +21,7 @@ claude plugin install mb@ai-marketing-hub-master-brain
 Then, in Claude Code:
 
 ```
-/mb:install      # clone every brain + claude-mem into ~/.claude/skills
+/mb:install      # clone the brains into ~/.claude/skills + install the claude-ads & claude-mem plugins
 /mb:init         # scaffold a project (wiki / web / reports / data / todos)
 /mb:idk           # not sure what to do? this tells you the next step
 ```
@@ -38,7 +38,7 @@ Then, in Claude Code:
 | Command | What it does |
 | --- | --- |
 | `/mb:idk` | Router & onboarding. Detects what's installed and recommends the next action. |
-| `/mb:install` | Clone/update every brain + install claude-mem if missing. |
+| `/mb:install` | Clone/update every cloned brain + install the claude-ads & claude-mem plugins if missing. |
 | `/mb:init` | Guided project setup — asks your goal, scaffolds the workspace, queues first todos. |
 | `/mb:update` | Fast-forward every installed brain to the latest version. |
 | `/mb:doctor` | Health check: installs, API keys (present/absent), tooling, todo backlog. |
@@ -58,9 +58,9 @@ Then, in Claude Code:
 | **website-brain** | Crawl any site into a clean, generation-ready Obsidian vault (Firecrawl). |
 | **marketing-brain** | Competitor + keyword research → a source-cited growth/SEO plan (DataForSEO). |
 | **local-seo-brain** | Google Business Profile, map-pack rankings, reviews, citations, NAP. |
-| **claude-ads** | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. |
+| **claude-ads** (*plugin*) | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
-| **claude-mem** (thedotmack) | Cross-session memory so the brains remember past work. |
+| **claude-mem** (thedotmack · *optional, public plugin*) | Cross-session memory so the brains remember past work. Installs to `~/.claude/plugins`, not `skills/`. |
 
 ## How the TODO loop works
 

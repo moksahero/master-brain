@@ -35,15 +35,17 @@ bash "$SCRIPTS/brains.sh" discover   # prints org brains not in the canonical li
 update still runs against the canonical list. Suggest `gh auth login` so future
 updates auto-pick-up new org brains.)
 
-## 2. Also refresh claude-mem
+## 2. Also refresh the plugin brains (claude-ads + claude-mem)
 
-If `claude-mem@thedotmack` is installed, update it:
+These ship as plugins, not `skills/` clones, so `brains.sh` doesn't touch them.
+Update whichever is installed:
 
 ```bash
+claude plugin update claude-ads@ai-marketing-hub-claude-ads
 claude plugin update claude-mem@thedotmack
 ```
 
-(If the plugin CLI isn't available, note it and skip.)
+(If the plugin CLI isn't available, or a plugin isn't installed, note it and skip.)
 
 ## 3. Report what changed
 

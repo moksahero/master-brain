@@ -33,11 +33,11 @@ start. Master Brain answers three questions:
 | **website-brain** | `AI-Marketing-Hub/website-brain` | Crawl any site into a clean, generation-ready Obsidian vault (Firecrawl). |
 | **marketing-brain** | `AI-Marketing-Hub/marketing-brain` | Competitor + keyword research → a source-cited growth/SEO plan (DataForSEO). |
 | **local-seo-brain** | `AI-Marketing-Hub/local-seo-brain` | Google Business Profile, map-pack rankings, reviews, citations, NAP. |
-| **claude-ads** | `AI-Marketing-Hub/claude-ads` | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. |
+| **claude-ads** (*plugin*) | `AI-Marketing-Hub/claude-ads` | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | `AI-Marketing-Hub/client-intelligence-report` | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
-| **claude-mem** | `thedotmack/claude-mem` | Cross-session memory so the brains remember past work. |
+| **claude-mem** (*optional · public plugin*) | `thedotmack/claude-mem` | Cross-session memory so the brains remember past work. |
 
-Brains install into `~/.claude/skills/<name>` (members-only repos; needs Pro access + git auth).
+Most brains clone into `~/.claude/skills/<name>` (members-only repos; needs Pro access + git auth). **claude-ads** and **claude-mem** are the exceptions — they install as Claude plugins under `~/.claude/plugins`.
 
 This table is the curated core, but the fleet is **not** hard-coded: when `gh` is
 authenticated, `/mb:install` and `/mb:update` walk the whole `AI-Marketing-Hub`
@@ -59,6 +59,28 @@ Codex-runtime variants (`codex-*`) and org infra. Run
 ├── todos/        # the TODO loop — todos.db (SQLite) + the Next.js dashboard
 └── CLAUDE.md     # project focus, target market, which brains are active
 ```
+
+## Persistence — work compounds in `wiki/` and `data/`
+
+A Master Brain project is meant to *accumulate*. The whole point of scaffolding
+`wiki/` and `data/` is that they become the project's durable memory — **work that
+isn't written there is gone when the session ends.** This is a standing rule for
+*every* session that operates in an `/mb:init` project, not just brain runs:
+
+- **`wiki/`** — the lasting knowledge. Any finding, decision, number, competitor
+  fact, or deliverable summary worth more than this one chat → a note under
+  `wiki/` (`entities/`, `concepts/`, `sources/`, `deliverables/`), a one-line
+  entry in `wiki/log.md`, and a link from `wiki/index.md`. Update existing notes
+  rather than duplicating.
+- **`data/`** — the raw evidence behind that knowledge: API dumps
+  (DataForSEO/Firecrawl), scrapes, exports, CSVs. Regenerable, but cite-able.
+- **`reports/`** — rendered deliverables (PDF/HTML). Output, not memory.
+
+The failure mode to avoid: results pile up only in `reports/` or `web/` while
+`wiki/` and `data/` stay frozen at bootstrap. Before finishing a substantive
+piece of work, **write it back** — update `wiki/`, drop raw artifacts in `data/`,
+append `wiki/log.md`. `/mb:init` bakes this rule into every project's `CLAUDE.md`
+so future sessions inherit it automatically.
 
 ## The TODO loop (why nothing gets dropped)
 
