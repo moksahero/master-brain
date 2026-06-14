@@ -60,7 +60,24 @@ language) is project-owned and never modified. If there's no `CLAUDE.md` here,
 it skips with a note (this isn't an `/mb:init` project). Report add / refresh /
 no-change / skip.
 
-## 3. Also refresh the plugin brains (claude-ads + claude-mem)
+## 3. Sync this project's reusable tooling (current directory only)
+
+The `todos/` scaffold (SQLite TODO store + Next.js dashboard) is shared tooling
+that improves over time in the source repo. Bring the current project current —
+overwriting only the shared files, never the project-owned ones:
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+[ -d ./todos ] && bash "$SCRIPTS/sync-tooling.sh" push .
+```
+
+This reads from the canonical source repo and refreshes `todos/src`,
+`migrations/`, `schema.sql`, etc., while keeping the project's own `routines.yml`,
+`wrangler.jsonc`, `mds/`, and SQLite db untouched. If there's no `todos/` here,
+it skips. This is the DOWN direction; `/mb:push` is the UP direction (promote a
+project's tooling edits back into the source repo). Report which files refreshed.
+
+## 4. Also refresh the plugin brains (claude-ads + claude-mem)
 
 These ship as plugins, not `skills/` clones, so `brains.sh` doesn't touch them.
 Update whichever is installed:
@@ -72,7 +89,7 @@ claude plugin update claude-mem@thedotmack
 
 (If the plugin CLI isn't available, or a plugin isn't installed, note it and skip.)
 
-## 4. Report what changed
+## 5. Report what changed
 
 Run `bash "$SCRIPTS/brains.sh" status` and show the table. State the resolved
 **install path** (`~/.claude/skills`) up front so it's clear the brain update was
@@ -85,6 +102,8 @@ system-wide, then call out:
 - Any brain that was **behind and is now current**, with the new version.
 - The **CLAUDE.md managed-section** result for this project (added / refreshed /
   no-change / skipped) from step 2 — so it's clear that part was per-project.
+- The **tooling sync** result for this project (which `todos/` files refreshed, or
+  skipped if no `todos/` here) from step 3 — also per-project.
 
 Make the two scopes explicit so they're never confused: brain code = **system-wide**
 (`~/.claude/skills`); the Persistence block = **this project only** (`./CLAUDE.md`).

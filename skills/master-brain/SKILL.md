@@ -24,6 +24,7 @@ start. Master Brain answers three questions:
 1. **What do I have / need?** — install and update the fleet (`/mb:install`, `/mb:update`, `/mb:doctor`).
 2. **What should I do?** — onboard, scaffold a project, and route to the right brain (`/mb:idk`, `/mb:init`).
 3. **Did anything get dropped?** — every brain run becomes a TODO that is tracked, reviewed, and executed (`/mb:todos-*`).
+4. **How do improvements spread?** — tooling flows DOWN into each project on `/mb:update`, and a project's tooling edits flow UP to the source repo via `/mb:push` so every project shares them.
 
 ## The fleet
 
@@ -111,7 +112,7 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
 ## Commands
 
 `/mb:idk` · `/mb:install` · `/mb:init` ·
-`/mb:update` · `/mb:doctor` · `/mb:report` ·
+`/mb:update` · `/mb:push` · `/mb:doctor` · `/mb:report` ·
 `/mb:todos-add` · `/mb:todos-routine` · `/mb:todos-list` · `/mb:todos-review` · `/mb:todos-execute` · `/mb:todos-log`
 
 ## Locating the scripts

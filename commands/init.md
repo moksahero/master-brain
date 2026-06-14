@@ -105,6 +105,19 @@ Create only what the answers call for:
   markers; everything you write outside those markers is project-owned and is
   never touched by later syncs.
 
+- Register the project and seed the current `todos/` tooling so it starts on the
+  canonical version and is reachable by `/mb:update` fan-out later:
+
+  ```bash
+  SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+  bash "$SCRIPTS/sync-tooling.sh" register .
+  bash "$SCRIPTS/sync-tooling.sh" push .     # installs todos/ scaffold from source
+  ```
+
+  Registration adds this project to the machine-local registry
+  (`~/.claude/master-brain-projects.txt`). If you later improve the tooling here,
+  `/mb:push` promotes it back up to the source repo for every project to share.
+
 ## 4. Map focus → brains and queue first actions
 
 Translate the chosen focus into concrete brain runs, and queue each as a TODO so
