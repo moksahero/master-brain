@@ -57,7 +57,7 @@ The LP is the destination — build it before the traffic sources so the campaig
 
 ## TODOs: how they are generated and handled
 
-The flow never executes work directly — it **emits TODOs** into the store, and a separate pass executes them. Two kinds:
+The flow never executes work directly — it **emits TODOs** into the TODO webapp, and a separate pass executes them. Two kinds:
 
 ### One-off TODOs
 
