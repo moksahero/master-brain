@@ -100,6 +100,8 @@ resolve_brains() {
   done < <(discover_new)
 }
 
+MASTER_BRAIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd || true)"
+
 clone_or_update() {
   local name="$1" dest="$SKILLS_DIR/$1"
   if [ -d "$dest/.git" ]; then
@@ -109,8 +111,11 @@ clone_or_update() {
   elif [ -d "$dest" ]; then
     printf '  \xe2\x80\xa2  %-28s present but not a git checkout \xe2\x80\x94 leaving as-is\n' "$name"
   else
-    printf '  \xe2\x86\x93  %-28s cloning\n' "$name"
-    if git clone --depth 1 "$(repo_url_ssh "$name")" "$dest" >/dev/null 2>&1; then
+    printf '  \xe2\x86\x93  %-28s installing\n' "$name"
+    if [ -d "${MASTER_BRAIN_DIR}/skills/${name}" ]; then
+      cp -r "${MASTER_BRAIN_DIR}/skills/${name}" "$dest"
+      printf '        installed from master-brain bundle\n'
+    elif git clone --depth 1 "$(repo_url_ssh "$name")" "$dest" >/dev/null 2>&1; then
       printf '        cloned via ssh\n'
     elif git clone --depth 1 "$(repo_url_https "$name")" "$dest" >/dev/null 2>&1; then
       printf '        cloned via https\n'
