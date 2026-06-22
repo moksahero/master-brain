@@ -76,6 +76,30 @@ Regenerate the doc after a re-capture with `node scripts/prompts.mjs markdown > 
 | **claude-ads** (*plugin*) | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
 | **claude-mem** (thedotmack · *optional, public plugin*) | Cross-session memory so the brains remember past work. Installs to `~/.claude/plugins`, not `skills/`. |
+| **humanizer** (blader · *vendored, public*) | Strips AI-writing tells from prose so deliverables read human-written. Ships with the plugin as `mb:humanizer`; `/mb:install` also clones it standalone as `/humanizer`. |
+
+## Humanizer (standing writing rule)
+
+master-brain vendors [blader/humanizer](https://github.com/blader/humanizer) (MIT) under
+`skills/humanizer/`. It's not just an on-demand command — it's a **standing rule**: before
+the brains deliver any prose (marketing copy, reports, emails, blog drafts, client
+deliverables), that text should be passed through the humanizer patterns so it reads
+human-written, not AI-generated. master-brain's SessionStart hook reinforces this each
+session. Skip it only for code, raw data, or when the user asks for verbatim output.
+
+Run it directly on any text:
+
+```
+/humanizer        # or mb:humanizer
+[paste text]
+```
+
+It honors a target register — e.g. "expressions a Japanese real-estate agent would
+understand" produces plain, jargon-free Japanese. The pattern list itself is
+English-oriented; for non-English output the agent applies the *spirit* (no inflated
+symbolism, no promo fluff, plain words, natural rhythm) to the target language.
+
+To re-sync after an upstream change, see `skills/humanizer/VENDORED.md`.
 
 ## How the TODO loop works
 

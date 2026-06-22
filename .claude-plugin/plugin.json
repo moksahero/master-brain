@@ -1,6 +1,6 @@
 {
   "name": "mb",
-  "version": "0.5.3",
+  "version": "0.6.1",
   "description": "The orchestration layer for the AI Marketing Hub brains. One plugin to install, update, scaffold, and operate website-brain, marketing-brain, local-seo-brain, claude-obsidian, claude-ads and the fused client-intelligence-report — plus claude-mem. Ships slash commands for one-shot install, guided project init, fleet update, a fused intelligence report, and a TODO system that auto-captures every brain run into ./todos and keeps it reviewed so nothing is dropped.",
   "author": {
     "name": "AgriciDaniel",

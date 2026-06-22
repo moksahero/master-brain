@@ -18,6 +18,10 @@
           {
             "type": "command",
             "command": "[ -f todos/todos.db ] && n=$(node \"${CLAUDE_PLUGIN_ROOT}/scripts/todos.mjs\" count open 2>/dev/null); [ \"${n:-0}\" != \"0\" ] && echo \"master-brain: ${n} open todo(s) — run /mb:todos-list to review or /mb:todos-execute to work them.\" || true"
+          },
+          {
+            "type": "command",
+            "command": "echo \"master-brain · humanizer rule: before delivering any prose you produce (marketing copy, reports, emails, blog drafts, deliverables), pass it through the humanizer skill's patterns (mb:humanizer / /humanizer) so it reads human-written, not AI-generated. Skip only for code, raw data, or when the user asks for verbatim output.\""
           }
         ]
       }

@@ -77,15 +77,57 @@ This reads from the canonical source repo and refreshes `todos/src`,
 it skips. This is the DOWN direction; `/mb:push` is the UP direction (promote a
 project's tooling edits back into the source repo). Report which files refreshed.
 
-## 4. Also refresh the plugin brains (claude-ads + claude-mem)
+## 4. Refresh the plugin brains (master-brain itself + claude-ads + claude-mem)
 
 These ship as plugins, not `skills/` clones, so `brains.sh` doesn't touch them.
-Update whichever is installed:
+
+**master-brain updates itself here too.** Its marketplace source is a *local git
+checkout* (see `~/.claude/plugins/known_marketplaces.json` → the
+`ai-marketing-hub-master-brain` entry's `installLocation`). So `/mb:update` must
+(a) fast-forward that checkout from its git remote — so anything pushed to the
+master-brain repo (new classroom lessons, prompt-library edits, command/skill
+tweaks) lands locally — and then (b) re-cache the `mb` plugin from that checkout
+so the running `/mb:` commands and the captured `classroom/` reflect the pull.
 
 ```bash
+# (a) resolve + fast-forward the master-brain checkout (the marketplace source)
+MB_DIR="$(python3 - <<'PY'
+import json, os
+p = os.path.expanduser('~/.claude/plugins/known_marketplaces.json')
+def find(o):
+    if isinstance(o, dict):
+        loc = o.get('installLocation') or o.get('path')
+        if loc and 'master-brain' in str(loc):
+            return loc
+        for v in o.values():
+            r = find(v)
+            if r: return r
+    elif isinstance(o, list):
+        for v in o:
+            r = find(v)
+            if r: return r
+try:
+    print(find(json.load(open(p))) or '')
+except Exception:
+    print('')
+PY
+)"
+MB_DIR="${MB_DIR:-$HOME/ai-marketing-hub/master-brain}"
+if [ -d "$MB_DIR/.git" ]; then
+  echo "master-brain checkout: $MB_DIR"
+  git -C "$MB_DIR" pull --ff-only 2>&1   # never clobbers; aborts if local edits conflict
+fi
+
+# (b) re-cache the plugins (mb re-reads from the local checkout above)
+claude plugin update mb@ai-marketing-hub-master-brain
 claude plugin update claude-ads@ai-marketing-hub-claude-ads
 claude plugin update claude-mem@thedotmack
 ```
+
+A `git pull --ff-only` never force-overwrites: if the checkout has uncommitted
+edits that would collide, it aborts with a message — report that and move on
+rather than stashing or forcing. If the checkout is already current, the pull is
+a no-op and the plugin re-cache simply confirms the latest version.
 
 (If the plugin CLI isn't available, or a plugin isn't installed, note it and skip.)
 
@@ -100,6 +142,9 @@ system-wide, then call out:
 - Any brain that **failed to update** and why (local changes, not a git checkout,
   missing), with the one-line fix.
 - Any brain that was **behind and is now current**, with the new version.
+- The **master-brain self-update** result from step 4: whether the local checkout
+  was fast-forwarded (and to what), or was already current, plus the re-cached
+  `mb` plugin version — so it's clear `/mb:update` now refreshes master-brain too.
 - The **CLAUDE.md managed-section** result for this project (added / refreshed /
   no-change / skipped) from step 2 — so it's clear that part was per-project.
 - The **tooling sync** result for this project (which `todos/` files refreshed, or

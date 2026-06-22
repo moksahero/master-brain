@@ -76,6 +76,26 @@ back to each project's documented installer (for claude-mem,
 `npx claude-mem@latest install`) and tell the user. If a plugin is already
 installed, say so and skip.
 
+## 3b. Install the humanizer skill (writing quality)
+
+master-brain ships **humanizer** (blader/humanizer, MIT) vendored as `mb:humanizer`,
+so `claude plugin update` already gives every PC the skill. This step also clones it
+standalone so the short `/humanizer` command works. It's a public repo — no Pro
+access needed:
+
+```bash
+if [ -d "$HOME/.claude/skills/humanizer/.git" ]; then
+  git -C "$HOME/.claude/skills/humanizer" pull --ff-only
+else
+  git clone https://github.com/blader/humanizer.git "$HOME/.claude/skills/humanizer"
+fi
+```
+
+Remind the user of the **standing rule**: any prose the brains produce — marketing
+copy, reports, emails, blog drafts, client deliverables — should be passed through
+humanizer before delivery so it reads human-written, not AI-generated. master-brain's
+SessionStart hook reinforces this each session.
+
 ## 4. Configure prerequisites (API keys + tools)
 
 The brains run without these, but each one is **required to unlock a specific
