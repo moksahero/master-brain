@@ -50,6 +50,20 @@ Then, in Claude Code:
 | `/mb:todos-execute` | Work every open TODO to completion (records an outcome on each). |
 | `/mb:todos-log` | Project history — what's been done, chronologically, with outcomes. |
 
+## Prompt Library
+
+[**PROMPTS.md**](PROMPTS.md) lists every runnable prompt available to Master Brain —
+54 copy-paste prompts across 9 buckets (ads, seo, blog, local, research, video,
+client, build, install), parsed from the captured classroom. Each carries its
+slash command and `<placeholders>`. Pull one from the CLI:
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+bash "$SCRIPTS/classroom.sh" prompts get ads 0      # one prompt, ready to run
+```
+
+Regenerate the doc after a re-capture with `node scripts/prompts.mjs markdown > PROMPTS.md`.
+
 ## The brains
 
 | Brain | What it does |

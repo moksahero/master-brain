@@ -144,8 +144,11 @@ Map of what to consult when:
 ### Runnable prompts — the Prompt Library catalog
 
 The Prompt Library is parsed into a queryable catalog of **54 runnable prompts**
-(via `scripts/prompts.mjs`, exposed through `classroom.sh prompts`). When you
-route a user to a skill, hand back the *blessed* prompt instead of inventing one:
+(via `scripts/prompts.mjs`, exposed through `classroom.sh prompts`). A rendered,
+human-readable listing of all of them lives at [`PROMPTS.md`](../../PROMPTS.md)
+in the repo root (regenerate with `node scripts/prompts.mjs markdown > PROMPTS.md`).
+When you route a user to a skill, hand back the *blessed* prompt instead of
+inventing one:
 
 ```bash
 SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
