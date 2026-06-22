@@ -14,7 +14,7 @@ nothing gets dropped.
 Master Brain is a Claude Code plugin. Add the marketplace and install it:
 
 ```bash
-claude plugin marketplace add AI-Marketing-Hub/master-brain
+claude plugin marketplace add moksahero/master-brain
 claude plugin install mb@ai-marketing-hub-master-brain
 ```
 
