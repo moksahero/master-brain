@@ -18,7 +18,8 @@ import path from 'node:path';
 
 const ROOT = process.env.CLAUDE_PLUGIN_ROOT
   || path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const DIR = path.join(ROOT, 'classroom', '09-prompt-library');
+const DIR = path.join(ROOT, 'classroom', '09-prompt-library'); // captured library
+const SUPP = path.join(ROOT, 'prompts');                       // repo-owned supplements (e.g. mb commands)
 
 // The universal "three context lines" the library tells you to prepend.
 const CONTEXT_HEADER = [
@@ -33,6 +34,7 @@ const ALIASES = {
   walt: 'video-content', video: 'video-content',
   gbp: 'local-seo', maps: 'local-seo', local: 'local-seo',
   client: 'client-agency', agency: 'client-agency',
+  'master-brain': 'mb', commands: 'mb', 'mb-commands': 'mb',
   install: 'install-by-prompt-first-run-playbooks', 'first-run': 'install-by-prompt-first-run-playbooks',
   strategy: 'ai-strategy-research-tools', 'ai-strategy': 'ai-strategy-research-tools',
   build: 'build-your-own',
@@ -47,8 +49,8 @@ function firstCommand(body) {
   return first && first.startsWith('/') ? first : null;
 }
 
-function parseLesson(file) {
-  const raw = fs.readFileSync(path.join(DIR, file), 'utf8');
+function parseLesson(fullPath, file) {
+  const raw = fs.readFileSync(fullPath, 'utf8');
   const lines = raw.split('\n');
   const skill = skillKey(file);
   let title = skill;
@@ -85,14 +87,24 @@ function parseLesson(file) {
 }
 
 function loadCatalog() {
-  if (!fs.existsSync(DIR)) {
-    console.error(`Prompt Library not found at ${DIR}`);
+  const sources = [];
+  // Repo-owned supplements first (e.g. the mb command bucket) so they lead the list.
+  if (fs.existsSync(SUPP)) {
+    for (const f of fs.readdirSync(SUPP).filter((f) => f.endsWith('.md')).sort()) {
+      sources.push([path.join(SUPP, f), f]);
+    }
+  }
+  // The captured Prompt Library (skip intro + how-to-use lessons).
+  if (fs.existsSync(DIR)) {
+    for (const f of fs.readdirSync(DIR).filter((f) => f.endsWith('.md') && !/^0[12]-/.test(f)).sort()) {
+      sources.push([path.join(DIR, f), f]);
+    }
+  }
+  if (!sources.length) {
+    console.error(`No prompt sources found (looked in ${SUPP} and ${DIR})`);
     process.exit(1);
   }
-  const files = fs.readdirSync(DIR)
-    .filter((f) => f.endsWith('.md') && !/^0[12]-/.test(f)) // skip intro + how-to-use
-    .sort();
-  return files.flatMap(parseLesson);
+  return sources.flatMap(([p, f]) => parseLesson(p, f));
 }
 
 function resolve(input, keys) {

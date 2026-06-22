@@ -53,9 +53,10 @@ Then, in Claude Code:
 ## Prompt Library
 
 [**PROMPTS.md**](PROMPTS.md) lists every runnable prompt available to Master Brain —
-54 copy-paste prompts across 9 buckets (ads, seo, blog, local, research, video,
-client, build, install), parsed from the captured classroom. Each carries its
-slash command and `<placeholders>`. Pull one from the CLI:
+67 copy-paste prompts across 10 buckets: the `mb` bucket (Master Brain's own
+`/mb:` commands, also in [**MB-COMMANDS.md**](MB-COMMANDS.md)) plus ads, seo, blog,
+local, research, video, client, build, and install (parsed from the captured
+classroom). Each carries its slash command and `<placeholders>`. Pull one from the CLI:
 
 ```bash
 SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"

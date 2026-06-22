@@ -1,6 +1,6 @@
 # Master Brain — Prompt Library
 
-> 54 runnable prompts across 9 buckets, parsed from the
+> 67 runnable prompts across 10 buckets, parsed from the
 > captured classroom (`classroom/09-prompt-library/`). Copy a prompt, swap the
 > `<angle brackets>` for your real values, and run.
 
@@ -25,6 +25,7 @@ Voice: <how it should sound, e.g. plain, expert, friendly>
 
 ## Contents
 
+- [🧰 Master Brain Commands](#mb) — 13 prompts
 - [🔎 SEO Prompts](#seo) — 5 prompts
 - [✍️ Blog Prompts](#blog) — 5 prompts
 - [📣 Ads Prompts](#ads) — 5 prompts
@@ -34,6 +35,116 @@ Voice: <how it should sound, e.g. plain, expert, friendly>
 - [🎯 Client & Agency Prompts](#client-agency) — 8 prompts
 - [🛠️ Build Your Own Prompt](#build-your-own) — 3 prompts
 - [📦 Install by Prompt + First-Run Playbooks](#install-by-prompt-first-run-playbooks) — 11 prompts
+
+<a id="mb"></a>
+
+## 🧰 Master Brain Commands
+
+Bucket key: `mb` · 13 prompts
+
+### 0. Not sure what to do — route me
+
+Command: `/mb:idk <what you're trying to do, e.g. rank my plumbing business in Austin>`
+
+```text
+/mb:idk <what you're trying to do, e.g. rank my plumbing business in Austin>
+```
+
+### 1. Install the whole fleet (brains + claude-ads + claude-mem)
+
+Command: `/mb:install`
+
+```text
+/mb:install
+```
+
+### 2. Scaffold a project (asks your goal, wires the right brains, queues first TODOs)
+
+Command: `/mb:init <project name or goal>`
+
+```text
+/mb:init <project name or goal>
+```
+
+### 3. Health check — what's installed, API keys, tooling, todo backlog
+
+Command: `/mb:doctor`
+
+```text
+/mb:doctor
+```
+
+### 4. Update every installed brain to the latest version
+
+Command: `/mb:update`
+
+```text
+/mb:update
+```
+
+### 5. Run the fused multi-brain client intelligence report for a site
+
+Command: `/mb:report <https://client-site.com>`
+
+```text
+/mb:report <https://client-site.com>
+```
+
+### 6. Promote this project's tooling improvements up to the source repo
+
+Command: `/mb:push`
+
+```text
+/mb:push
+```
+
+### 7. Capture a follow-up into the tracked backlog
+
+Command: `/mb:todos-add "<the follow-up to remember>"`
+
+```text
+/mb:todos-add "<the follow-up to remember>"
+```
+
+### 8. See the backlog (open / done / all)
+
+Command: `/mb:todos-list`
+
+```text
+/mb:todos-list
+```
+
+### 9. Triage the backlog — dedupe, prioritize, mark stale/blocked
+
+Command: `/mb:todos-review`
+
+```text
+/mb:todos-review
+```
+
+### 10. Work every open TODO to completion (records an outcome on each)
+
+Command: `/mb:todos-execute`
+
+```text
+/mb:todos-execute
+```
+
+### 11. Generate recurring TODOs on a cadence (pair with /schedule)
+
+Command: `/mb:todos-routine`
+
+```text
+/mb:todos-routine
+```
+
+### 12. Project history — what's been done, chronologically, with outcomes
+
+Command: `/mb:todos-log`
+
+```text
+/mb:todos-log
+```
 
 <a id="seo"></a>
 

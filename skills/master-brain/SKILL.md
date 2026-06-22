@@ -143,12 +143,15 @@ Map of what to consult when:
 
 ### Runnable prompts — the Prompt Library catalog
 
-The Prompt Library is parsed into a queryable catalog of **54 runnable prompts**
-(via `scripts/prompts.mjs`, exposed through `classroom.sh prompts`). A rendered,
+The Prompt Library is parsed into a queryable catalog of **67 runnable prompts**
+(via `scripts/prompts.mjs`, exposed through `classroom.sh prompts`). This includes
+the **`mb` bucket** — Master Brain's own `/mb:` commands (source:
+`prompts/mb-prompts.md`, also rendered as [`MB-COMMANDS.md`](../../MB-COMMANDS.md))
+— plus the per-skill buckets parsed from the captured classroom. A rendered,
 human-readable listing of all of them lives at [`PROMPTS.md`](../../PROMPTS.md)
-in the repo root (regenerate with `node scripts/prompts.mjs markdown > PROMPTS.md`).
-When you route a user to a skill, hand back the *blessed* prompt instead of
-inventing one:
+(regenerate with `node scripts/prompts.mjs markdown > PROMPTS.md`).
+When you route a user to a skill — or when a new user asks how to run Master
+Brain itself — hand back the *blessed* prompt instead of inventing one:
 
 ```bash
 SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
@@ -158,7 +161,8 @@ bash "$SCRIPTS/classroom.sh" prompts get ads 0        # one prompt, ready to fil
 bash "$SCRIPTS/classroom.sh" prompts search "audit"   # match across all buckets
 ```
 
-Bucket keys are fuzzy — `ads`, `seo`, `blog`, `local` (→ local-seo), `marketing`
+Bucket keys are fuzzy — `mb` (→ the `/mb:` commands; aliases `commands`,
+`master-brain`), `ads`, `seo`, `blog`, `local` (→ local-seo), `marketing`
 or `research` (→ research-brain), `video` (→ video-content), `client` (→
 client-agency), `install`. Every prompt comes with its slash command (e.g.
 `/ads audit`) and `<placeholders>` the user fills in. `get` prepends the three
