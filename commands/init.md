@@ -136,6 +136,17 @@ node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs
 - website capture → **website-brain**
 - report → **client-intelligence-report** (`/mb:report`)
 
+Use the captured classroom as the canon for *what to queue and in what order*:
+`04-client-delivery/` is the end-to-end engagement flow, and `09-prompt-library/`
+has the ready-to-run prompt for each brain — seed the first TODO from it so the
+work starts from the blessed prompt, not a guess:
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+bash "$SCRIPTS/classroom.sh" show 04-client-delivery/02-the-five-step-flow.md
+bash "$SCRIPTS/classroom.sh" search "<brain> prompt"
+```
+
 ## 5. Confirm
 
 Show what was created (tree), which brains are active, and the queued todos.

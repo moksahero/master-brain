@@ -109,6 +109,37 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
 - "One premium report fusing all of the above" → **client-intelligence-report** (`/mb:report`)
 - "Organize knowledge / persistent wiki" → **claude-obsidian**
 
+## Knowledge base — the captured classroom
+
+The member classroom from
+[skool.com/ai-marketing-hub-pro](https://www.skool.com/ai-marketing-hub-pro/classroom)
+is mirrored into this repo at **`classroom/`** — 12 courses, 167 lessons, one
+Markdown file each, plus `classroom/README.md` as the index. This is the
+**canonical, human-written documentation** for the whole Hub: setup order,
+which-skill-when, the client-delivery flow, troubleshooting, and the copy-paste
+Prompt Library. When a question is about *how the Hub works or how to run it*,
+prefer this corpus over improvising — it is the source of truth the commands
+route against.
+
+Don't load it wholesale (it's ~1.4 MB). Pull the one relevant lesson with the
+helper:
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+bash "$SCRIPTS/classroom.sh" search "which skill when"   # → matching lesson paths
+bash "$SCRIPTS/classroom.sh" show 03-how-it-all-works/04-which-skill-when.md
+bash "$SCRIPTS/classroom.sh" courses                     # the 12 course names
+```
+
+Map of what to consult when:
+
+- **Setup / install / API keys / troubleshooting** → course `02-setup-install/`
+  (esp. `09-troubleshooting-your-install-checklist.md`).
+- **Which brain/skill for a goal, how it fits together** → course
+  `03-how-it-all-works/` (esp. `04-which-skill-when.md`) and `01-start-here/03-pick-your-path.md`.
+- **Running a client engagement end to end** → course `04-client-delivery/`.
+- **The actual prompt to run a skill** → course `09-prompt-library/`.
+
 ## Commands
 
 `/mb:idk` · `/mb:install` · `/mb:init` ·

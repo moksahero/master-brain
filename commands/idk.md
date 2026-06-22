@@ -39,3 +39,16 @@ Pick the single most useful next action and say it plainly:
 If the user passed `$ARGUMENTS` describing what they want (e.g. "rank my plumbing
 business in Austin"), map it to the right brain(s) and propose the exact command
 or prompt to run next. Always end with one clear, single recommended action.
+
+Ground the routing in the canonical docs rather than improvising: before
+recommending, consult the captured classroom for the matching decision lesson —
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+bash "$SCRIPTS/classroom.sh" show 03-how-it-all-works/04-which-skill-when.md
+bash "$SCRIPTS/classroom.sh" search "<the user's goal>"   # find the closest lesson(s)
+```
+
+If a Prompt Library lesson exists for the brain you're routing to
+(`bash "$SCRIPTS/classroom.sh" search "<brain> prompt"`), hand back its prompt so
+the user can run it immediately.

@@ -14,3 +14,4 @@ wiki/.obsidian/workspace*.json
 
 # node
 node_modules/
+.playwright-mcp/

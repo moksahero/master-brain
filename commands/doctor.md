@@ -45,3 +45,12 @@ A compact report with three sections — **✅ Ready**, **⚠ Needs attention**,
 **❌ Missing** — each line stating the exact fix (e.g. "❌ FIRECRAWL_API_KEY not
 set → add it to ~/.config/website-brain/.env"). Never print secret values, only
 whether they're present. End with the single highest-priority action.
+
+For any **❌ Missing** / **⚠ Needs attention** item, the captured classroom holds
+the canonical fix — point the user at (or quote from) the matching lesson:
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+bash "$SCRIPTS/classroom.sh" show 02-setup-install/09-troubleshooting-your-install-checklist.md
+bash "$SCRIPTS/classroom.sh" search "<the failing item>"
+```

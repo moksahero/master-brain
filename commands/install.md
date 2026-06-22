@@ -14,6 +14,16 @@ Confirm `git` is available. Resolve the scripts directory:
 SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
 ```
 
+The captured **Setup & Install** course is the canonical, member-facing version
+of this whole flow. Skim it so your steps and wording match what the user has
+seen in the classroom, and use the troubleshooting lesson as the remediation
+script when anything below fails:
+
+```bash
+bash "$SCRIPTS/classroom.sh" show 02-setup-install/09-troubleshooting-your-install-checklist.md
+# bash "$SCRIPTS/classroom.sh" list   # to see every Setup & Install lesson
+```
+
 Tell the user what's about to happen: "I'll clone/update the AI Marketing Hub
 brains into `~/.claude/skills` — the canonical fleet (claude-obsidian,
 website-brain, marketing-brain, local-seo-brain,
