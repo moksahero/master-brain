@@ -12,6 +12,9 @@ data/
 reports/
 wiki/.obsidian/workspace*.json
 
+# todos/ moved out to the standalone bazinga-hq app — no longer shipped by the plugin
+todos/
+
 # node
 node_modules/
 .playwright-mcp/
