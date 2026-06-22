@@ -16,7 +16,7 @@ Ask these, adapting to anything already given in `$ARGUMENTS`:
 3. **What's the focus?** (pick any: **SEO/content**, **local SEO / map pack**, **paid ads** — Google/Meta/TikTok/etc., **website capture**, **just a report**)
 4. **Target market / location?** (city, country, or language — drives local + keyword work)
 5. **Primary website URL** (if any).
-6. **What language should reports be written in?** (e.g. English, Spanish, Japanese — or **bilingual** like English + Korean; default English)
+6. **What language should reports be written in?** (e.g. Japanese, English, Spanish — or **bilingual** like Japanese + English; **default Japanese**)
 
 Keep it to one round of questions. Don't interrogate.
 
@@ -86,9 +86,10 @@ Create only what the answers call for:
   (`npx create-next-app@latest web --tailwind --ts --eslint --app` — confirm
   before running, since it pulls packages).
 - Write `CLAUDE.md` capturing: project name, new/existing, focus areas, target
-  market, primary URL, **report language**, and the list of brains this project
-  will use. Downstream report runs (`/mb:report`) should honor this
-  language.
+  market, primary URL, **report language (default Japanese)**, and the list of
+  brains this project will use. Downstream report runs (`/mb:report`) should
+  honor this language — write reports in **Japanese** unless the user chose
+  otherwise.
 - The scaffolded `CLAUDE.md` **must include the "Persistence" conventions block**
   so every future session in this directory writes work back to the vault rather
   than only to `reports/`/`web/`. Don't retype it — after writing the
@@ -132,7 +133,14 @@ node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs
 
 - SEO/content → **marketing-brain**
 - local SEO → **local-seo-brain**
-- paid ads → **claude-ads**
+- paid ads → **claude-ads** — when ads are in focus, always queue these in order:
+  1. **`/ads-dna <url>`** — extract brand DNA (`brand-profile.json`) so creative
+     stays on-brand.
+  2. **`/ads-competitor`** — competitor ad-intelligence report (Meta Ad Library /
+     Google Ads Transparency / TikTok Top Ads): copy, creative, spend, gaps.
+  3. **`/ads-landing <url>`** — landing-page assessment **and concrete LP design
+     suggestions** (message match, above-the-fold, trust signals, form/CTA, mobile)
+     to lift conversion rate.
 - website capture → **website-brain**
 - report → **client-intelligence-report** (`/mb:report`)
 
@@ -151,7 +159,26 @@ bash "$SCRIPTS/classroom.sh" prompts get <bucket> <index>   # the blessed first-
 Word each queued TODO around that blessed prompt (keep its slash command and
 `<placeholders>`) so whoever picks it up runs the canonical prompt, not a guess.
 
-## 5. Confirm
+## 5. Execute everything, then deliver a PDF report (no confirmation prompt)
 
-Show what was created (tree), which brains are active, and the queued todos.
-End with: "Want me to start with [most relevant brain] now?"
+Do **not** stop to ask whether to proceed. After scaffolding and queuing, run the
+whole pipeline end-to-end automatically:
+
+1. **Work every open TODO to completion** — run them in priority order, marking
+   each done in the SQLite store as you go (same behavior as `/mb:todos-execute`):
+
+   ```bash
+   node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs" list --open
+   ```
+
+   Execute each with its blessed brain/prompt (`/ads-dna`, `/ads-competitor`,
+   `/ads-landing` with LP design suggestions, the SEO/local/website runs, etc.),
+   then mark it done. Don't pause between todos.
+
+2. **Generate the client intelligence report as a PDF** — run the fused
+   multi-brain report via **`/client-intelligence-report`** (`/mb:report`) over the
+   primary URL, writing the rendered **PDF** into `reports/`. Write it in
+   **Japanese** (the project default) unless `CLAUDE.md` records another language.
+
+Only at the very end, show what was created (tree), which brains ran, the
+completed todos, and the path to the delivered PDF report.

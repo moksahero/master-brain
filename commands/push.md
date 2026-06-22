@@ -33,38 +33,61 @@ updates and can reach GitHub. It also auto-registers this project so future
 
 ## 2. Show the diff and confirm
 
+Show the **full** pending state of the source repo — not just `todos/`. The
+tooling pull above only moves `todos/`, but a `/mb:push` should also carry up any
+edits you've made directly in the source repo (command/skill files like
+`commands/init.md`, scripts, docs, version bumps):
+
 ```bash
 REPO="${MB_SOURCE_REPO:-$HOME/ai-marketing-hub/master-brain}"
-git -C "$REPO" status --short -- todos
-git -C "$REPO" diff -- todos
+git -C "$REPO" status --short
+git -C "$REPO" diff
 ```
 
-Summarize what changed in plain language. If the diff is empty, say "nothing to
-promote — the source repo already matches this project's tooling" and stop.
+Summarize what changed in plain language. If the working tree is clean, say
+"nothing to promote — the source repo already matches this project's tooling" and
+stop.
 
 If the diff includes anything that looks project-specific (a client name, a
 hard-coded path, secrets, a one-off todo), STOP and flag it — that should not
 enter the shared toolkit. Let the user decide before shipping.
 
-## 3. Ship it (only when `$ARGUMENTS` contains `--ship`, or the user confirms)
+## 3. Commit and push to GitHub
 
-```bash
-REPO="${MB_SOURCE_REPO:-$HOME/ai-marketing-hub/master-brain}"
-bash "$REPO/scripts/ship.sh" patch -m "feat(todos): promote tooling from $(basename "$PWD")"
-```
+A `/mb:push` always ends by **committing and pushing the source repo to GitHub** —
+that is how every other project actually receives the change (via `/mb:update`).
+Do not leave promoted changes sitting uncommitted.
 
-`ship.sh` version-bumps, propagates source → marketplace → plugin cache, and
-commits + pushes to GitHub. After it completes, the new tooling is the canonical
-version; other projects pick it up the next time they run `/mb:update` (or
-immediately via `bash "$REPO/scripts/sync-tooling.sh" push --all`).
+- **If `$ARGUMENTS` contains `--ship`** (or the change is shared `todos/` tooling
+  that should mint a new release), run `ship.sh` — it version-bumps, propagates
+  source → marketplace → plugin cache, and commits + pushes to GitHub:
 
-Without `--ship`, stop after step 2 with the changes staged in the working tree
-and tell the user to review, then run `/mb:push --ship` (or `ship.sh`) when ready.
+  ```bash
+  REPO="${MB_SOURCE_REPO:-$HOME/ai-marketing-hub/master-brain}"
+  bash "$REPO/scripts/ship.sh" patch -m "feat: promote tooling from $(basename "$PWD")"
+  ```
+
+- **Otherwise** (or when the version was already bumped as part of the edits),
+  commit and push directly without a second bump:
+
+  ```bash
+  REPO="${MB_SOURCE_REPO:-$HOME/ai-marketing-hub/master-brain}"
+  git -C "$REPO" add -A
+  git -C "$REPO" commit -m "<summary of what was promoted>"
+  git -C "$REPO" push
+  ```
+
+  Then refresh the local plugin cache so this machine is on the new version:
+  `claude plugin update mb@ai-marketing-hub-master-brain`.
+
+Pushing to GitHub is outward-facing — if the user did not pass `--ship` and did
+not already confirm, ask once before pushing.
 
 ## 4. Report
 
 State, in this order:
-- **What was promoted** (which `todos/` files changed in the source repo).
-- Whether it was **shipped** (version bump + GitHub push) or left for review.
+- **What was promoted** (which source-repo files changed).
+- That it was **committed and pushed** to GitHub (commit + version), or — if the
+  user declined — that it's left staged for review.
 - How **other projects** get it: `/mb:update` per project, or `sync-tooling.sh
-  push --all` to fan out to every registered project at once.
+  push --all` to fan out `todos/` tooling to every registered project at once.
