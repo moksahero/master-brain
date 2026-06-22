@@ -144,8 +144,12 @@ work starts from the blessed prompt, not a guess:
 ```bash
 SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
 bash "$SCRIPTS/classroom.sh" show 04-client-delivery/02-the-five-step-flow.md
-bash "$SCRIPTS/classroom.sh" search "<brain> prompt"
+bash "$SCRIPTS/classroom.sh" prompts skill <ads|seo|blog|local|marketing|video|client>
+bash "$SCRIPTS/classroom.sh" prompts get <bucket> <index>   # the blessed first-run prompt
 ```
+
+Word each queued TODO around that blessed prompt (keep its slash command and
+`<placeholders>`) so whoever picks it up runs the canonical prompt, not a guess.
 
 ## 5. Confirm
 

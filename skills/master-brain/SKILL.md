@@ -138,7 +138,28 @@ Map of what to consult when:
 - **Which brain/skill for a goal, how it fits together** → course
   `03-how-it-all-works/` (esp. `04-which-skill-when.md`) and `01-start-here/03-pick-your-path.md`.
 - **Running a client engagement end to end** → course `04-client-delivery/`.
-- **The actual prompt to run a skill** → course `09-prompt-library/`.
+- **The actual prompt to run a skill** → course `09-prompt-library/` — but use the
+  catalog below, don't hand-read the lessons.
+
+### Runnable prompts — the Prompt Library catalog
+
+The Prompt Library is parsed into a queryable catalog of **54 runnable prompts**
+(via `scripts/prompts.mjs`, exposed through `classroom.sh prompts`). When you
+route a user to a skill, hand back the *blessed* prompt instead of inventing one:
+
+```bash
+SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
+bash "$SCRIPTS/classroom.sh" prompts list             # 9 buckets + counts
+bash "$SCRIPTS/classroom.sh" prompts skill ads        # the prompts in a bucket
+bash "$SCRIPTS/classroom.sh" prompts get ads 0        # one prompt, ready to fill + run
+bash "$SCRIPTS/classroom.sh" prompts search "audit"   # match across all buckets
+```
+
+Bucket keys are fuzzy — `ads`, `seo`, `blog`, `local` (→ local-seo), `marketing`
+or `research` (→ research-brain), `video` (→ video-content), `client` (→
+client-agency), `install`. Every prompt comes with its slash command (e.g.
+`/ads audit`) and `<placeholders>` the user fills in. `get` prepends the three
+context lines (Business / Goal / Voice) the library recommends.
 
 ## Commands
 

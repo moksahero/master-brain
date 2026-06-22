@@ -49,6 +49,13 @@ bash "$SCRIPTS/classroom.sh" show 03-how-it-all-works/04-which-skill-when.md
 bash "$SCRIPTS/classroom.sh" search "<the user's goal>"   # find the closest lesson(s)
 ```
 
-If a Prompt Library lesson exists for the brain you're routing to
-(`bash "$SCRIPTS/classroom.sh" search "<brain> prompt"`), hand back its prompt so
-the user can run it immediately.
+Then hand back the **blessed, runnable prompt** for the brain you're routing to —
+pulled from the parsed Prompt Library catalog, not invented:
+
+```bash
+bash "$SCRIPTS/classroom.sh" prompts skill <ads|seo|blog|local|marketing|video|client>
+bash "$SCRIPTS/classroom.sh" prompts get <bucket> <index>   # ready to fill + run
+```
+
+Show the user the exact prompt with its `<placeholders>` so they can fill the
+blanks and run it immediately, rather than a paraphrase.

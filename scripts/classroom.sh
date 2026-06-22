@@ -61,8 +61,12 @@ case "$cmd" in
     [ -f "$f" ] || { echo "not found: $rel" >&2; exit 1; }
     cat "$f"
     ;;
+  prompts)
+    # Delegate to the Prompt Library catalog: classroom.sh prompts {list|skill <k>|get <k> [i]|search <q>}
+    exec node "$ROOT/scripts/prompts.mjs" "$@"
+    ;;
   *)
-    echo "usage: classroom.sh {search <q>|list|courses|show <rel-path>}" >&2
+    echo "usage: classroom.sh {search <q>|list|courses|show <rel-path>|prompts ...}" >&2
     exit 2
     ;;
 esac
