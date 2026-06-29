@@ -147,10 +147,30 @@ writes a scorecard to `wiki/meta`, and lists fixes for your approval.
 
 **5. Build the master report**  ·  *the agent builds it (deterministic layout + AI prose)*
 > Build one consolidated master report PDF per language. Premium agency style in
-> the client's brand colors: white hero cover, executive scorecard, a how-to-read
-> page, every perspective as a chapter with charts, tables, and captioned
-> screenshots, a plain-language glossary, and one prioritized action plan. Write
-> it so a non-technical owner sees the value. Save to the vault and my Desktop.
+> the client's brand colors: white hero cover, **an executive scorecard, a
+> how-to-read page**, every perspective as a chapter with charts, tables, and
+> captioned screenshots, a plain-language glossary, and one prioritized action
+> plan. Write it so a non-technical owner sees the value. Save to the vault and my
+> Desktop.
+
+The **executive scorecard is mandatory** — it is the first thing the owner reads
+and the one slide they remember. It must appear in the executive summary of every
+report and always include:
+
+- **One overall letter rank** (A / B / C / D / F) with a 0–100 score, shown as a
+  prominent badge.
+- **A row per analysis dimension** present in the engagement (e.g. site/brand
+  foundation, SEO/keywords, Google performance/Core Web Vitals, competitor/ads,
+  landing-page/CRO) with that dimension's own 0–100 score, a letter grade, a
+  visual bar, and its weight.
+- **The overall as the weighted average** of the dimension scores, with a one-line
+  note stating the weights and naming the dimension that drags the rank down most
+  (so the owner sees the highest-ROI fix at a glance).
+- Grade bands stated once: A 90+ / B 80+ / C 60+ / D 40+ / F <40.
+
+Ground every dimension score in that chapter's real findings — never invent a
+grade the body does not support. If a dimension's data is degraded (e.g. a missing
+API), score what you have and say so in the note, don't omit the row.
 
 Under the hood: scripts own the page layout so nothing overflows; the model writes
 the words, grounded only in the real numbers.
@@ -181,6 +201,9 @@ That is the whole thing. Swap the placeholders, paste, approve.
    two languages as separate PDFs.
 6. **Ground every number.** If it is not in the data, it does not go in the
    report. No guarantees, no guessing.
+7. **Always lead with the scorecard.** Every report opens its executive summary
+   with the graded scorecard above: one overall letter rank, a graded row per
+   dimension, and the weighted overall. It is non-optional.
 
 ## Cost and time
 
