@@ -131,17 +131,26 @@ clone_or_update() {
 # as skills/ clones (not plugins) otherwise expose no slash commands at all — this
 # closes that gap so /goal, /start, /campaign, etc. work everywhere.
 #
-# Scope: EVERY resolved brain that has a commands/ dir. Last writer wins on a name
-# clash and each collision is logged (not silenced), so an overridden command is
-# always visible in the update output. Set CLAUDE_SKIP_CMD_REGISTER=1 to opt out.
+# Scope: EVERY installed skill dir that has a commands/ dir (gh-independent), minus
+# the codex-*/DENY_EXACT exclusions. Last writer wins on a name clash and each
+# collision is logged (not silenced), so an overridden command is always visible in
+# the update output. Set CLAUDE_SKIP_CMD_REGISTER=1 to opt out.
 declare -A CMD_OWNER
 register_commands() {
   [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && { echo "  command registration skipped (CLAUDE_SKIP_CMD_REGISTER=1)"; return 0; }
-  local name src f base dest n=0
+  local name src f base dest n=0 d
   CMD_OWNER=()
   mkdir -p "$COMMANDS_DIR"
   echo "  registering brain commands into ${COMMANDS_DIR} ..."
-  for name in "${RESOLVED[@]}"; do
+  # Scan EVERY installed skill dir on disk (not just the gh-RESOLVED fleet): this
+  # keeps registration working when gh is unauthenticated during an update — which
+  # would otherwise collapse RESOLVED to the canonical few and silently drop
+  # /goal, /start, /campaign, /brain-*, etc. Honor the same exclusions discovery
+  # uses (codex-* runtime variants + DENY_EXACT) so codex-obsidian doesn't clash.
+  for d in "$SKILLS_DIR"/*/; do
+    [ -d "$d" ] || continue
+    name="$(basename "$d")"
+    is_denied "$name" && continue
     src="$SKILLS_DIR/$name/commands"
     [ -d "$src" ] || continue
     for f in "$src"/*.md; do
@@ -157,6 +166,30 @@ register_commands() {
     done
   done
   printf '        %d command(s) registered (%d unique name(s))\n' "$n" "${#CMD_OWNER[@]}"
+  register_master_brain_commands
+}
+
+# master-brain's own commands/ dir is mostly MANAGEMENT (update/doctor/install/
+# todos-*/push/report/init/idk) — those stay under the mb: plugin namespace, which
+# is reserved for changing master-brain itself. But a few are BRAIN-OPERATION
+# commands that should be reachable as clean top-level slash commands instead. Map
+# each here (source filename -> top-level slash filename) and we expose it.
+# We COPY (not symlink) because this script usually runs from the versioned plugin
+# cache (…/mb/<ver>/scripts), whose path changes every release — a symlink would go
+# stale on the next bump, whereas /mb:update re-copies fresh content each run.
+declare -A MB_BRAIN_COMMANDS=(
+  ["youtuber.md"]="youtube.md"
+)
+register_master_brain_commands() {
+  [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && return 0
+  local src_dir="$MASTER_BRAIN_DIR/commands" from to
+  [ -d "$src_dir" ] || return 0
+  for from in "${!MB_BRAIN_COMMANDS[@]}"; do
+    to="${MB_BRAIN_COMMANDS[$from]}"
+    [ -f "$src_dir/$from" ] || continue
+    cp -f "$src_dir/$from" "$COMMANDS_DIR/$to"
+    printf '        /%s registered (master-brain brain-op: %s)\n' "${to%.md}" "${from%.md}"
+  done
 }
 
 brain_status() {
