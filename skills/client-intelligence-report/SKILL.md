@@ -89,17 +89,27 @@ them from your environment, so the keys never touch the vault or the report.
 - **DataForSEO** (required, powers SEO, marketing, and local). Put
   `DATAFORSEO_LOGIN=...` and `DATAFORSEO_PASSWORD=...` in `~/Documents/.env`.
   Costs a few cents per run.
-- **Google APIs** (optional: PageSpeed, CrUX, Search Console, GA4). Only needed
-  if you want field Core Web Vitals, indexation status, and live traffic in the
-  technical chapter. The pipeline runs fine without them.
+- **Google PageSpeed Insights API** (required for the performance chapter). Powers
+  the **mandatory Core Web Vitals section** with real-user (CrUX field) LCP, INP,
+  and CLS — the metrics Google actually ranks on. Get a key in Google Cloud
+  Console (enable "PageSpeed Insights API"), then put `GOOGLE_PAGESPEED_API_KEY=...`
+  (or `GOOGLE_API_KEY=...`) in your secrets. One call to
+  `pagespeedonline/v5/runPagespeed` returns both field (`loadingExperience` /
+  `originLoadingExperience`) and lab (Lighthouse) data — you do **not** need the
+  separate CrUX API. If the key's project returns `429` quota 0, the API is not
+  enabled on that project; enable it (or use a key whose project has it). Free.
+- **Other Google APIs** (optional: Search Console, GA4). For indexation status and
+  live organic traffic in the technical/marketing chapters. The pipeline runs
+  without these.
 
 ### What each API powers
 
 | API | What it does | Used in |
 | --- | --- | --- |
 | Firecrawl | Maps the site, downloads every page (markdown, HTML, links, images) and a full-page screenshot | Website brain (prompt 1) |
-| DataForSEO | Per-page on-page SEO + Lighthouse and Core Web Vitals; competitor and keyword discovery; GBP, map-grid rankings, reviews, NAP, citations | All three brains (prompts 1, 2, 3) |
-| Google APIs (optional) | Field CWV, indexation, organic traffic | Deeper technical and marketing detail |
+| DataForSEO | Per-page on-page SEO; competitor and keyword discovery; GBP, map-grid rankings, reviews, NAP, citations | All three brains (prompts 1, 2, 3) |
+| PageSpeed Insights (required) | Real-user (CrUX field) LCP/INP/CLS + Lighthouse lab, mobile & desktop | The mandatory performance chapter (prompt 5) |
+| Other Google APIs (optional) | Indexation, organic traffic | Deeper technical and marketing detail |
 
 ## The six-prompt plan
 
@@ -204,6 +214,17 @@ That is the whole thing. Swap the placeholders, paste, approve.
 7. **Always lead with the scorecard.** Every report opens its executive summary
    with the graded scorecard above: one overall letter rank, a graded row per
    dimension, and the weighted overall. It is non-optional.
+8. **Always include the PageSpeed Insights / Core Web Vitals chapter.** Every
+   report has a Google-performance section built from the PageSpeed Insights API,
+   and it **leads with real-user (CrUX field) data** — LCP, INP, CLS for mobile
+   and desktop, at both the URL and origin level — because that is the signal
+   Google ranks on. Lab (Lighthouse) numbers are shown only as diagnostic support,
+   clearly labelled, and must never be presented as the user's real experience or
+   as the headline grade. Pull it fresh (`strategy=mobile` and `strategy=desktop`)
+   and save the raw JSON to `data/performance/`. If the API key is missing or its
+   project has the API disabled (HTTP 429 quota 0), say so plainly in the chapter,
+   fall back to lab data marked as lab-only, and add enabling the API as an action
+   item — do not drop the chapter and do not pass lab values off as field values.
 
 ## Cost and time
 
