@@ -25,6 +25,14 @@ clones any newly discovered brain that isn't present yet. A brain with
 uncommitted local changes (or a non-fast-forward history) is reported as a failed
 pull rather than force-updated — never clobber local work.
 
+Finally, it **registers slash commands**: every resolved brain that ships a
+`commands/` dir has its `commands/*.md` symlinked into `~/.claude/commands` so
+they're runnable as top-level commands (`/goal`, `/start`, `/campaign`, …).
+Brains that expose commands only through a plugin are unaffected; brains that ship
+as plain `skills/` clones (which otherwise expose no slash commands) get theirs
+wired up here. Last writer wins on a name clash and each collision is logged in
+the update output. Set `CLAUDE_SKIP_CMD_REGISTER=1` to opt out.
+
 To preview what discovery would add before updating, run:
 
 ```bash

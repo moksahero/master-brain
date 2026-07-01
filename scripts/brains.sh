@@ -23,6 +23,7 @@ set -uo pipefail
 
 ORG="AI-Marketing-Hub"
 SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
+COMMANDS_DIR="${CLAUDE_COMMANDS_DIR:-$HOME/.claude/commands}"
 
 # Canonical brains, in recommended read/install order. Discovery appends any
 # other org brains after these; this list just guarantees order + an offline
@@ -125,6 +126,39 @@ clone_or_update() {
   fi
 }
 
+# Make each cloned brain's commands runnable as top-level slash commands by
+# symlinking every commands/*.md into the personal commands dir. Brains that ship
+# as skills/ clones (not plugins) otherwise expose no slash commands at all — this
+# closes that gap so /goal, /start, /campaign, etc. work everywhere.
+#
+# Scope: EVERY resolved brain that has a commands/ dir. Last writer wins on a name
+# clash and each collision is logged (not silenced), so an overridden command is
+# always visible in the update output. Set CLAUDE_SKIP_CMD_REGISTER=1 to opt out.
+declare -A CMD_OWNER
+register_commands() {
+  [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && { echo "  command registration skipped (CLAUDE_SKIP_CMD_REGISTER=1)"; return 0; }
+  local name src f base dest n=0
+  CMD_OWNER=()
+  mkdir -p "$COMMANDS_DIR"
+  echo "  registering brain commands into ${COMMANDS_DIR} ..."
+  for name in "${RESOLVED[@]}"; do
+    src="$SKILLS_DIR/$name/commands"
+    [ -d "$src" ] || continue
+    for f in "$src"/*.md; do
+      [ -e "$f" ] || continue
+      base="$(basename "$f")"
+      dest="$COMMANDS_DIR/$base"
+      if [ -n "${CMD_OWNER[$base]:-}" ]; then
+        printf '        \xe2\x9a\xa0  /%s collision: %s overrides %s\n' "${base%.md}" "$name" "${CMD_OWNER[$base]}"
+      fi
+      ln -sf "$f" "$dest"
+      CMD_OWNER[$base]="$name"
+      n=$((n+1))
+    done
+  done
+  printf '        %d command(s) registered (%d unique name(s))\n' "$n" "${#CMD_OWNER[@]}"
+}
+
 brain_status() {
   local name="$1" dest="$SKILLS_DIR/$1" ver="-" sha="-" state
   if [ -d "$dest/.git" ]; then
@@ -168,6 +202,7 @@ case "$cmd" in
     resolve_brains
     mkdir -p "$SKILLS_DIR"
     for b in "${RESOLVED[@]}"; do clone_or_update "$b"; done
+    register_commands
     echo "done."
     ;;
   status)
