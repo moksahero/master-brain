@@ -11,19 +11,26 @@ SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
 bash "$SCRIPTS/brains.sh" update
 ```
 
-When the `gh` CLI is installed and authenticated, this **walks the entire
-`AI-Marketing-Hub` org** and resolves the fleet dynamically: the canonical brains
-first, then any other brain that's been added to the org (e.g. `social-hub`). So
-a newly published brain joins the fleet automatically — no edit to `brains.sh`.
-Discovery includes both Claude plugins and Obsidian-brain vaults, and excludes
-Codex-runtime variants (`codex-*`) and non-skill infra (`.github`,
-`classroom-assets`, `marketing-os`, `member-workflows`). Without `gh`, it falls
-back to the built-in canonical list and says so.
+When the `gh` CLI is installed and authenticated, this **sweeps the entire
+`AI-Marketing-Hub` org** and installs/refreshes *every* repo it publishes — no
+curated allow/deny list. Each repo is handled by detecting its type: repos that
+ship a Claude plugin (`.claude-plugin/marketplace.json`) are plugin-installed or
+`claude plugin update`d (claude-ads, claude-seo, claude-blog, sales-brain,
+social-hub, …); the rest are cloned/fast-forwarded as `~/.claude/skills` brains.
+The only repos skipped are structural non-installs (`master-brain` itself and the
+org `.github` profile). A repo newly added to the org joins the fleet
+automatically — no edit to `brains.sh`. Without `gh`, it falls back to the offline
+canonical skills-clone list (plugins can't be resolved) and says so.
 
-It then fast-forwards every brain that's a git checkout in `~/.claude/skills` and
-clones any newly discovered brain that isn't present yet. A brain with
-uncommitted local changes (or a non-fast-forward history) is reported as a failed
-pull rather than force-updated — never clobber local work.
+> **Why the full sweep.** Install-time filtering is what silently dropped
+> `claude-seo`. The rule is install everything the org has; pick what to *run*
+> locally. Do not reintroduce a hardcoded plugin or exclusion list here.
+
+It fast-forwards every brain that's a git checkout in `~/.claude/skills`, clones
+any newly discovered skill brain that isn't present yet, and plugin-installs any
+new plugin brain. A brain with uncommitted local changes (or a non-fast-forward
+history) is reported as a failed pull rather than force-updated — never clobber
+local work.
 
 Finally, it **registers slash commands**: every resolved brain that ships a
 `commands/` dir has its `commands/*.md` symlinked into `~/.claude/commands` so
@@ -85,9 +92,14 @@ This reads from the canonical source repo and refreshes `todos/src`,
 it skips. This is the DOWN direction; `/mb:push` is the UP direction (promote a
 project's tooling edits back into the source repo). Report which files refreshed.
 
-## 4. Refresh the plugin brains (master-brain itself + claude-ads + claude-mem)
+## 4. Refresh master-brain itself + claude-mem
 
-These ship as plugins, not `skills/` clones, so `brains.sh` doesn't touch them.
+The org's own plugin brains (claude-ads, claude-seo, claude-blog, sales-brain,
+social-hub, …) are **already refreshed by the Step 1 sweep** — it runs
+`claude plugin update` on each installed org plugin. Two plugins still need an
+explicit refresh here because they sit *outside* that sweep: `master-brain` itself
+(its marketplace is a local git checkout, below) and `claude-mem` (a public,
+non-org plugin).
 
 **master-brain updates itself here too.** Its marketplace source is a *local git
 checkout* (see `~/.claude/plugins/known_marketplaces.json` → the
@@ -126,9 +138,10 @@ if [ -d "$MB_DIR/.git" ]; then
   git -C "$MB_DIR" pull --ff-only 2>&1   # never clobbers; aborts if local edits conflict
 fi
 
-# (b) re-cache the plugins (mb re-reads from the local checkout above)
+# (b) re-cache master-brain (re-reads from the local checkout above) + claude-mem.
+# Every AI-Marketing-Hub org plugin was already `claude plugin update`d by the
+# Step 1 sweep, so they are NOT repeated here.
 claude plugin update mb@ai-marketing-hub-master-brain
-claude plugin update claude-ads@ai-marketing-hub-claude-ads
 claude plugin update claude-mem@thedotmack
 ```
 

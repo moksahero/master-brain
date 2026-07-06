@@ -1,5 +1,5 @@
 ---
-description: Install the whole AI Marketing Hub fleet — every brain plus the claude-ads and claude-mem plugins — in one shot.
+description: Install the whole AI Marketing Hub fleet — a full sweep of the AI-Marketing-Hub org (every brain, plugin or skill) plus claude-mem — in one shot.
 ---
 
 Read the `master-brain` skill. Then run the install workflow. The brains are
@@ -24,47 +24,51 @@ bash "$SCRIPTS/classroom.sh" show 02-setup-install/09-troubleshooting-your-insta
 # bash "$SCRIPTS/classroom.sh" list   # to see every Setup & Install lesson
 ```
 
-Tell the user what's about to happen: "I'll clone/update the AI Marketing Hub
-brains into `~/.claude/skills` — the canonical fleet (claude-obsidian,
-website-brain, marketing-brain, local-seo-brain,
-client-intelligence-report) **plus any other brain discovered in the
-`AI-Marketing-Hub` org** when `gh` is authenticated — and install the
-claude-ads + claude-mem plugins if they're missing." To preview the full resolved list first, run
-`bash "$SCRIPTS/brains.sh" list`.
+Tell the user what's about to happen: "I'll sweep the **entire `AI-Marketing-Hub`
+org** and install every repo it publishes — no curated allow/deny list. Each repo
+is installed by detecting its type: repos that ship a Claude plugin
+(`.claude-plugin/marketplace.json`) are plugin-installed (claude-ads, claude-seo,
+claude-blog, sales-brain, social-hub, …); the rest are cloned as `~/.claude/skills`
+brains (marketing-brain, website-brain, walt, email-marketing, …). The only repos
+skipped are structural non-installs (`master-brain` itself and the org `.github`
+profile). Pick-and-choose happens at execution time, never at install." To preview
+the full resolved list first, run `bash "$SCRIPTS/brains.sh" list`.
 
-## 2. Install / update the brains
+> **Why the full sweep (don't reintroduce a curated list).** Install-time
+> filtering is exactly what silently dropped `claude-seo` (a plugin repo that
+> nobody remembered to add to a hardcoded list). The rule is: **install
+> everything the org has, decide what to *run* locally.** A repo added to the org
+> tomorrow joins the fleet automatically — no edit to `brains.sh`.
+
+## 2. Sweep the org (installs every brain — plugins AND skills)
 
 ```bash
 bash "$SCRIPTS/brains.sh" install
 ```
 
-This is idempotent: it resolves the fleet (canonical list + any `gh`-discovered
-org brains such as `social-hub`), clones what's missing, and fast-forwards what's
-present (SSH first, HTTPS fallback). If any clone fails, the most likely causes
-are (a) no AI Marketing Hub Pro access on this GitHub account, or (b) git not
-authenticated. Surface the failing repo name and the fix; don't fail silently.
-If `gh` isn't installed or logged in, discovery is skipped (canonical list only)
-— note it and suggest `gh auth login`.
+This is idempotent and does the whole org in one pass: it walks every non-archived
+repo, and for each one either **plugin-installs** it (marketplace add + install,
+when it ships `.claude-plugin/marketplace.json`) or **clones/fast-forwards** it as
+a skills brain. Existing working clones are fast-forwarded, not disturbed. If an
+install fails, the most likely causes are (a) no AI Marketing Hub Pro access on
+this GitHub account, or (b) git/gh not authenticated. Surface the failing repo name
+and the fix; don't fail silently. `gh` must be installed **and authenticated** for
+the sweep and for plugin detection — without it, only the offline canonical
+skills-clone list runs and plugins can't be resolved; note it and suggest
+`gh auth login`.
 
-## 3. Install the plugin brains (claude-ads + claude-mem)
+## 3. Confirm claude-mem (external, installed by the sweep)
 
-Two brains ship as Claude **plugins**, not `~/.claude/skills` clones, so they're
-installed separately. Check `~/.claude/plugins/installed_plugins.json` for each
-entry and install whichever is missing.
+The org-hosted plugin brains (claude-ads, claude-seo, claude-blog, …) are installed
+by the Step 2 org sweep, and **claude-mem is installed by that same sweep too** —
+`brains.sh` carries it in its `EXTERNAL_PLUGINS` list because it lives at
+`thedotmack/claude-mem`, **outside** the AI-Marketing-Hub org, so an org walk can
+never discover it. There is no separate per-plugin list to maintain here anymore;
+this step just confirms the result.
 
-**claude-ads** (`claude-ads@ai-marketing-hub-claude-ads`) — the paid-media brain.
-It's a multi-skill repo that only loads as a plugin (a bare `skills/` clone has no
-top-level `SKILL.md` and won't load), so it is **not** cloned by `brains.sh`:
-
-```bash
-claude plugin marketplace add AI-Marketing-Hub/claude-ads
-claude plugin install claude-ads@ai-marketing-hub-claude-ads
-```
-
-It's a private, members-only repo, so this needs the same Pro access + git auth as
-the cloned brains.
-
-**claude-mem** (`claude-mem@thedotmack`) — cross-session memory (public):
+**claude-mem** (`claude-mem@thedotmack`) — cross-session memory (public). It's
+already handled by Step 2; only run this by hand if you skipped the sweep or it
+reported a failure:
 
 ```bash
 claude plugin marketplace add thedotmack/claude-mem
@@ -73,8 +77,8 @@ claude plugin install claude-mem@thedotmack
 
 If the `claude` CLI plugin commands aren't available in this environment, fall
 back to each project's documented installer (for claude-mem,
-`npx claude-mem@latest install`) and tell the user. If a plugin is already
-installed, say so and skip.
+`npx claude-mem@latest install`) and tell the user. If it's already installed, say
+so and skip.
 
 ## 3b. Install the humanizer skill (writing quality)
 

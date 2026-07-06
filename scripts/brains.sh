@@ -1,40 +1,40 @@
 #!/usr/bin/env bash
-# master-brain :: canonical registry of AI Marketing Hub brains + clone/update/status helpers.
+# master-brain :: sweep the AI Marketing Hub org and install EVERY brain — clone/
+# update/status helpers.
 #
 # Usage:
-#   bash brains.sh list      # print the resolved brain repo names (one per line)
-#   bash brains.sh discover  # gh-walk the org, print brains NOT already canonical
-#   bash brains.sh install   # clone any missing brain, fast-forward the rest
-#   bash brains.sh update    # same as install (idempotent)
-#   bash brains.sh status    # show install state + version + last commit per brain
+#   bash brains.sh list      # print the resolved repo names (one per line)
+#   bash brains.sh discover  # gh-walk the org, print repos NOT already canonical
+#   bash brains.sh install   # install every org repo (plugin OR skill), update rest
+#   bash brains.sh update    # same as install (idempotent) + fast-forwards
+#   bash brains.sh status    # show install state + version + last commit per repo
 #
-# Brains are private, members-only repos in the AI-Marketing-Hub org. Cloning
-# requires that your git is authenticated to GitHub (SSH key or gh/credential
-# helper). We try SSH first, then fall back to HTTPS.
+# Brains are private, members-only repos in the AI-Marketing-Hub org. Cloning /
+# plugin-installing requires that your git + gh are authenticated to GitHub (SSH
+# key or gh/credential helper) with AI Marketing Hub Pro access.
 #
-# DISCOVERY: when the `gh` CLI is installed and authenticated, install/update/
-# status/list walk the ENTIRE org and pick up any new brain automatically — so a
-# repo added to AI-Marketing-Hub (e.g. social-hub) joins the fleet with no edit
-# here. We include both Claude plugins and Obsidian-brain vaults, and exclude
-# Codex-runtime variants (codex-*) and non-skill infra (see DENY_EXACT). Without
-# gh, we degrade gracefully to the static canonical list below.
+# POLICY (why this file changed): the sweep installs EVERYTHING the org publishes.
+# We do NOT keep a hand-curated allow/deny list of which repos are "worth" it —
+# that curation is exactly what silently dropped claude-seo. Instead we walk the
+# whole org and install each repo by DETECTING its type:
+#   * has .claude-plugin/marketplace.json  -> install as a Claude PLUGIN
+#   * otherwise                            -> clone as a skills/ brain
+# The only repos skipped are STRUCTURAL non-installs (this repo itself, and the
+# org's .github profile repo) — not a judgement about value. Pick-and-choose
+# happens at EXECUTION time locally, never at install time. New repos added to the
+# org are picked up automatically with zero edits here.
 
 set -uo pipefail
 
 ORG="AI-Marketing-Hub"
 SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
 COMMANDS_DIR="${CLAUDE_COMMANDS_DIR:-$HOME/.claude/commands}"
+INSTALLED_PLUGINS="$HOME/.claude/plugins/installed_plugins.json"
 
-# Canonical brains, in recommended read/install order. Discovery appends any
-# other org brains after these; this list just guarantees order + an offline
-# fallback when gh is unavailable.
-#   claude-obsidian             knowledge substrate every brain writes into
-#   website-brain               crawl a site into an Obsidian vault
-#   marketing-brain             competitors + keywords + growth (SEO) plan
-#   local-seo-brain             GBP / map pack / citations / reviews
-#   client-intelligence-report  the fused multi-brain client report (Mega-Brain)
-# claude-ads is intentionally NOT here: it ships as a Claude plugin
-# (claude-ads@ai-marketing-hub-claude-ads), installed by /mb:install, not cloned.
+# Canonical brains, in recommended read/install order. Discovery appends every
+# OTHER org repo after these; this list only guarantees ordering + an offline
+# fallback when gh is unavailable. Membership here is NOT a filter — repos not
+# listed are still installed, just after these.
 BRAINS=(
   "claude-obsidian"
   "website-brain"
@@ -43,28 +43,27 @@ BRAINS=(
   "client-intelligence-report"
 )
 
-# Org repos that are NOT installable Claude brains: org infra, standalone apps,
-# asset dumps, and master-brain itself. Codex-runtime variants (codex-*) are
-# excluded separately by prefix. Edit this list to tune what discovery picks up.
-DENY_EXACT=(
-  # claude-ads is a real brain but ships as a Claude plugin, not a skills/ clone,
-  # so exclude it from gh-discovery to avoid a dead duplicate in ~/.claude/skills.
-  "claude-ads"
-  ".github"
-  "classroom-assets"
-  "marketing-os"
-  "member-workflows"
-  "master-brain"
+# External fleet plugins that live OUTSIDE the AI-Marketing-Hub org, so the org
+# sweep structurally cannot discover them — they must be listed explicitly. This
+# is NOT the curated org allow/deny list the sweep abolished: these repos are in
+# other orgs entirely, so an org walk can never reach them. Each entry is
+# "<marketplace-add-arg>|<plugin@marketplace ref>".
+#   claude-mem  cross-session memory (public, thedotmack/claude-mem)
+EXTERNAL_PLUGINS=(
+  "thedotmack/claude-mem|claude-mem@thedotmack"
 )
 
 repo_url_ssh()   { printf 'git@github.com:%s/%s.git' "$ORG" "$1"; }
 repo_url_https() { printf 'https://github.com/%s/%s.git' "$ORG" "$1"; }
 
-# True (0) when a repo name should be skipped by discovery.
-is_denied() {
-  local name="$1" d
-  case "$name" in codex-*) return 0 ;; esac
-  for d in "${DENY_EXACT[@]}"; do [ "$name" = "$d" ] && return 0; done
+# STRUCTURAL skips only — repos that have nothing installable for Claude Code, not
+# a value judgement. `master-brain` is THIS repo (cloning it into skills/ under
+# itself is nonsensical/recursive); `.github` is the org profile-README repo.
+# Everything else in the org gets installed.
+is_structural_skip() {
+  case "$1" in
+    master-brain|.github) return 0 ;;
+  esac
   return 1
 }
 
@@ -77,12 +76,12 @@ gh_org_repos() {
     --jq '.[] | select(.isArchived | not) | .name' 2>/dev/null
 }
 
-# Print the discovered brains that are NOT already in the canonical list.
+# Print the discovered repos that are NOT already in the canonical list.
 discover_new() {
   local name found b
   gh_org_repos | while IFS= read -r name; do
     [ -z "$name" ] && continue
-    is_denied "$name" && continue
+    is_structural_skip "$name" && continue
     found=0
     for b in "${BRAINS[@]}"; do [ "$b" = "$name" ] && { found=1; break; }; done
     [ "$found" -eq 1 ] && continue
@@ -91,7 +90,7 @@ discover_new() {
 }
 
 # Populate the global RESOLVED array: canonical brains first (order preserved),
-# then any gh-discovered extras. Falls back to canonical-only without gh.
+# then every gh-discovered org repo. Falls back to canonical-only without gh.
 RESOLVED=()
 resolve_brains() {
   RESOLVED=("${BRAINS[@]}")
@@ -99,6 +98,101 @@ resolve_brains() {
   while IFS= read -r name; do
     [ -n "$name" ] && RESOLVED+=("$name")
   done < <(discover_new)
+}
+
+# --- Plugin detection + install ------------------------------------------------
+# A repo is a Claude plugin when it ships .claude-plugin/marketplace.json. We
+# detect it live via the GitHub API (cached per run) so the sweep never needs a
+# hardcoded plugin list. This is what makes claude-ads / claude-seo / claude-blog
+# (and any future plugin brain) install automatically.
+declare -A PLUGIN_CACHE
+repo_is_plugin() {
+  local name="$1"
+  if [ -z "${PLUGIN_CACHE[$name]:-}" ]; then
+    if command -v gh >/dev/null 2>&1 \
+       && gh api "repos/$ORG/$name/contents/.claude-plugin/marketplace.json" >/dev/null 2>&1; then
+      PLUGIN_CACHE[$name]=yes
+    else
+      PLUGIN_CACHE[$name]=no
+    fi
+  fi
+  [ "${PLUGIN_CACHE[$name]}" = yes ]
+}
+
+# Emit "<plugin-name>\t<marketplace-name>" for each plugin declared in a repo's
+# marketplace.json. Used to build the `<plugin>@<marketplace>` install ref.
+plugin_refs() {
+  local name="$1"
+  gh api "repos/$ORG/$name/contents/.claude-plugin/marketplace.json" --jq '.content' 2>/dev/null \
+    | base64 -d 2>/dev/null \
+    | python3 -c 'import json,sys
+try:
+    d=json.load(sys.stdin); m=d.get("name","")
+    for p in d.get("plugins",[]):
+        n=p.get("name","")
+        if n and m: print(n+"\t"+m)
+except Exception:
+    pass' 2>/dev/null
+}
+
+plugin_installed() {
+  grep -q "\"$1\"" "$INSTALLED_PLUGINS" 2>/dev/null
+}
+
+# Install (or, in update mode, refresh) every plugin declared by a plugin repo.
+install_plugin() {
+  local name="$1" mode="${2:-install}" pl mk ref got=0
+  while IFS=$'\t' read -r pl mk; do
+    [ -z "$pl" ] || [ -z "$mk" ] && continue
+    got=1
+    ref="${pl}@${mk}"
+    if plugin_installed "$ref"; then
+      if [ "$mode" = "update" ]; then
+        printf '  \xe2\x86\xbb  %-28s plugin \xe2\x80\x94 updating (%s)\n' "$name" "$ref"
+        claude plugin update "$ref" >/dev/null 2>&1 \
+          || printf '        \xe2\x9a\xa0  update failed\n'
+      else
+        printf '  \xe2\x80\xa2  %-28s plugin \xe2\x80\x94 already installed (%s)\n' "$name" "$ref"
+      fi
+    else
+      printf '  \xe2\x86\x93  %-28s plugin \xe2\x80\x94 installing (%s)\n' "$name" "$ref"
+      claude plugin marketplace add "$ORG/$name" >/dev/null 2>&1
+      if claude plugin install "$ref" >/dev/null 2>&1; then
+        printf '        installed\n'
+      else
+        printf '        \xe2\x9a\xa0  install failed \xe2\x80\x94 confirm AI Marketing Hub Pro access + git auth\n'
+      fi
+    fi
+  done < <(plugin_refs "$name")
+  if [ "$got" -eq 0 ]; then
+    printf '  \xe2\x9a\xa0  %-28s marked plugin but no plugins parsed \xe2\x80\x94 skipping\n' "$name"
+  fi
+}
+
+# Install (or, in update mode, refresh) the external, non-org fleet plugins
+# (claude-mem, …). Runs regardless of gh — these don't need org discovery.
+install_external_plugins() {
+  local mode="${1:-install}" entry add ref name
+  for entry in "${EXTERNAL_PLUGINS[@]}"; do
+    add="${entry%%|*}"; ref="${entry##*|}"; name="${ref%@*}"
+    if plugin_installed "$ref"; then
+      if [ "$mode" = "update" ]; then
+        printf '  \xe2\x86\xbb  %-28s external plugin \xe2\x80\x94 updating (%s)\n' "$name" "$ref"
+        claude plugin update "$ref" >/dev/null 2>&1 \
+          || printf '        \xe2\x9a\xa0  update failed\n'
+      else
+        printf '  \xe2\x80\xa2  %-28s external plugin \xe2\x80\x94 already installed (%s)\n' "$name" "$ref"
+      fi
+    else
+      printf '  \xe2\x86\x93  %-28s external plugin \xe2\x80\x94 installing (%s)\n' "$name" "$ref"
+      claude plugin marketplace add "$add" >/dev/null 2>&1
+      if claude plugin install "$ref" >/dev/null 2>&1; then
+        printf '        installed\n'
+      else
+        printf '        \xe2\x9a\xa0  install failed \xe2\x80\x94 try each project'\''s installer (e.g. npx claude-mem@latest install)\n'
+      fi
+    fi
+  done
 }
 
 MASTER_BRAIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." 2>/dev/null && pwd || true)"
@@ -126,31 +220,46 @@ clone_or_update() {
   fi
 }
 
+# Install one org repo the right way: already a working skills clone -> keep it
+# fast-forwarded (don't disturb a functioning brain); else if it's a plugin repo
+# -> plugin-install; else -> clone as a skills brain.
+install_one() {
+  local name="$1" mode="$2"
+  is_structural_skip "$name" && return 0
+  if [ -d "$SKILLS_DIR/$name/.git" ] || [ -d "$SKILLS_DIR/$name" ]; then
+    clone_or_update "$name"
+  elif repo_is_plugin "$name"; then
+    install_plugin "$name" "$mode"
+  else
+    clone_or_update "$name"
+  fi
+}
+
 # Make each cloned brain's commands runnable as top-level slash commands by
 # symlinking every commands/*.md into the personal commands dir. Brains that ship
 # as skills/ clones (not plugins) otherwise expose no slash commands at all — this
-# closes that gap so /goal, /start, /campaign, etc. work everywhere.
+# closes that gap so /goal, /start, /campaign, etc. work everywhere. Plugins wire
+# their own commands, so this pass only touches skills/ clones.
 #
-# Scope: EVERY installed skill dir that has a commands/ dir (gh-independent), minus
-# the codex-*/DENY_EXACT exclusions. Last writer wins on a name clash and each
-# collision is logged (not silenced), so an overridden command is always visible in
-# the update output. Set CLAUDE_SKIP_CMD_REGISTER=1 to opt out.
+# codex-* dirs are skipped here (command registration only): they are a different
+# runtime and must never SHADOW a Claude command of the same name. This is a
+# collision-safety guard, not an install filter — the codex repos are still
+# installed, their commands just aren't symlinked into the Claude command space.
 declare -A CMD_OWNER
+skip_cmd_register() {
+  case "$1" in codex-*) return 0 ;; esac
+  is_structural_skip "$1"
+}
 register_commands() {
   [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && { echo "  command registration skipped (CLAUDE_SKIP_CMD_REGISTER=1)"; return 0; }
   local name src f base dest n=0 d
   CMD_OWNER=()
   mkdir -p "$COMMANDS_DIR"
   echo "  registering brain commands into ${COMMANDS_DIR} ..."
-  # Scan EVERY installed skill dir on disk (not just the gh-RESOLVED fleet): this
-  # keeps registration working when gh is unauthenticated during an update — which
-  # would otherwise collapse RESOLVED to the canonical few and silently drop
-  # /goal, /start, /campaign, /brain-*, etc. Honor the same exclusions discovery
-  # uses (codex-* runtime variants + DENY_EXACT) so codex-obsidian doesn't clash.
   for d in "$SKILLS_DIR"/*/; do
     [ -d "$d" ] || continue
     name="$(basename "$d")"
-    is_denied "$name" && continue
+    skip_cmd_register "$name" && continue
     src="$SKILLS_DIR/$name/commands"
     [ -d "$src" ] || continue
     for f in "$src"/*.md; do
@@ -199,6 +308,8 @@ brain_status() {
     sha="$(git -C "$dest" log -1 --format='%h %cd' --date=short 2>/dev/null || echo '-')"
   elif [ -d "$dest" ]; then
     state="dir"
+  elif repo_is_plugin "$name" && { ver=""; while IFS=$'\t' read -r pl mk; do [ -n "$pl" ] && plugin_installed "${pl}@${mk}" && ver="installed"; done < <(plugin_refs "$name"); [ -n "$ver" ]; }; then
+    state="plugin"; sha="(plugin)"; ver="-"
   else
     state="MISSING"
   fi
@@ -216,31 +327,33 @@ case "$cmd" in
     ;;
   discover)
     if ! command -v gh >/dev/null 2>&1; then
-      echo "gh CLI not found — install it to auto-discover new org brains." >&2
+      echo "gh CLI not found — install it to auto-discover org repos." >&2
       exit 1
     fi
     if ! gh auth status >/dev/null 2>&1; then
-      echo "gh is not authenticated — run 'gh auth login' to auto-discover new org brains." >&2
+      echo "gh is not authenticated — run 'gh auth login' to auto-discover org repos." >&2
       exit 1
     fi
     discover_new
     ;;
   install|update)
-    echo "master-brain :: ${cmd} into ${SKILLS_DIR}"
+    echo "master-brain :: ${cmd} into ${SKILLS_DIR} (+ plugins)"
     if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-      echo "  discovering brains across the ${ORG} org via gh ..."
+      echo "  sweeping the entire ${ORG} org via gh — installing every repo (plugin or skill) ..."
     else
-      echo "  gh unavailable or not authed -- using the built-in canonical list only."
+      echo "  gh unavailable or not authed -- using the built-in canonical list only (plugins can't be resolved)."
     fi
     resolve_brains
     mkdir -p "$SKILLS_DIR"
-    for b in "${RESOLVED[@]}"; do clone_or_update "$b"; done
+    for b in "${RESOLVED[@]}"; do install_one "$b" "$cmd"; done
+    echo "  external (non-org) fleet plugins ..."
+    install_external_plugins "$cmd"
     register_commands
     echo "done."
     ;;
   status)
     resolve_brains
-    echo "master-brain :: brain fleet in ${SKILLS_DIR}"
+    echo "master-brain :: brain fleet in ${SKILLS_DIR} (+ plugins)"
     printf '  %-28s %-8s %-9s %s\n' "BRAIN" "STATE" "VERSION" "LAST COMMIT"
     for b in "${RESOLVED[@]}"; do brain_status "$b"; done
     ;;
