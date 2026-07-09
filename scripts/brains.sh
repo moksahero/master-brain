@@ -286,18 +286,22 @@ register_commands() {
 # We COPY (not symlink) because this script usually runs from the versioned plugin
 # cache (…/mb/<ver>/scripts), whose path changes every release — a symlink would go
 # stale on the next bump, whereas /mb:update re-copies fresh content each run.
+# Value is a space-separated list of top-level slash filenames to expose for the
+# same source command (so one brain-op command can carry an alias). youtuber.md
+# ships as both /youtuber (primary, matches the command name) and /youtube (alias).
 declare -A MB_BRAIN_COMMANDS=(
-  ["youtuber.md"]="youtube.md"
+  ["youtuber.md"]="youtuber.md youtube.md"
 )
 register_master_brain_commands() {
   [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && return 0
   local src_dir="$MASTER_BRAIN_DIR/commands" from to
   [ -d "$src_dir" ] || return 0
   for from in "${!MB_BRAIN_COMMANDS[@]}"; do
-    to="${MB_BRAIN_COMMANDS[$from]}"
     [ -f "$src_dir/$from" ] || continue
-    cp -f "$src_dir/$from" "$COMMANDS_DIR/$to"
-    printf '        /%s registered (master-brain brain-op: %s)\n' "${to%.md}" "${from%.md}"
+    for to in ${MB_BRAIN_COMMANDS[$from]}; do
+      cp -f "$src_dir/$from" "$COMMANDS_DIR/$to"
+      printf '        /%s registered (master-brain brain-op: %s)\n' "${to%.md}" "${from%.md}"
+    done
   done
 }
 

@@ -7,10 +7,17 @@
 .DS_Store
 Thumbs.db
 
-# project runtime artifacts (when master-brain is used in a project dir)
-data/
-reports/
-wiki/.obsidian/workspace*.json
+# project runtime artifacts (when master-brain is used in a project dir).
+# Anchored to repo root so they don't silently eat vendored brain template files
+# under brains/ (e.g. brains/youtube-brain/**/wiki/reports/).
+/data/
+/reports/
+/wiki/.obsidian/workspace*.json
+
+# Vendored brains: ship the tooling + templates, but never commit generated
+# creator vaults or per-machine Obsidian workspace state.
+brains/*/vaults/
+brains/**/.obsidian/workspace*.json
 
 # todos/ moved out to the standalone bazinga-hq app — no longer shipped by the plugin
 todos/

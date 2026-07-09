@@ -18,13 +18,21 @@ resolve_yt() {
   if [ -n "${YOUTUBE_BRAIN_DIR:-}" ] && [ -f "$YOUTUBE_BRAIN_DIR/scripts/scaffold_vault.py" ]; then
     echo "$YOUTUBE_BRAIN_DIR"; return 0
   fi
-  # 2) current dir / ancestors
+  # 2) bundled inside master-brain — ships with a plugin install or a repo clone,
+  #    so /youtuber works with zero setup. Checked before the filesystem walk.
+  for cand in \
+    "${CLAUDE_PLUGIN_ROOT:-}/brains/youtube-brain" \
+    "$HOME/.claude/skills/master-brain/brains/youtube-brain" \
+    "$HOME/master-brain/brains/youtube-brain"; do
+    [ -n "$cand" ] && [ -f "$cand/scripts/scaffold_vault.py" ] && { echo "$cand"; return 0; }
+  done
+  # 3) current dir / ancestors
   d="$PWD"
   while [ "$d" != "/" ]; do
     [ -f "$d/scripts/scaffold_vault.py" ] && grep -q "name: youtube-brain" "$d/SKILL.md" 2>/dev/null && { echo "$d"; return 0; }
     d="$(dirname "$d")"
   done
-  # 3) scan the master-brain project registry
+  # 4) scan the master-brain project registry
   while IFS= read -r p; do
     [ -f "$p/scripts/scaffold_vault.py" ] && grep -q "name: youtube-brain" "$p/SKILL.md" 2>/dev/null && { echo "$p"; return 0; }
   done < "${MB_PROJECTS_FILE:-$HOME/.claude/master-brain-projects.txt}"
@@ -33,10 +41,13 @@ resolve_yt() {
 YT="$(resolve_yt)" && echo "YouTube Brain: $YT" || echo "NOT FOUND"
 ```
 
-If it prints `NOT FOUND`, tell the user the YouTube Brain repo isn't on this
-machine (clone `git@github.com:AgriciDaniel/youtuber.git` or set
-`YOUTUBE_BRAIN_DIR`) and stop. Otherwise `cd "$YT"` and run everything below
-from there. Read `$YT/SKILL.md` as the authoritative spec.
+The YouTube Brain normally ships **bundled inside master-brain** at
+`brains/youtube-brain/`, so a fresh clone or plugin install of master-brain has
+it already (candidate 2 above). If it prints `NOT FOUND`, the bundle is missing —
+reinstall/clone master-brain (or set `YOUTUBE_BRAIN_DIR` to a standalone
+`git@github.com:AgriciDaniel/youtuber.git` checkout) — then stop. Otherwise
+`cd "$YT"` and run everything below from there. Read `$YT/SKILL.md` as the
+authoritative spec.
 
 ## Operating rules (always)
 
