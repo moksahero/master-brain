@@ -24,6 +24,7 @@ and tells you the next step.
 | `/mb:idk <goal>` | Any time you're unsure. Routes you to the right brain/command for what you're trying to do. |
 | `/mb:init <goal>` | Starting a new client/project — scaffolds the workspace (`wiki/`, `data/`, `todos/`, `CLAUDE.md`), wires the right brains, and queues the first TODOs from the blessed prompts. |
 | `/mb:report <url>` | When you want the fused multi-brain client intelligence report (the agency-grade bilingual PDF) for a site. |
+| `/mb:ads-google [client] [mode]` | Operating a live Google Ads account week to week. Phase-gated (launch-check / watch / optimize / audit), budget-calibrated, and it trains itself via a playbook + experiment ledger in your workspace. |
 
 ## Inside `/mb:init` — what it actually does
 

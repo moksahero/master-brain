@@ -43,6 +43,7 @@ Then, in Claude Code:
 | `/mb:update` | Fast-forward every installed brain to the latest version. |
 | `/mb:doctor` | Health check: installs, API keys (present/absent), tooling, todo backlog. |
 | `/mb:report` | Drive the fused multi-brain client intelligence report for a URL. |
+| `/mb:ads-google` | Phase-gated Google Ads operator: live GAQL review, small-budget calibration, cross-client playbook/ledger training loop. |
 | `/mb:todos-add` | Add a manual follow-up TODO to the backlog. |
 | `/mb:todos-routine` | Generate recurring TODOs on a cadence (pair with `/schedule`). |
 | `/mb:todos-list` | List the TODO backlog (open / done / all). |
