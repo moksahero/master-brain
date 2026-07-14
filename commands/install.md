@@ -1,5 +1,5 @@
 ---
-description: Install the whole AI Marketing Hub fleet — a full sweep of the AI-Marketing-Hub org (every brain, plugin or skill) plus claude-mem — in one shot.
+description: Install the whole AI Marketing Hub fleet — a full sweep of the AI-Marketing-Hub org and the AgriciDaniel public account (every brain, plugin or skill) plus claude-mem — in one shot.
 ---
 
 Read the `master-brain` skill. Then run the install workflow. The brains are
@@ -24,15 +24,18 @@ bash "$SCRIPTS/classroom.sh" show 02-setup-install/09-troubleshooting-your-insta
 # bash "$SCRIPTS/classroom.sh" list   # to see every Setup & Install lesson
 ```
 
-Tell the user what's about to happen: "I'll sweep the **entire `AI-Marketing-Hub`
-org** and install every repo it publishes — no curated allow/deny list. Each repo
-is installed by detecting its type: repos that ship a Claude plugin
-(`.claude-plugin/marketplace.json`) are plugin-installed (claude-ads, claude-seo,
-claude-blog, sales-brain, social-hub, …); the rest are cloned as `~/.claude/skills`
-brains (marketing-brain, website-brain, walt, email-marketing, …). The only repos
-skipped are structural non-installs (`master-brain` itself and the org `.github`
-profile). Pick-and-choose happens at execution time, never at install." To preview
-the full resolved list first, run `bash "$SCRIPTS/brains.sh" list`.
+Tell the user what's about to happen: "I'll sweep **every fleet source** — the
+`AI-Marketing-Hub` org AND the `AgriciDaniel` public account — and install every
+repo they publish, no curated allow/deny list. Each repo is installed by detecting
+its type: repos that ship a Claude plugin (`.claude-plugin/marketplace.json`) are
+plugin-installed (claude-ads, claude-seo, claude-blog, sales-brain, social-hub, …);
+the rest are cloned as `~/.claude/skills` brains (marketing-brain, website-brain,
+walt, claude-video, skill-forge, …). On a repo-name collision the org wins (it
+ships active development; the personal account ships public releases of the same
+tools). The only repos skipped are structural non-installs (`master-brain` itself,
+`.github`/profile-README repos, and forks of third-party repos). Pick-and-choose
+happens at execution time, never at install." To preview the full resolved list
+first, run `bash "$SCRIPTS/brains.sh" list`.
 
 > **Why the full sweep (don't reintroduce a curated list).** Install-time
 > filtering is exactly what silently dropped `claude-seo` (a plugin repo that

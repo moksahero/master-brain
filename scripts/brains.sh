@@ -1,32 +1,39 @@
 #!/usr/bin/env bash
-# master-brain :: sweep the AI Marketing Hub org and install EVERY brain — clone/
+# master-brain :: sweep every fleet source and install EVERY brain — clone/
 # update/status helpers.
 #
 # Usage:
 #   bash brains.sh list      # print the resolved repo names (one per line)
-#   bash brains.sh discover  # gh-walk the org, print repos NOT already canonical
-#   bash brains.sh install   # install every org repo (plugin OR skill), update rest
+#   bash brains.sh discover  # gh-walk the sources, print owner/repo NOT canonical
+#   bash brains.sh install   # install every repo (plugin OR skill), update rest
 #   bash brains.sh update    # same as install (idempotent) + fast-forwards
 #   bash brains.sh status    # show install state + version + last commit per repo
 #
-# Brains are private, members-only repos in the AI-Marketing-Hub org. Cloning /
-# plugin-installing requires that your git + gh are authenticated to GitHub (SSH
-# key or gh/credential helper) with AI Marketing Hub Pro access.
+# The fleet sweeps every source in SOURCES, in order: the AI-Marketing-Hub org
+# (private, members-only — cloning/plugin-installing requires git + gh
+# authenticated with AI Marketing Hub Pro access) and the AgriciDaniel personal
+# account (public releases of the same ecosystem). On a repo-NAME collision the
+# EARLIER source wins — the org ships the active-development versions of
+# claude-seo / claude-blog / claude-ads etc., the personal account their public
+# releases, so the org must stay canonical.
 #
-# POLICY (why this file changed): the sweep installs EVERYTHING the org publishes.
-# We do NOT keep a hand-curated allow/deny list of which repos are "worth" it —
-# that curation is exactly what silently dropped claude-seo. Instead we walk the
-# whole org and install each repo by DETECTING its type:
+# POLICY (why this file changed): the sweep installs EVERYTHING the sources
+# publish. We do NOT keep a hand-curated allow/deny list of which repos are
+# "worth" it — that curation is exactly what silently dropped claude-seo. Instead
+# we walk each source and install each repo by DETECTING its type:
 #   * has .claude-plugin/marketplace.json  -> install as a Claude PLUGIN
 #   * otherwise                            -> clone as a skills/ brain
-# The only repos skipped are STRUCTURAL non-installs (this repo itself, and the
-# org's .github profile repo) — not a judgement about value. Pick-and-choose
-# happens at EXECUTION time locally, never at install time. New repos added to the
-# org are picked up automatically with zero edits here.
+# The only repos skipped are STRUCTURAL non-installs (this repo itself, .github /
+# profile-README repos, forks of third-party repos, and same-name repos already
+# taken by an earlier source) — not a judgement about value. Pick-and-choose
+# happens at EXECUTION time locally, never at install time. New repos added to a
+# source are picked up automatically with zero edits here.
 
 set -uo pipefail
 
-ORG="AI-Marketing-Hub"
+# Sweep sources, in priority order — first source wins repo-name collisions.
+SOURCES=("AI-Marketing-Hub" "AgriciDaniel")
+ORG="${SOURCES[0]}"
 SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
 COMMANDS_DIR="${CLAUDE_COMMANDS_DIR:-$HOME/.claude/commands}"
 INSTALLED_PLUGINS="$HOME/.claude/plugins/installed_plugins.json"
@@ -53,50 +60,67 @@ EXTERNAL_PLUGINS=(
   "thedotmack/claude-mem|claude-mem@thedotmack"
 )
 
-repo_url_ssh()   { printf 'git@github.com:%s/%s.git' "$ORG" "$1"; }
-repo_url_https() { printf 'https://github.com/%s/%s.git' "$ORG" "$1"; }
+# Repo name -> owning source. Canonical brains and first-discovered names claim
+# ownership; later sources never override (org stays canonical on collisions).
+declare -A REPO_OWNER
+owner_of() { printf '%s' "${REPO_OWNER[$1]:-$ORG}"; }
+
+repo_url_ssh()   { printf 'git@github.com:%s/%s.git' "$(owner_of "$1")" "$1"; }
+repo_url_https() { printf 'https://github.com/%s/%s.git' "$(owner_of "$1")" "$1"; }
 
 # STRUCTURAL skips only — repos that have nothing installable for Claude Code, not
 # a value judgement. `master-brain` is THIS repo (cloning it into skills/ under
-# itself is nonsensical/recursive); `.github` is the org profile-README repo.
-# Everything else in the org gets installed.
+# itself is nonsensical/recursive); `.github` is an org profile-README repo; a
+# repo named after its owner is a personal profile-README repo. Second arg is the
+# source owner (optional).
 is_structural_skip() {
   case "$1" in
     master-brain|.github) return 0 ;;
   esac
+  [ -n "${2:-}" ] && [ "$1" = "$2" ] && return 0
   return 1
 }
 
-# Walk the org via gh and print every non-archived repo name. Silent no-op
+# Walk one source via gh and print every non-archived, non-fork repo name. Forks
+# are third-party repos mirrored into the account, not fleet brains. Silent no-op
 # (returns non-zero) when gh is missing or not authenticated.
-gh_org_repos() {
+gh_source_repos() {
+  local owner="$1"
   command -v gh >/dev/null 2>&1 || return 1
   gh auth status >/dev/null 2>&1 || return 1
-  gh repo list "$ORG" --limit 200 --json name,isArchived \
-    --jq '.[] | select(.isArchived | not) | .name' 2>/dev/null
+  gh repo list "$owner" --limit 300 --json name,isArchived,isFork \
+    --jq '.[] | select((.isArchived or .isFork) | not) | .name' 2>/dev/null
 }
 
-# Print the discovered repos that are NOT already in the canonical list.
+# Print discovered "owner<TAB>name" pairs NOT already in the canonical list, all
+# sources in priority order, first source claiming each name.
 discover_new() {
-  local name found b
-  gh_org_repos | while IFS= read -r name; do
-    [ -z "$name" ] && continue
-    is_structural_skip "$name" && continue
-    found=0
-    for b in "${BRAINS[@]}"; do [ "$b" = "$name" ] && { found=1; break; }; done
-    [ "$found" -eq 1 ] && continue
-    printf '%s\n' "$name"
+  local src name found b
+  declare -A seen
+  for b in "${BRAINS[@]}"; do seen[$b]=1; done
+  for src in "${SOURCES[@]}"; do
+    while IFS= read -r name; do
+      [ -z "$name" ] && continue
+      is_structural_skip "$name" "$src" && continue
+      [ -n "${seen[$name]:-}" ] && continue
+      seen[$name]=1
+      printf '%s\t%s\n' "$src" "$name"
+    done < <(gh_source_repos "$src")
   done
 }
 
 # Populate the global RESOLVED array: canonical brains first (order preserved),
-# then every gh-discovered org repo. Falls back to canonical-only without gh.
+# then every gh-discovered repo from each source in priority order. Falls back to
+# canonical-only without gh. Also records each repo's owning source.
 RESOLVED=()
 resolve_brains() {
   RESOLVED=("${BRAINS[@]}")
-  local name
-  while IFS= read -r name; do
-    [ -n "$name" ] && RESOLVED+=("$name")
+  local b src name
+  for b in "${BRAINS[@]}"; do REPO_OWNER[$b]="$ORG"; done
+  while IFS=$'\t' read -r src name; do
+    [ -z "$name" ] && continue
+    REPO_OWNER[$name]="$src"
+    RESOLVED+=("$name")
   done < <(discover_new)
 }
 
@@ -110,7 +134,7 @@ repo_is_plugin() {
   local name="$1"
   if [ -z "${PLUGIN_CACHE[$name]:-}" ]; then
     if command -v gh >/dev/null 2>&1 \
-       && gh api "repos/$ORG/$name/contents/.claude-plugin/marketplace.json" >/dev/null 2>&1; then
+       && gh api "repos/$(owner_of "$name")/$name/contents/.claude-plugin/marketplace.json" >/dev/null 2>&1; then
       PLUGIN_CACHE[$name]=yes
     else
       PLUGIN_CACHE[$name]=no
@@ -123,7 +147,7 @@ repo_is_plugin() {
 # marketplace.json. Used to build the `<plugin>@<marketplace>` install ref.
 plugin_refs() {
   local name="$1"
-  gh api "repos/$ORG/$name/contents/.claude-plugin/marketplace.json" --jq '.content' 2>/dev/null \
+  gh api "repos/$(owner_of "$name")/$name/contents/.claude-plugin/marketplace.json" --jq '.content' 2>/dev/null \
     | base64 -d 2>/dev/null \
     | python3 -c 'import json,sys
 try:
@@ -156,7 +180,7 @@ install_plugin() {
       fi
     else
       printf '  \xe2\x86\x93  %-28s plugin \xe2\x80\x94 installing (%s)\n' "$name" "$ref"
-      claude plugin marketplace add "$ORG/$name" >/dev/null 2>&1
+      claude plugin marketplace add "$(owner_of "$name")/$name" >/dev/null 2>&1
       if claude plugin install "$ref" >/dev/null 2>&1; then
         printf '        installed\n'
       else
@@ -165,7 +189,10 @@ install_plugin() {
     fi
   done < <(plugin_refs "$name")
   if [ "$got" -eq 0 ]; then
-    printf '  \xe2\x9a\xa0  %-28s marked plugin but no plugins parsed \xe2\x80\x94 skipping\n' "$name"
+    # marketplace.json exists but declares no plugins (some repos use it as a
+    # custom install catalog, e.g. claude-video) — caller falls back to a clone.
+    printf '  \xe2\x9a\xa0  %-28s marked plugin but no plugins parsed \xe2\x80\x94 falling back to skills clone\n' "$name"
+    return 1
   fi
 }
 
@@ -229,7 +256,7 @@ install_one() {
   if [ -d "$SKILLS_DIR/$name/.git" ] || [ -d "$SKILLS_DIR/$name" ]; then
     clone_or_update "$name"
   elif repo_is_plugin "$name"; then
-    install_plugin "$name" "$mode"
+    install_plugin "$name" "$mode" || clone_or_update "$name"
   else
     clone_or_update "$name"
   fi
@@ -252,10 +279,23 @@ skip_cmd_register() {
 }
 register_commands() {
   [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && { echo "  command registration skipped (CLAUDE_SKIP_CMD_REGISTER=1)"; return 0; }
-  local name src f base dest n=0 d
+  local name src f base dest n=0 d link
   CMD_OWNER=()
   mkdir -p "$COMMANDS_DIR"
   echo "  registering brain commands into ${COMMANDS_DIR} ..."
+  # Prune symlinks whose target vanished (a brain removed or restructured its
+  # commands/ dir upstream — e.g. claude-obsidian v2.0.0 moved to plugin layout).
+  # Only touches links that point into SKILLS_DIR; user-authored files are safe.
+  for link in "$COMMANDS_DIR"/*.md; do
+    [ -L "$link" ] || continue
+    [ -e "$link" ] && continue
+    case "$(readlink "$link")" in
+      "$SKILLS_DIR"/*)
+        rm -f "$link"
+        printf '        pruned stale /%s (brain removed its command upstream)\n' "$(basename "${link%.md}")"
+        ;;
+    esac
+  done
   for d in "$SKILLS_DIR"/*/; do
     [ -d "$d" ] || continue
     name="$(basename "$d")"
@@ -338,12 +378,12 @@ case "$cmd" in
       echo "gh is not authenticated — run 'gh auth login' to auto-discover org repos." >&2
       exit 1
     fi
-    discover_new
+    discover_new | awk -F'\t' '{print $1 "/" $2}'
     ;;
   install|update)
     echo "master-brain :: ${cmd} into ${SKILLS_DIR} (+ plugins)"
     if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-      echo "  sweeping the entire ${ORG} org via gh — installing every repo (plugin or skill) ..."
+      echo "  sweeping every fleet source via gh (${SOURCES[*]}) — installing every repo (plugin or skill) ..."
     else
       echo "  gh unavailable or not authed -- using the built-in canonical list only (plugins can't be resolved)."
     fi

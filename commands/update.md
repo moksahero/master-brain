@@ -11,16 +11,19 @@ SCRIPTS="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts"
 bash "$SCRIPTS/brains.sh" update
 ```
 
-When the `gh` CLI is installed and authenticated, this **sweeps the entire
-`AI-Marketing-Hub` org** and installs/refreshes *every* repo it publishes — no
-curated allow/deny list. Each repo is handled by detecting its type: repos that
-ship a Claude plugin (`.claude-plugin/marketplace.json`) are plugin-installed or
-`claude plugin update`d (claude-ads, claude-seo, claude-blog, sales-brain,
-social-hub, …); the rest are cloned/fast-forwarded as `~/.claude/skills` brains.
-The only repos skipped are structural non-installs (`master-brain` itself and the
-org `.github` profile). A repo newly added to the org joins the fleet
-automatically — no edit to `brains.sh`. Without `gh`, it falls back to the offline
-canonical skills-clone list (plugins can't be resolved) and says so.
+When the `gh` CLI is installed and authenticated, this **sweeps every fleet
+source** — the `AI-Marketing-Hub` org AND the `AgriciDaniel` public account — and
+installs/refreshes *every* repo they publish — no curated allow/deny list. Each
+repo is handled by detecting its type: repos that ship a Claude plugin
+(`.claude-plugin/marketplace.json`) are plugin-installed or `claude plugin
+update`d (claude-ads, claude-seo, claude-blog, sales-brain, social-hub, …); the
+rest are cloned/fast-forwarded as `~/.claude/skills` brains. On a repo-name
+collision the earlier source wins — the org stays canonical over the personal
+account's public releases. The only repos skipped are structural non-installs
+(`master-brain` itself, `.github`/profile-README repos, and forks of third-party
+repos). A repo newly added to either source joins the fleet automatically — no
+edit to `brains.sh`. Without `gh`, it falls back to the offline canonical
+skills-clone list (plugins can't be resolved) and says so.
 
 > **Why the full sweep.** Install-time filtering is what silently dropped
 > `claude-seo`. The rule is install everything the org has; pick what to *run*
