@@ -163,6 +163,25 @@ plugin_installed() {
   grep -q "\"$1\"" "$INSTALLED_PLUGINS" 2>/dev/null
 }
 
+# Some plugin brains (gogh, fable-5-brain, dataforseo-brain, youtube-brain, …)
+# declare their skill as `"skills": ["./SKILL.md"]` — a root FILE. Claude Code
+# only loads plugin skills from directories, so the plugin's agents appear but
+# the /<skill> command never does. Each of those repos ships an install.sh with
+# a `claude` target that copies the skill surface to ~/.claude/skills/<name>;
+# run it after every plugin install/update so the skill is truly system-wide.
+sync_root_skill_surface() {
+  local pl="$1" mk="$2" dir
+  dir="$(ls -1d "$HOME/.claude/plugins/cache/$mk/$pl"/*/ 2>/dev/null | sort -V | tail -1)"
+  dir="${dir%/}"
+  [ -n "$dir" ] && [ -f "$dir/SKILL.md" ] && [ -f "$dir/install.sh" ] || return 0
+  grep -qs '"\./SKILL\.md"' "$dir/.claude-plugin/plugin.json" "$dir/plugin.json" || return 0
+  if bash "$dir/install.sh" --target claude >/dev/null 2>&1; then
+    printf '        skill surface \xe2\x86\x92 ~/.claude/skills/%s (root-SKILL.md plugins don'\''t auto-load it)\n' "$pl"
+  else
+    printf '        \xe2\x9a\xa0  skill-surface install failed (install.sh --target claude)\n'
+  fi
+}
+
 # Install (or, in update mode, refresh) every plugin declared by a plugin repo.
 install_plugin() {
   local name="$1" mode="${2:-install}" pl mk ref got=0
@@ -178,11 +197,13 @@ install_plugin() {
       else
         printf '  \xe2\x80\xa2  %-28s plugin \xe2\x80\x94 already installed (%s)\n' "$name" "$ref"
       fi
+      sync_root_skill_surface "$pl" "$mk"
     else
       printf '  \xe2\x86\x93  %-28s plugin \xe2\x80\x94 installing (%s)\n' "$name" "$ref"
       claude plugin marketplace add "$(owner_of "$name")/$name" >/dev/null 2>&1
       if claude plugin install "$ref" >/dev/null 2>&1; then
         printf '        installed\n'
+        sync_root_skill_surface "$pl" "$mk"
       else
         printf '        \xe2\x9a\xa0  install failed \xe2\x80\x94 confirm AI Marketing Hub Pro access + git auth\n'
       fi
@@ -315,7 +336,73 @@ register_commands() {
     done
   done
   printf '        %d command(s) registered (%d unique name(s))\n' "$n" "${#CMD_OWNER[@]}"
+  register_skill_aliases
   register_master_brain_commands
+}
+
+# commands/*.md is only half the surface. Most brains expose their real
+# capabilities as SKILL.md files: a root SKILL.md (the brain itself) and one
+# level of sub-skills under <brain>/skills/<sub>/SKILL.md (ads-competitor,
+# seo-audit, blog-write, canvas-export, ...). Plugins surface those ONLY under a
+# plugin: namespace, so from a fresh project you'd have to know the exact
+# /claude-ads:ads-competitor form. This pass symlinks each such SKILL.md as a
+# bare top-level slash command so /ads-competitor (and every sibling) works in
+# every project, with NO per-project /mb:update. Same collision rule as the
+# commands/ pass: a real command file or an earlier owner wins (first-wins), and
+# a user-authored (non-symlink) command of the same name is never clobbered.
+# Scope is deliberately shallow — only <brain>/SKILL.md and
+# <brain>/skills/<sub>/SKILL.md. Deeper SKILL.md files (examples/, vendored
+# copies, nested sub-sub-skills, marketing-os/seo-os resources) are internal and
+# stay unexposed. These symlinks point into SKILLS_DIR, so the stale-link sweep
+# at the top of register_commands auto-prunes any whose skill vanishes upstream.
+register_skill_aliases() {
+  local skillmd brain bare dest a=0 pdir plugin latest
+  # Phase 1: brains that live as skills/ clones under SKILLS_DIR.
+  for skillmd in "$SKILLS_DIR"/*/SKILL.md "$SKILLS_DIR"/*/skills/*/SKILL.md; do
+    [ -e "$skillmd" ] || continue
+    brain="${skillmd#"$SKILLS_DIR"/}"; brain="${brain%%/*}"
+    skip_cmd_register "$brain" && continue
+    bare="$(basename "$(dirname "$skillmd")")"
+    dest="$COMMANDS_DIR/$bare.md"
+    if [ -n "${CMD_OWNER[$bare.md]:-}" ]; then
+      [ "${CMD_OWNER[$bare.md]}" = "$brain" ] || \
+        printf '        \xe2\x9a\xa0  /%s alias skipped: already owned by %s\n' "$bare" "${CMD_OWNER[$bare.md]}"
+      continue
+    fi
+    [ -e "$dest" ] && [ ! -L "$dest" ] && continue
+    ln -sf "$skillmd" "$dest"
+    CMD_OWNER[$bare.md]="$brain"
+    a=$((a+1))
+  done
+  # Phase 2: brains whose skills live ONLY in the versioned plugin cache
+  # (claude-repurpose, banana-claude, claude-music, claude-mem, ...). Resolve each
+  # plugin's CURRENT version dir (highest semver) and alias its canonical
+  # skills/*/SKILL.md. mb (fleet management: /update, /install, /doctor, /todos-*)
+  # is intentionally excluded so those stay under the reserved mb: namespace and
+  # never shadow a same-named brain skill. Symlinks point at the versioned path, so
+  # a version bump breaks the old link — the stale-link sweep at the top of
+  # register_commands prunes it and the next register re-points to the new version.
+  for pdir in "$HOME"/.claude/plugins/cache/*/*/; do
+    plugin="$(basename "$pdir")"
+    case "$plugin" in mb) continue ;; esac
+    latest="$(ls -1d "$pdir"*/ 2>/dev/null | sort -V | tail -1)"
+    [ -n "$latest" ] || continue
+    for skillmd in "$latest"skills/*/SKILL.md; do
+      [ -e "$skillmd" ] || continue
+      bare="$(basename "$(dirname "$skillmd")")"
+      dest="$COMMANDS_DIR/$bare.md"
+      if [ -n "${CMD_OWNER[$bare.md]:-}" ]; then
+        [ "${CMD_OWNER[$bare.md]}" = "$plugin" ] || \
+          printf '        \xe2\x9a\xa0  /%s alias skipped: already owned by %s\n' "$bare" "${CMD_OWNER[$bare.md]}"
+        continue
+      fi
+      [ -e "$dest" ] && [ ! -L "$dest" ] && continue
+      ln -sf "$skillmd" "$dest"
+      CMD_OWNER[$bare.md]="$plugin"
+      a=$((a+1))
+    done
+  done
+  printf '        %d skill(s) aliased as bare commands\n' "$a"
 }
 
 # master-brain's own commands/ dir is mostly MANAGEMENT (update/doctor/install/
@@ -395,6 +482,13 @@ case "$cmd" in
     register_commands
     echo "done."
     ;;
+  register)
+    # Re-wire slash commands + bare skill aliases WITHOUT a network sweep. Fast,
+    # idempotent, safe to run any time a brain adds/removes a skill.
+    echo "master-brain :: registering commands + skill aliases into ${COMMANDS_DIR}"
+    register_commands
+    echo "done."
+    ;;
   status)
     resolve_brains
     echo "master-brain :: brain fleet in ${SKILLS_DIR} (+ plugins)"
@@ -402,7 +496,7 @@ case "$cmd" in
     for b in "${RESOLVED[@]}"; do brain_status "$b"; done
     ;;
   *)
-    echo "usage: brains.sh {list|discover|install|update|status}" >&2
+    echo "usage: brains.sh {list|discover|install|update|register|status}" >&2
     exit 2
     ;;
 esac
