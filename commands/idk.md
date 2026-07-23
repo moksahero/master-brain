@@ -35,6 +35,11 @@ Pick the single most useful next action and say it plainly:
 - **Project exists, open todos** → "You have N open todos — `/mb:todos-list` then `/mb:todos-execute`."
 - **User described a goal in `$ARGUMENTS`** → route them to the right brain using
   the cheat-sheet in the skill, and offer to kick it off.
+- **"What's wrong with my site" / "audit my website" / they hand over a URL and
+  want to know what to fix** → `/website-audit <url>`. It is also the right first
+  move on any existing site before SEO, ads, or report work: it establishes the
+  ground truth (does Google receive an empty page? one canonical everywhere? does
+  the mobile hero render?) those later runs depend on.
 
 If the user passed `$ARGUMENTS` describing what they want (e.g. "rank my plumbing
 business in Austin"), map it to the right brain(s) and propose the exact command

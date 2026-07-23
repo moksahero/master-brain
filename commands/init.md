@@ -13,7 +13,7 @@ Ask these, adapting to anything already given in `$ARGUMENTS`:
 
 1. **New or existing project?** (Is there already a site/business, or are we starting fresh?)
 2. **If new:** OK to create a **Next.js + Tailwind** app under `web/`? (yes / no / different stack)
-3. **What's the focus?** (pick any: **SEO/content**, **local SEO / map pack**, **paid ads** — Google/Meta/TikTok/etc., **website capture**, **just a report**)
+3. **What's the focus?** (pick any: **SEO/content**, **local SEO / map pack**, **paid ads** — Google/Meta/TikTok/etc., **website capture**, **full website audit** — the evidence-only teardown PDF, **just a report**)
 4. **Target market / location?** (city, country, or language — drives local + keyword work)
 5. **Primary website URL** (if any).
 6. **What language should reports be written in?** (e.g. Japanese, English, Spanish — or **bilingual** like Japanese + English; **default Japanese**)
@@ -142,6 +142,18 @@ node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs
      suggestions** (message match, above-the-fold, trust signals, form/CTA, mobile)
      to lift conversion rate.
 - website capture → **website-brain**
+- full website audit → **website-audit** (`/mb:website-audit`, bare `/website-audit`) —
+  the evidence-only teardown: ground-truth curl pass, five parallel specialist
+  lanes (technical SEO, page inventory, content/E-E-A-T, visual/UI with
+  screenshots, marketing/socials/reputation), annotated screenshots, validated
+  charts, and an owner-ready Times New Roman PDF verified page by page. **Queue it
+  first whenever there is an existing site**, whatever the other focus areas are:
+  it produces the ground truth (SPA-without-SSR, duplicate canonicals, broken
+  mobile hero) that the SEO, ads, and report work all depend on. Queue it as:
+  ```bash
+  node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs" \
+    add "/website-audit <url> — full evidence-only audit → PDF" --skill=website-audit --priority=high
+  ```
 - report → **client-intelligence-report** (`/mb:report`)
 
 Use the captured classroom as the canon for *what to queue and in what order*:
@@ -175,7 +187,12 @@ whole pipeline end-to-end automatically:
    `/ads-landing` with LP design suggestions, the SEO/local/website runs, etc.),
    then mark it done. Don't pause between todos.
 
-2. **Generate the client intelligence report as a PDF** — run the fused
+2. **If the project has an existing site, run the full website audit** — invoke
+   **`/website-audit <primary URL>`** (the `website-audit` skill) end to end,
+   including the mandatory page-by-page PDF verification. Its findings files are
+   the evidence base every later chapter cites, so run it before the fused report.
+
+3. **Generate the client intelligence report as a PDF** — run the fused
    multi-brain report via **`/client-intelligence-report`** (`/mb:report`) over the
    primary URL, writing the rendered **PDF** into `reports/`. Write it in
    **Japanese** (the project default) unless `CLAUDE.md` records another language.

@@ -1,0 +1,121 @@
+/* Website Audit report stylesheet — WeasyPrint / A4 / Times New Roman.
+   Inline this into the report HTML (WeasyPrint reads a <style> block fine, and a
+   single self-contained file is easier to hand to a client than css + html).
+   Set --site and --period once in the report, or replace the string in @page. */
+
+@page {
+  size: A4;
+  margin: 20mm 18mm 18mm 18mm;
+  @bottom-center {
+    content: "SITE Website Audit, MONTH YEAR | Page " counter(page) " of " counter(pages);
+    font-family: "Times New Roman", "Liberation Serif", serif;
+    font-size: 8.5pt;
+    color: #666;
+  }
+}
+@page :first { @bottom-center { content: ""; } }
+
+html {
+  font-family: "Times New Roman", "Liberation Serif", serif;
+  font-size: 11pt;
+  line-height: 1.45;
+  color: #111;
+}
+body { text-align: justify; hyphens: auto; }
+
+h1 {
+  font-size: 17pt;
+  border-bottom: 1.5px solid #111;
+  padding-bottom: 4px;
+  margin: 0 0 14px;
+  page-break-before: always;
+  page-break-after: avoid;
+  text-align: left;
+}
+h1.first, .cover + h1 { page-break-before: avoid; }
+h2 { font-size: 13pt; margin: 16px 0 6px; page-break-after: avoid; text-align: left; }
+h3 { font-size: 11.5pt; margin: 12px 0 4px; page-break-after: avoid; text-align: left; }
+p { margin: 0 0 8px; }
+ul, ol { margin: 0 0 8px 18px; padding: 0; }
+li { margin-bottom: 3px; }
+a { color: #3b6fb5; text-decoration: none; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 9.5pt; }
+
+/* --- Cover ---------------------------------------------------------------- */
+.cover { page-break-after: always; text-align: center; padding-top: 55mm; }
+.cover .title { font-size: 30pt; font-weight: bold; line-height: 1.15; }
+.cover .rule { width: 70mm; height: 2px; background: #111; margin: 16mm auto; }
+.cover .meta { font-size: 11pt; color: #333; line-height: 1.8; }
+.cover .meta b { font-weight: bold; }
+
+/* --- Contents ------------------------------------------------------------- */
+.toc { list-style: none; margin-left: 0; }
+.toc li { margin-bottom: 5px; }
+.toc .n { display: inline-block; width: 22px; font-weight: bold; }
+
+/* --- Callout boxes -------------------------------------------------------- */
+.meaning, .warn, .note {
+  padding: 8px 12px;
+  margin: 12px 0;
+  page-break-inside: avoid;
+  text-align: left;
+}
+.meaning { border-left: 4px solid #3b6fb5; background: #eef3fa; }
+.warn    { border-left: 4px solid #9b1c1c; background: #fbeeee; }
+.note    { border-left: 4px solid #8a6d00; background: #fbf6e6; }
+.meaning::before, .warn::before, .note::before {
+  display: block;
+  font-variant: small-caps;
+  letter-spacing: 0.4px;
+  font-weight: bold;
+  font-size: 9.5pt;
+  margin-bottom: 3px;
+}
+.meaning::before { content: "What this means."; color: #2c5590; }
+.warn::before    { content: "Risk."; color: #9b1c1c; }
+.note::before    { content: "Note."; color: #7a6000; }
+
+/* --- Severity ------------------------------------------------------------- */
+.sev { font-weight: bold; }
+.sev-critical { color: #7f1d1d; }
+.sev-high     { color: #a53f35; }
+.sev-medium   { color: #8a6d00; }
+.sev-low      { color: #3f6b3f; }
+
+/* --- Stat tiles ----------------------------------------------------------- */
+table.tiles { width: 100%; border-collapse: collapse; margin: 14px 0; page-break-inside: avoid; }
+table.tiles td {
+  border: 1px solid #bbb;
+  width: 25%;
+  padding: 10px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+table.tiles .num { display: block; font-size: 19pt; font-weight: bold; line-height: 1.1; }
+table.tiles .num.bad { color: #7f1d1d; }
+table.tiles .num.good { color: #3f6b3f; }
+table.tiles .cap { display: block; font-size: 8.5pt; color: #444; margin-top: 4px; }
+
+/* --- Tables (the Plan, inventories) --------------------------------------- */
+table.data { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 9.5pt; }
+table.data th, table.data td { border: 1px solid #bbb; padding: 5px 7px; text-align: left; vertical-align: top; }
+table.data th { background: #f0f0f0; font-weight: bold; }
+table.data tr { page-break-inside: avoid; }
+table.data td.num, table.data th.num { text-align: right; white-space: nowrap; }
+
+/* --- Figures -------------------------------------------------------------- */
+figure { margin: 12px 0; page-break-inside: avoid; text-align: center; }
+figure img { width: 100%; border: 1px solid #999; }
+figcaption { font-size: 9pt; color: #333; margin-top: 4px; text-align: left; }
+figcaption b { color: #c8281e; font-weight: bold; }
+
+/* --- Charts (inline SVG) -------------------------------------------------- */
+.chart { margin: 12px 0 16px; page-break-inside: avoid; text-align: center; }
+.chart svg { width: 100%; height: auto; }
+.chart .chart-title { font-size: 10.5pt; font-weight: bold; text-align: left; margin-bottom: 4px; }
+.chart .chart-note { font-size: 8.5pt; color: #555; text-align: left; margin-top: 3px; }
+/* SVG text inherits the serif face so charts match the body copy */
+.chart text { font-family: "Times New Roman", "Liberation Serif", serif; fill: #222; }
+.chart .axis, .chart .grid { stroke: #ccc; stroke-width: 0.6; }
+.chart .ref { stroke: #666; stroke-width: 0.8; stroke-dasharray: 3 2; }
+.chart .val { font-size: 8.5pt; }

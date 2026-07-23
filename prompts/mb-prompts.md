@@ -36,10 +36,22 @@
 /mb:update
 ```
 
+**Full evidence-only website audit → owner-ready PDF (five parallel lanes, annotated screenshots, page-by-page verification):**
+
+```text
+/mb:website-audit <https://client-site.com> <client name> <business type: SaaS|e-commerce|service|agency|local> <report language>
+```
+
 **Run the fused multi-brain client intelligence report for a site:**
 
 ```text
 /mb:report <https://client-site.com>
+```
+
+**Ship a master-brain change — surface every command/skill system-wide and push to GitHub:**
+
+```text
+/mb:ship <conventional commit message, e.g. feat(mb): add the website-audit skill>
 ```
 
 **Promote this project's tooling improvements up to the source repo:**

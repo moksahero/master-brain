@@ -16,6 +16,7 @@ and tells you the next step.
 | `/mb:doctor` | "Am I set up right?" / "what's broken?" — checks installs, API keys (present/absent), tooling, and the todo backlog. |
 | `/mb:update` | Periodically — fast-forwards every installed brain to the latest version. |
 | `/mb:push` | After you improve this project's tooling — promotes those edits up to the source repo so every project gets them. |
+| `/mb:ship` | After you change master-brain itself — makes every command/skill available system-wide **and** pushes to GitHub in one command. |
 
 ## Onboard & operate
 
@@ -23,6 +24,7 @@ and tells you the next step.
 | --- | --- |
 | `/mb:idk <goal>` | Any time you're unsure. Routes you to the right brain/command for what you're trying to do. |
 | `/mb:init <goal>` | Starting a new client/project — scaffolds the workspace (`wiki/`, `data/`, `todos/`, `CLAUDE.md`), wires the right brains, and queues the first TODOs from the blessed prompts. |
+| `/mb:website-audit <url>` | When someone asks "what is wrong with my website". The evidence-only teardown: five parallel specialist lanes, annotated screenshots, validated charts, and an owner-ready Times New Roman PDF verified page by page. Also runs bare as `/website-audit`. |
 | `/mb:report <url>` | When you want the fused multi-brain client intelligence report (the agency-grade bilingual PDF) for a site. |
 | `/mb:ads-google [client] [mode]` | Operating a live Google Ads account week to week. Phase-gated (launch-check / watch / optimize / audit), budget-calibrated, and it trains itself via a playbook + experiment ledger in your workspace. |
 
@@ -33,8 +35,8 @@ project, with the first work already queued from blessed prompts:
 
 1. **Short intake (one round).** New vs existing · whether to scaffold a
    Next.js + Tailwind `web/` · focus (SEO/content, local SEO, paid ads, website
-   capture, or just a report) · target market/location · primary URL · report
-   language (incl. bilingual, e.g. English + Japanese).
+   capture, **full website audit**, or just a report) · target market/location ·
+   primary URL · report language (incl. bilingual, e.g. English + Japanese).
 2. **API credentials (only if missing).** Checks `FIRECRAWL_API_KEY` and
    `DATAFORSEO_LOGIN`/`DATAFORSEO_PASSWORD`, asks for any missing (explaining what
    each unlocks), and persists them securely (`chmod 600`, sourced from
@@ -48,7 +50,9 @@ project, with the first work already queued from blessed prompts:
    (reachable later by `/mb:update` fan-out and `/mb:push` promotion).
 4. **Maps focus → brains and queues first actions.** Routes the focus to the right
    brain (SEO → marketing-brain, local → local-seo-brain, ads → claude-ads,
-   capture → website-brain, report → client-intelligence-report), grounds the plan
+   capture → website-brain, audit → website-audit, report →
+   client-intelligence-report), queues **`/website-audit` first on any existing
+   site** because its ground truth feeds everything else, grounds the plan
    in the canonical **5-step client flow** from the captured classroom, and **seeds
    each first TODO from the blessed Prompt Library prompt** (the real `/seo audit`,
    `/ads audit`, … with its slash command and `<placeholders>`) — so queued work

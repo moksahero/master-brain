@@ -418,6 +418,7 @@ register_skill_aliases() {
 # ships as both /youtuber (primary, matches the command name) and /youtube (alias).
 declare -A MB_BRAIN_COMMANDS=(
   ["youtuber.md"]="youtuber.md youtube.md"
+  ["website-audit.md"]="website-audit.md"
 )
 register_master_brain_commands() {
   [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && return 0

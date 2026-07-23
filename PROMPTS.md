@@ -1,6 +1,6 @@
 # Master Brain — Prompt Library
 
-> 67 runnable prompts across 10 buckets, parsed from the
+> 69 runnable prompts across 10 buckets, parsed from the
 > captured classroom (`classroom/09-prompt-library/`). Copy a prompt, swap the
 > `<angle brackets>` for your real values, and run.
 
@@ -25,7 +25,7 @@ Voice: <how it should sound, e.g. plain, expert, friendly>
 
 ## Contents
 
-- [🧰 Master Brain Commands](#mb) — 13 prompts
+- [🧰 Master Brain Commands](#mb) — 15 prompts
 - [🔎 SEO Prompts](#seo) — 5 prompts
 - [✍️ Blog Prompts](#blog) — 5 prompts
 - [📣 Ads Prompts](#ads) — 5 prompts
@@ -40,7 +40,7 @@ Voice: <how it should sound, e.g. plain, expert, friendly>
 
 ## 🧰 Master Brain Commands
 
-Bucket key: `mb` · 13 prompts
+Bucket key: `mb` · 15 prompts
 
 ### 0. Not sure what to do — route me
 
@@ -82,7 +82,15 @@ Command: `/mb:update`
 /mb:update
 ```
 
-### 5. Run the fused multi-brain client intelligence report for a site
+### 5. Full evidence-only website audit → owner-ready PDF (five parallel lanes, annotated screenshots, page-by-page verification)
+
+Command: `/mb:website-audit <https://client-site.com> <client name> <business type: SaaS|e-commerce|service|agency|local> <report language>`
+
+```text
+/mb:website-audit <https://client-site.com> <client name> <business type: SaaS|e-commerce|service|agency|local> <report language>
+```
+
+### 6. Run the fused multi-brain client intelligence report for a site
 
 Command: `/mb:report <https://client-site.com>`
 
@@ -90,7 +98,15 @@ Command: `/mb:report <https://client-site.com>`
 /mb:report <https://client-site.com>
 ```
 
-### 6. Promote this project's tooling improvements up to the source repo
+### 7. Ship a master-brain change — surface every command/skill system-wide and push to GitHub
+
+Command: `/mb:ship <conventional commit message, e.g. feat(mb): add the website-audit skill>`
+
+```text
+/mb:ship <conventional commit message, e.g. feat(mb): add the website-audit skill>
+```
+
+### 8. Promote this project's tooling improvements up to the source repo
 
 Command: `/mb:push`
 
@@ -98,7 +114,7 @@ Command: `/mb:push`
 /mb:push
 ```
 
-### 7. Capture a follow-up into the tracked backlog
+### 9. Capture a follow-up into the tracked backlog
 
 Command: `/mb:todos-add "<the follow-up to remember>"`
 
@@ -106,7 +122,7 @@ Command: `/mb:todos-add "<the follow-up to remember>"`
 /mb:todos-add "<the follow-up to remember>"
 ```
 
-### 8. See the backlog (open / done / all)
+### 10. See the backlog (open / done / all)
 
 Command: `/mb:todos-list`
 
@@ -114,7 +130,7 @@ Command: `/mb:todos-list`
 /mb:todos-list
 ```
 
-### 9. Triage the backlog — dedupe, prioritize, mark stale/blocked
+### 11. Triage the backlog — dedupe, prioritize, mark stale/blocked
 
 Command: `/mb:todos-review`
 
@@ -122,7 +138,7 @@ Command: `/mb:todos-review`
 /mb:todos-review
 ```
 
-### 10. Work every open TODO to completion (records an outcome on each)
+### 12. Work every open TODO to completion (records an outcome on each)
 
 Command: `/mb:todos-execute`
 
@@ -130,7 +146,7 @@ Command: `/mb:todos-execute`
 /mb:todos-execute
 ```
 
-### 11. Generate recurring TODOs on a cadence (pair with /schedule)
+### 13. Generate recurring TODOs on a cadence (pair with /schedule)
 
 Command: `/mb:todos-routine`
 
@@ -138,7 +154,7 @@ Command: `/mb:todos-routine`
 /mb:todos-routine
 ```
 
-### 12. Project history — what's been done, chronologically, with outcomes
+### 14. Project history — what's been done, chronologically, with outcomes
 
 Command: `/mb:todos-log`
 

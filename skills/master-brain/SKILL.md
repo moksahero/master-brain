@@ -36,6 +36,7 @@ start. Master Brain answers three questions:
 | **local-seo-brain** | `AI-Marketing-Hub/local-seo-brain` | Google Business Profile, map-pack rankings, reviews, citations, NAP. |
 | **claude-ads** (*plugin*) | `AI-Marketing-Hub/claude-ads` | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | `AI-Marketing-Hub/client-intelligence-report` | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
+| **website-audit** | *ships with this plugin* (`skills/website-audit/`) | Evidence-only site teardown → an owner-ready Times New Roman PDF. Ground-truth curl pass, five parallel specialist lanes, PIL callouts, inline-SVG charts, WeasyPrint, page-by-page verification. `/mb:website-audit`, bare `/website-audit`. |
 | **claude-mem** (*optional · public plugin*) | `thedotmack/claude-mem` | Cross-session memory so the brains remember past work. |
 
 Most brains clone into `~/.claude/skills/<name>` (members-only repos; needs Pro access + git auth). **claude-ads** and **claude-mem** are the exceptions — they install as Claude plugins under `~/.claude/plugins`.
@@ -106,6 +107,7 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
 - "Find competitors & keywords, build an SEO plan" → **marketing-brain**
 - "Rank a local business / map pack / GBP" → **local-seo-brain**
 - "Audit or build paid ads" → **claude-ads**
+- "What is wrong with my website / audit this site" → **website-audit** (`/mb:website-audit`)
 - "One premium report fusing all of the above" → **client-intelligence-report** (`/mb:report`)
 - "Organize knowledge / persistent wiki" → **claude-obsidian**
 
@@ -171,8 +173,30 @@ context lines (Business / Goal / Voice) the library recommends.
 ## Commands
 
 `/mb:idk` · `/mb:install` · `/mb:init` ·
-`/mb:update` · `/mb:push` · `/mb:doctor` · `/mb:report` ·
+`/mb:update` · `/mb:push` · `/mb:ship` · `/mb:doctor` ·
+`/mb:website-audit` (bare `/website-audit`) · `/mb:report` ·
 `/mb:todos-add` · `/mb:todos-routine` · `/mb:todos-list` · `/mb:todos-review` · `/mb:todos-execute` · `/mb:todos-log`
+
+## Changing master-brain itself — always ship, never just push
+
+Editing a file in this repo does **not** make the change usable. Two separate
+things have to happen, and `/mb:ship` (→ `scripts/ship.sh`) does both:
+
+1. **System-wide availability** — version bump → mirror into the local marketplace
+   → `claude plugin update` (refreshes the `mb:` commands) → `brains.sh register`
+   (writes the **bare** aliases like `/website-audit` and every brain skill into
+   `~/.claude/commands`). A plain `git push` skips all of this, so the new command
+   does not exist on this machine until the next `/mb:update`.
+2. **The repo** — `git add -A`, commit, push to `origin`.
+
+```bash
+bash scripts/ship.sh -m "feat(mb): <what changed>"          # patch bump + everything
+bash scripts/ship.sh --minor -m "feat(mb): new command"     # new command or skill
+bash scripts/ship.sh --no-bump -m "docs(mb): …"             # docs only
+```
+
+Restart Claude Code after adding a *new* command so the session loads it. Other
+machines pick it up with `/mb:update`.
 
 ## Locating the scripts
 

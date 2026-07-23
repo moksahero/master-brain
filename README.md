@@ -42,7 +42,9 @@ Then, in Claude Code:
 | `/mb:init` | Guided project setup — asks your goal, scaffolds the workspace, queues first todos. |
 | `/mb:update` | Fast-forward every installed brain to the latest version. |
 | `/mb:doctor` | Health check: installs, API keys (present/absent), tooling, todo backlog. |
+| `/mb:website-audit` | Full evidence-only website audit → owner-ready Times New Roman PDF. Five parallel specialist lanes, annotated screenshots, validated charts, verified page by page. Also bare `/website-audit`. |
 | `/mb:report` | Drive the fused multi-brain client intelligence report for a URL. |
+| `/mb:ship` | You changed master-brain: surface every command/skill system-wide **and** push to GitHub in one shot. |
 | `/mb:ads-google` | Phase-gated Google Ads operator: live GAQL review, small-budget calibration, cross-client playbook/ledger training loop. |
 | `/mb:todos-add` | Add a manual follow-up TODO to the backlog. |
 | `/mb:todos-routine` | Generate recurring TODOs on a cadence (pair with `/schedule`). |
@@ -76,6 +78,7 @@ Regenerate the doc after a re-capture with `node scripts/prompts.mjs markdown > 
 | **local-seo-brain** | Google Business Profile, map-pack rankings, reviews, citations, NAP. |
 | **claude-ads** (*plugin*) | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
+| **website-audit** (*ships with this plugin*) | Evidence-only site teardown → an owner-ready PDF: ground-truth curl pass, five parallel lanes (technical SEO, page inventory, content/E-E-A-T, visual/UI, marketing & reputation), PIL callouts, inline-SVG charts, WeasyPrint render, page-by-page verification. |
 | **claude-mem** (thedotmack · *optional, public plugin*) | Cross-session memory so the brains remember past work. Installs to `~/.claude/plugins`, not `skills/`. |
 | **humanizer** (blader · *vendored, public*) | Strips AI-writing tells from prose so deliverables read human-written. Ships with the plugin as `mb:humanizer`; `/mb:install` also clones it standalone as `/humanizer`. |
 
@@ -159,6 +162,11 @@ checking a box marks the row `done`. See [`todos/README.md`](todos/README.md).
 - **Playwright MCP** → the browser the live audits log in through (`claude mcp add playwright npx @playwright/mcp@latest`)
 - **GBP + ad-account access** → live local & paid audits (local-seo-brain + claude-ads) — via Playwright manual-login, CSV export, or native API
 - **pandoc** (+ a CJK-capable LaTeX engine) → render the bilingual/Japanese report to PDF
+- **WeasyPrint + poppler-utils + Pillow** → the `/website-audit` PDF, its page-by-page
+  verification (`pdftoppm`), and the annotated screenshots
+  (`pipx install weasyprint` · `apt install poppler-utils` · `pip install --user pillow`).
+  Check them anytime with
+  `bash skills/website-audit/scripts/render.sh check`.
 
 `/mb:install` walks you through adding each of these; `/mb:doctor` re-checks them anytime.
 

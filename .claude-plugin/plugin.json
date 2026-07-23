@@ -1,7 +1,7 @@
 {
   "name": "mb",
-  "version": "0.7.1",
-  "description": "The orchestration layer for the AI Marketing Hub brains. One plugin to install, update, scaffold, and operate website-brain, marketing-brain, local-seo-brain, claude-obsidian, claude-ads and the fused client-intelligence-report — plus claude-mem. Ships slash commands for one-shot install, guided project init, fleet update, a fused intelligence report, and a TODO system that auto-captures every brain run into ./todos and keeps it reviewed so nothing is dropped.",
+  "version": "0.8.0",
+  "description": "The orchestration layer for the AI Marketing Hub brains. One plugin to install, update, scaffold, and operate website-brain, marketing-brain, local-seo-brain, claude-obsidian, claude-ads and the fused client-intelligence-report — plus claude-mem. Ships slash commands for one-shot install, guided project init, fleet update, a full evidence-only website audit that renders an owner-ready PDF, a fused intelligence report, and a TODO system that auto-captures every brain run into ./todos and keeps it reviewed so nothing is dropped.",
   "author": {
     "name": "AgriciDaniel",
     "url": "https://github.com/AgriciDaniel"
@@ -15,6 +15,8 @@
     "orchestration",
     "onboarding",
     "seo",
+    "website-audit",
+    "site-audit",
     "paid-ads",
     "google-ads",
     "local-seo",
