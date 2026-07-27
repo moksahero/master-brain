@@ -110,6 +110,13 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
 - "What is wrong with my website / audit this site" → **website-audit** (`/mb:website-audit`)
 - "One premium report fusing all of the above" → **client-intelligence-report** (`/mb:report`)
 - "Organize knowledge / persistent wiki" → **claude-obsidian**
+- **"Research an online store / e-commerce site"** → the **e-commerce recipe**, not
+  the generic SEO route. Read
+  [`references/ecommerce-research.md`](references/ecommerce-research.md) and run it
+  in order: **catalog pull → `/website-audit` → `/seo-ecommerce` → marketing-brain
+  → `/ads-dna` + `/ads-competitor` + `/ads-landing` → `/mb:report`**. The catalog
+  pull (step 0) is mandatory — a store is audited from its SKUs, not its homepage.
+  Skip `local-seo-brain` unless there are physical stores.
 
 ## Knowledge base — the captured classroom
 

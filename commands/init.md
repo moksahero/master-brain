@@ -13,7 +13,10 @@ Ask these, adapting to anything already given in `$ARGUMENTS`:
 
 1. **New or existing project?** (Is there already a site/business, or are we starting fresh?)
 2. **If new:** OK to create a **Next.js + Tailwind** app under `web/`? (yes / no / different stack)
-3. **What's the focus?** (pick any: **SEO/content**, **local SEO / map pack**, **paid ads** — Google/Meta/TikTok/etc., **website capture**, **full website audit** — the evidence-only teardown PDF, **just a report**)
+3. **What's the focus?** (pick any: **e-commerce / online store** — the full EC recipe, **SEO/content**, **local SEO / map pack**, **paid ads** — Google/Meta/TikTok/etc., **website capture**, **full website audit** — the evidence-only teardown PDF, **just a report**)
+   - If the URL is a storefront (a cart, `/products/`, `/collections/`, a Shopify or
+     futureshop signature), lead with **e-commerce** — it is the EC recipe in §4,
+     not the generic SEO route.
 4. **Target market / location?** (city, country, or language — drives local + keyword work)
 5. **Primary website URL** (if any).
 6. **What language should reports be written in?** (e.g. Japanese, English, Spanish — or **bilingual** like Japanese + English; **default Japanese**)
@@ -155,6 +158,29 @@ node "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/todos.mjs
     add "/website-audit <url> — full evidence-only audit → PDF" --skill=website-audit --priority=high
   ```
 - report → **client-intelligence-report** (`/mb:report`)
+- **e-commerce / online store** (Shopify, futureshop, MakeShop, BASE, Woo, custom
+  cart — anything that sells products directly) → run the **e-commerce recipe**,
+  which supersedes the generic SEO/ads routing above. Read
+  `skills/master-brain/references/ecommerce-research.md` and queue it in order:
+  1. **catalog pull** — `products.json` / merchant feed / product sitemap into
+     `data/catalog/`, then compute taxonomy health (empty `product_type`,
+     polluted `vendor`), content depth per SKU, image coverage, price sanity, and
+     the `published_at` distribution. **Mandatory and first** — a store is audited
+     from its SKUs, not its homepage, and catalog age alone can reframe the whole
+     verdict (a 3-month-old store has no rankings to "recover").
+  2. **`/website-audit <url>`** — the evidence baseline.
+  3. **`/seo-ecommerce <url>`** — product schema, Google Shopping / marketplace
+     visibility, competitor pricing, the category layer.
+  4. **marketing-brain** — commercial-intent keywords and the real SERP owners.
+  5. **`/ads-dna` → `/ads-competitor` → `/ads-landing`** — paid readiness.
+  6. **`/mb:report`** — the fused PDF citing 1–5.
+
+  Always check the five EC verdict points explicitly: conversion measurement and
+  whether checkout leaves the domain, the collection/category layer (usually
+  broken while product pages are fine), on-site reviews vs the brand's own
+  marketplace store, shipping/price consistency across page-cart-FAQ-policy, and
+  whether owned content actually links into collections and SKUs. Skip
+  **local-seo-brain** unless the client has physical stores.
 
 Use the captured classroom as the canon for *what to queue and in what order*:
 `04-client-delivery/` is the end-to-end engagement flow, and `09-prompt-library/`
