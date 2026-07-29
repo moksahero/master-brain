@@ -83,7 +83,38 @@ back to each project's documented installer (for claude-mem,
 `npx claude-mem@latest install`) and tell the user. If it's already installed, say
 so and skip.
 
-## 3b. Install the humanizer skill (writing quality)
+## 3b. Install anti-slop (the substance pass)
+
+**anti-slop** (`AgriciDaniel/anti-slop`, public) is picked up automatically by the
+`/mb:update` fleet sweep, which plugin-installs it. It gives you `/slop-review`,
+`/slop-rewrite`, `/slop-verify` and `/slop-code`.
+
+One thing to flag to the user, because it is not obvious from the install: the
+plugin registers its own `PostToolUse` hook on `Write|Edit` with **no skill or
+path condition**. When it is enabled it fires on every write in every repository
+and blocks the write (exit 2) on a house-style hit — em dash, en dash, spaced
+double hyphen.
+
+It ships **inert**: the hook resolves the linter at
+`$CLAUDE_PLUGIN_ROOT/../anti-slop-brain/scripts/lint_voice.py`, a path that only
+exists in the upstream repo layout, not in the flattened plugin cache. A missing
+linter is a silent no-op by design. Enable it only if the user wants that gate:
+
+```bash
+# ON — links the sibling brain into the cache so the hook finds the linter
+ln -sfn "$HOME/.claude/plugins/marketplaces/anti-slop/anti-slop-brain" \
+        "$HOME/.claude/plugins/cache/anti-slop/anti-slop/anti-slop-brain"
+
+# OFF — delete the link; the hook goes back to a no-op
+rm -f "$HOME/.claude/plugins/cache/anti-slop/anti-slop/anti-slop-brain"
+```
+
+Warn them that the Hub's own docs use em dashes as house style, so with the gate
+on, ordinary edits to master-brain and most brain repos get blocked. The
+scanners and skills work fine either way — the symlink only controls the
+automatic write gate.
+
+## 3c. Install the humanizer skill (writing quality)
 
 master-brain ships **humanizer** (blader/humanizer, MIT) vendored as `mb:humanizer`,
 so `claude plugin update` already gives every PC the skill. This step also clones it
@@ -98,10 +129,13 @@ else
 fi
 ```
 
-Remind the user of the **standing rule**: any prose the brains produce — marketing
-copy, reports, emails, blog drafts, client deliverables — should be passed through
-humanizer before delivery so it reads human-written, not AI-generated. master-brain's
-SessionStart hook reinforces this each session.
+Remind the user of the **standing delivery rule**: any prose the brains produce —
+marketing copy, reports, emails, blog drafts, client deliverables — goes through two
+passes in order. First **substance** (`/slop-review` → `/slop-rewrite`, plus
+`/slop-verify` on citations and links), then **style** (humanizer), so it reads
+human-written. Substance first, because stripping style markers off an unsourced
+paragraph only removes the warning label. master-brain's SessionStart hook reinforces
+this each session.
 
 ## 4. Configure prerequisites (API keys + tools)
 

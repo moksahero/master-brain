@@ -80,16 +80,38 @@ Regenerate the doc after a re-capture with `node scripts/prompts.mjs markdown > 
 | **client-intelligence-report** | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
 | **website-audit** (*ships with this plugin*) | Evidence-only site teardown → an owner-ready PDF: ground-truth curl pass, five parallel lanes (technical SEO, page inventory, content/E-E-A-T, visual/UI, marketing & reputation), PIL callouts, inline-SVG charts, WeasyPrint render, page-by-page verification. |
 | **claude-mem** (thedotmack · *optional, public plugin*) | Cross-session memory so the brains remember past work. Installs to `~/.claude/plugins`, not `skills/`. |
-| **humanizer** (blader · *vendored, public*) | Strips AI-writing tells from prose so deliverables read human-written. Ships with the plugin as `mb:humanizer`; `/mb:install` also clones it standalone as `/humanizer`. |
+| **anti-slop** (AgriciDaniel · *public plugin*) | The substance pass. Finds and repairs padding, vague attribution, hollow analysis, unsourced claims, dead citations, non-existent package imports and vendor residue in prose, docs, code and commit messages. `/slop-review`, `/slop-rewrite`, `/slop-verify`, `/slop-code`. Reports defects, never authorship. **Ships a global `Write`/`Edit` gate** — read the delivery rule in the skill before enabling it. |
+| **humanizer** (blader · *vendored, public*) | Strips AI-writing tells from prose so deliverables read human-written. Ships with the plugin as `mb:humanizer`; `/mb:install` also clones it standalone as `/humanizer`. Runs **after** anti-slop: substance before style. |
 
-## Humanizer (standing writing rule)
+## The delivery rule: anti-slop, then humanizer
 
-master-brain vendors [blader/humanizer](https://github.com/blader/humanizer) (MIT) under
-`skills/humanizer/`. It's not just an on-demand command — it's a **standing rule**: before
-the brains deliver any prose (marketing copy, reports, emails, blog drafts, client
-deliverables), that text should be passed through the humanizer patterns so it reads
-human-written, not AI-generated. master-brain's SessionStart hook reinforces this each
-session. Skip it only for code, raw data, or when the user asks for verbatim output.
+Before the brains deliver any prose (marketing copy, reports, emails, blog drafts, client
+deliverables), it goes through **two passes, in this order**. master-brain's SessionStart
+hook states the rule each session. Skip both only for code, raw data, or when the user
+asks for verbatim output.
+
+**1. Substance — [anti-slop](https://github.com/AgriciDaniel/anti-slop).** Fix what is
+actually wrong before touching how it reads:
+
+| Command | Use it for |
+| --- | --- |
+| `/slop-review` | read-only findings: padding, vague attribution, hollow analysis, unsourced claims. Diagnoses only. |
+| `/slop-rewrite` | repairs **only** what a review listed. Never invents a fact, number, date or citation. |
+| `/slop-verify` | citations, DOIs, links, package existence, vendor residue (`oaicite`, `[cite: 1]`, `utm_source=chatgpt.com`). |
+| `/slop-code` | source, tests, config, generated docs, commit messages, PR bodies. |
+
+It **reports defects, never authorship** — no score, no percentage, no verdict on who or
+what wrote something. Its house-style linter (em/en dash, spaced double hyphen) is
+*preference only*; a hit is not a defect. Note it ships a `Write`/`Edit` hook that fires
+**globally in every repo** when enabled — see the delivery-rule section in the skill for
+how to switch it on and off.
+
+**2. Style — humanizer.** master-brain vendors
+[blader/humanizer](https://github.com/blader/humanizer) (MIT) under `skills/humanizer/`.
+Run it *after* the substance pass so the copy reads human-written, not AI-generated.
+
+Why this order: stripping the style markers off an unsourced paragraph leaves an unsourced
+paragraph with the warning label removed.
 
 Run it directly on any text:
 

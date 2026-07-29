@@ -31,8 +31,12 @@ until the final PDF has been rendered *and* visually verified page by page.
    `dataviz` first), write the report against `references/report-spec.md` +
    `assets/report.css`, render with WeasyPrint, then rasterize EVERY page and
    look at each one. Fix layout defects and re-render until a full pass is clean.
-6. **Before delivering**, pass the report prose through the `humanizer` patterns
-   (standing master-brain rule). Findings files and code are exempt.
+6. **Before delivering**, run the standing two-pass delivery rule over the report
+   prose: first `/slop-review` → `/slop-rewrite` for substance (padding, vague
+   attribution, unsourced claims) and `/slop-verify` over every cited URL and
+   statistic in the report, then the `humanizer` patterns for style. Substance
+   before style. Findings files and code are exempt from the humanizer pass;
+   `/slop-verify` still applies to their citations.
 7. **Write back** — in a Master Brain project, persist root causes and key numbers
    to `wiki/`, raw evidence to `data/`, the PDF to `reports/`, append `wiki/log.md`,
    and queue a review TODO.

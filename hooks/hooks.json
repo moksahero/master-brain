@@ -32,7 +32,7 @@
           },
           {
             "type": "command",
-            "command": "echo \"master-brain · humanizer rule: before delivering any prose you produce (marketing copy, reports, emails, blog drafts, deliverables), pass it through the humanizer skill's patterns (mb:humanizer / /humanizer) so it reads human-written, not AI-generated. Skip only for code, raw data, or when the user asks for verbatim output.\""
+            "command": "echo \"master-brain · delivery rule (two passes, in this order): (1) SUBSTANCE — run the anti-slop pass over any prose you produce (marketing copy, reports, emails, blog drafts, deliverables): /slop-review to find defects, /slop-rewrite to repair only what it lists, /slop-verify for citations, links and package names, /slop-code for code, tests and docs. It reports defects, never authorship. (2) STYLE — then pass the repaired text through the humanizer skill (mb:humanizer / /humanizer) so it reads human-written. Substance before style: stripping style markers off an unsourced paragraph only removes the warning label. Skip both only for code, raw data, or when the user asks for verbatim output.\""
           }
         ]
       }

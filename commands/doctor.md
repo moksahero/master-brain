@@ -11,6 +11,18 @@ readable health report. This is the command for "I don't know what's wrong" or
 1. **Brain fleet** — `bash "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/master-brain}/scripts/brains.sh" status`.
    Note any brain that is MISSING or not a git checkout.
 2. **claude-mem** — present in `~/.claude/plugins/installed_plugins.json`? enabled in `~/.claude/settings.json`?
+2b. **anti-slop write gate** — report which state it is in, because it is easy to
+   enable by accident and it blocks writes in *every* repo, not just this one:
+
+   ```bash
+   L="$HOME/.claude/plugins/cache/anti-slop/anti-slop/anti-slop-brain"
+   if [ -e "$L" ]; then echo "anti-slop write gate: ON  (house-style hits block Write/Edit everywhere)";
+   else echo "anti-slop write gate: OFF (hook is a silent no-op; skills + scanners still work)"; fi
+   ```
+
+   Neither state is wrong — just say which one is live and how to flip it (`ln -sfn`
+   the marketplace `anti-slop-brain` into that path to enable, `rm` the link to
+   disable). Flag that the Hub's docs use em dashes, so ON blocks routine doc edits.
 3. **API keys** — check the environment and common `.env` locations (`~/Documents/.env`,
    `~/.config/website-brain/.env`, `./.env`) WITHOUT printing secret values —
    report only present/absent for:

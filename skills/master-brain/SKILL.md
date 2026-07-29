@@ -37,6 +37,7 @@ start. Master Brain answers three questions:
 | **claude-ads** (*plugin*) | `AI-Marketing-Hub/claude-ads` | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | `AI-Marketing-Hub/client-intelligence-report` | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
 | **website-audit** | *ships with this plugin* (`skills/website-audit/`) | Evidence-only site teardown → an owner-ready Times New Roman PDF. Ground-truth curl pass, five parallel specialist lanes, PIL callouts, inline-SVG charts, WeasyPrint, page-by-page verification. `/mb:website-audit`, bare `/website-audit`. |
+| **anti-slop** (*plugin*) | `AgriciDaniel/anti-slop` | Substance pass over any deliverable: finds and repairs padding, vague attribution, unsourced claims, dead citations, non-existent packages, vendor residue. `/slop-review`, `/slop-rewrite`, `/slop-verify`, `/slop-code`. Reports defects, never authorship. Ships a global write gate — see [the delivery rule](#the-delivery-rule--substance-before-style). |
 | **claude-mem** (*optional · public plugin*) | `thedotmack/claude-mem` | Cross-session memory so the brains remember past work. |
 
 Most brains clone into `~/.claude/skills/<name>` (members-only repos; needs Pro access + git auth). **claude-ads** and **claude-mem** are the exceptions — they install as Claude plugins under `~/.claude/plugins`.
@@ -110,6 +111,10 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
 - "What is wrong with my website / audit this site" → **website-audit** (`/mb:website-audit`)
 - "One premium report fusing all of the above" → **client-intelligence-report** (`/mb:report`)
 - "Organize knowledge / persistent wiki" → **claude-obsidian**
+- "Review / clean up a draft, check its sources, de-slop it" → **anti-slop**
+  (`/slop-review`, `/slop-rewrite`, `/slop-verify`, `/slop-code`). See
+  [the delivery rule](#the-delivery-rule--substance-before-style) below; it runs
+  on every prose deliverable, not just on request.
 - **"Research an online store / e-commerce site"** → the **e-commerce recipe**, not
   the generic SEO route. Read
   [`references/ecommerce-research.md`](references/ecommerce-research.md) and run it
@@ -117,6 +122,63 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
   → `/ads-dna` + `/ads-competitor` + `/ads-landing` → `/mb:report`**. The catalog
   pull (step 0) is mandatory — a store is audited from its SKUs, not its homepage.
   Skip `local-seo-brain` unless there are physical stores.
+
+## The delivery rule — substance before style
+
+Every prose deliverable a Hub brain produces (reports, marketing copy, emails,
+blog drafts, client decks) goes through **two passes, in this order**. The
+`SessionStart` hook in `hooks/hooks.json` states this rule at the top of every
+session.
+
+**Pass 1 — substance (`anti-slop`).** Fix what is actually wrong before touching
+how it reads:
+
+| Command | Use it for |
+| --- | --- |
+| `/slop-review` | read-only findings over prose or docs: padding, vague attribution, hollow analysis, unsourced claims. Diagnoses only; never edits. |
+| `/slop-rewrite` | repairs **only** what a review already listed. Never invents a fact, number, date or citation not already in the source. |
+| `/slop-verify` | citations, DOIs/ISBNs/arXiv IDs, links, package existence, vendor residue (`oaicite`, `[cite: 1]`, `utm_source=chatgpt.com`). The only layer allowed to hard-fail. |
+| `/slop-code` | source, tests, config, generated docs, commit messages, PR bodies. |
+
+**Pass 2 — style (`humanizer`).** Only after the substance pass: run
+`mb:humanizer` / `/humanizer` so the copy reads human-written.
+
+**Why this order.** Stripping the style markers off an unsourced paragraph
+leaves an unsourced paragraph with the warning label removed. Anti-slop is built
+on that objection, so it goes first and humanizer polishes what survives.
+
+Two limits worth stating, because they are design constraints and not
+disclaimers:
+
+- Anti-slop **reports defects, never authorship**. There is no score, no
+  percentage, and no verdict about who or what wrote something. Do not ask it
+  for one and do not present its output as one.
+- Its house-style linter (em dash, en dash, spaced double hyphen, banned tokens)
+  is **house style only** — a preference chosen by a document's owner. A hit is
+  not a defect and says nothing about quality. Note that this repo's own house
+  style *uses* em dashes freely, so the linter and this repo disagree by design.
+
+### The global write gate (know what you are turning on)
+
+The `anti-slop` plugin ships its own `PostToolUse` hook on `Write|Edit` with no
+skill or path condition. While the plugin is installed and its linter path
+resolves, it fires on **every write in every repository** and blocks (exit 2) on
+a house-style hit. Because this repo's docs use em dashes throughout, that gate
+will block routine edits here.
+
+It ships broken-by-default: the hook looks for the linter at
+`$CLAUDE_PLUGIN_ROOT/../anti-slop-brain/scripts/lint_voice.py`, which only
+resolves in the upstream repo layout, not in the flattened plugin cache. To
+switch it **on**, link the sibling brain into the cache:
+
+```bash
+ln -sfn ~/.claude/plugins/marketplaces/anti-slop/anti-slop-brain \
+        ~/.claude/plugins/cache/anti-slop/anti-slop/anti-slop-brain
+```
+
+To switch it **off** again, remove that symlink — the hook returns to a silent
+no-op. Deleting the link is the whole revert; nothing was written to any
+settings file.
 
 ## Knowledge base — the captured classroom
 
