@@ -22,6 +22,10 @@ brains/**/.obsidian/workspace*.json
 # todos/ moved out to the standalone bazinga-hq app — no longer shipped by the plugin
 todos/
 
+# PDF描画のQA中間物。render-ja.sh / render.sh が全ページをPNG化したもので、
+# 目視検証のためだけに存在する。いつでも再生成できるのでコミットしない。
+skills/*/report/verify/
+
 # node
 node_modules/
 .playwright-mcp/
