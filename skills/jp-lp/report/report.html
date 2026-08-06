@@ -7,17 +7,74 @@
   <h1>日本市場<br>ランディングページ<br>実態調査 2026</h1>
   <div class="sub">高コンバージョンLPの構造・コピー・実装値・法規制<br>実測ベースの再現可能な型</div>
   <div class="meta">
-    調査実施日：2026年8月5日<br>
-    調査規模：実機で開いたページ 約890件／一覧タリー 46,006件／官公庁一次資料 34件<br>
+    第1次調査：2026年8月5日（14レーン・実測中心）<br>
+    第2次調査：2026年8月6日（12レーン・穴埋めと反証）<br>
+    調査規模：実機で開いたページ 約890件／一覧タリー 46,006件／官公庁一次資料 34件＋公式媒体資料 90件超<br>
     作成：Master Brain <code>jp-lp</code> スキル
   </div>
 </section>
+
+<h1>0. 第2次調査による訂正</h1>
+
+<div class="warn">
+<span class="label">この章を最初に読むこと</span>
+本レポートは第1次調査（2026年8月5日）の結論を、第2次調査（8月6日）で<strong>反証にかけた</strong>。その結果、<strong>初版の看板だった発見を含む15項目を訂正</strong>している。以降の章は訂正後の内容だが、初版を既に読んだ人のために、何が変わったかをここにまとめる。
+</div>
+
+<h2>0.1 最も重い訂正：「2つの母集団」は成立しない</h2>
+
+<p>初版は「日本のLPは統計的に別物の2母集団に分かれる」と書いた。<strong>これは支えられない。</strong>理由は4つ。</p>
+
+<ol>
+<li><strong>サンプリング枠が重なっている。</strong>「ギャラリー」として扱ったLPアーカイブ（rdlp.jp）は、公式に「<strong>広告をクリックした際に表示されるランディングページ</strong>」を集めると明記しており、fbclid付きの記事LPが実際に登録されている。2つの群は互いに素ではない。</li>
+<li><strong>測定手法が非対称で、しかも中立ではない。</strong>一方はHTML取得ベース、他方はスクリーンショット目視。初版が別途「日本のLPは装飾を画像に焼き込む」と結論している以上、<strong>HTML側は構造的に装飾を取り逃す</strong>。この2つの発見は並置できない。</li>
+<li><strong>キュレーションが入っている。</strong>LPアーカイブの掲載基準は「弊社で良いと思ったデザイン」という主観選定であり、母集団統計ではない。</li>
+<li><strong>件数の読み違い。</strong>「46,006件」は登録総数ではなく<strong>PCデザインの表示件数</strong>。登録総数は2025年3月時点で約7.6万件。</li>
+</ol>
+
+<p><strong>訂正後の結論</strong>：日本のLPの装飾濃度は<strong>連続的に分布する</strong>。位置を決めるのは業種ではなく、(1) 誰が作ったか、(2) どの制作SaaSを使ったか、(3) どの面に配信するか、の3つである。</p>
+
+<h2>0.2 「記事LP」は市場の型ではなくベンダーの処方だった</h2>
+
+<p>初版は <code>/ab/</code> を「記事LPのパス」として一般化したが、これは<strong>Squad beyond というツールのホスティング規約</strong>である。n=17は1ベンダーの標本にすぎない。</p>
+
+<p>そして赤字・黄色マーカー17/17（100%）という数字は、<strong>同社が公式ブログで「太字＋マーカー」「吹き出しを多用」と処方した結果</strong>だった。市場が自然に収束したのではない。</p>
+
+<div class="note">
+<span class="label">規模感は無視できない</span>
+Squad beyond は自社システム製ページが年間推定9,000億円（国内ネット広告媒体費の約30%相当）の広告配信に使われていると自己申告している。<strong>初版が「日本の広告LPの型」と呼んだものの相当部分は、単一SaaSのテンプレート効果</strong>である可能性が高い。
+</div>
+
+<h2>0.3 訂正一覧</h2>
+
+<table>
+<thead><tr><th>#</th><th>初版</th><th>訂正</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>統計的に別物の2母集団</td><td>連続分布。境界はない</td></tr>
+<tr><td>2</td><td><code>/ab/</code> は記事LPのパス</td><td>Squad beyond のホスティング規約</td></tr>
+<tr><td>3</td><td>媒体ごとに別LPを作るのが実勢</td><td>誇張。Meta識別子は55件中15件（27.3%）。単位は媒体より<strong>面</strong></td></tr>
+<tr><td>4</td><td>業種別CVRベンチマークは出典付き1件</td><td><strong>実務判断に使えるものは0件</strong></td></tr>
+<tr><td>5</td><td>PASONA / PASBECONA はどちらが正か不明</td><td>2016年書籍は<strong>PASONAが正</strong>。PASBECONAは2021年の別書籍</td></tr>
+<tr><td>6</td><td>AIDMA はホールが提唱</td><td><strong>誤り。</strong>Hall原著5冊の検証で不在。実際はAICCA（1915）</td></tr>
+<tr><td>7</td><td>漢字率3割説は裏付け未確認</td><td><strong>実験で否定済み。</strong>効くのは漢字連続長</td></tr>
+<tr><td>8</td><td>外部送信規律「自社商材LPは対象外」（公式）</td><td><strong>推定に格下げ。</strong>4類型からの解釈で明言ではない</td></tr>
+<tr><td>9</td><td>Yahoo!広告は未確認</td><td><strong>解消。</strong>公式31件を原文取得</td></tr>
+<tr><td>10</td><td>LINE広告は急かし表現を明示的に否認</td><td><strong>出典なし。取り下げ</strong></td></tr>
+<tr><td>11</td><td>TikTokのQR禁止に日本を含む</td><td>根拠が誤り（対象60市場に日本は不在）。結論は不変</td></tr>
+<tr><td>12</td><td>機能性表示食品のガイドライン</td><td><strong>廃止済み。</strong>現行は「手引き」（令和7年）</td></tr>
+<tr><td>13</td><td>BEAF初出は2011年</td><td>2010年5月</td></tr>
+<tr><td>14</td><td>縦の長さは母集団の特徴</td><td>記事LPを挟むかどうかで決まる</td></tr>
+<tr><td>15</td><td>マンガ2件は投資・不動産に偏る</td><td>小標本の産物。業界の見解ではコンプレックス商材が主戦場</td></tr>
+</tbody>
+</table>
+
+<p class="src">第2次で<strong>追認された</strong>もの：医療広告の二段構え、マンガLPが日本の型ではないこと（3.8%を独立再現）、日本語CVR記事の出典が米国であること、同意モードv2が日本で不要であること、LPOツールの価格。</p>
 
 <h1>1. 要旨</h1>
 
 <div class="key">
 <span class="label">この調査で最も重要な発見</span>
-日本のLPは、統計的に<strong>別物の2つの母集団</strong>に分かれる。「日本のLPといえば縦長・赤字・吹き出し・マンガ」という通説は、デザインギャラリーに載るLPでは<strong>棄却</strong>され、広告配信専用のLPでは<strong>支持</strong>された。通説そのものが誤りだったのではなく、通説が指していた層がギャラリーに載らない層だった。<strong>どちらを作るのかを最初に決めないと、設計言語が混ざったLPができる。</strong>
+日本のLPの装飾濃度は<strong>連続的に分布する</strong>。位置を決めるのは業種ではなく、<strong>(1) 誰が作ったか（ブランド本体かDR事業部か）、(2) どの制作SaaSを使ったか、(3) どの面に配信するか</strong>の3つである。「日本のLPといえば赤字・吹き出し」という通説は、<strong>特定の制作基盤と特定の配信面に強く紐づいた現象</strong>であって、日本のLP一般の型ではない。<strong>設計に入る前にこの3つを確定させること。「日本のLPの型」という単一の答えを探さない。</strong>
 </div>
 
 <h2>1.1 検証された通説</h2>
@@ -98,9 +155,14 @@ CVR 1% で 20% の改善を検出するには片群<strong>約4.3万セッショ
 
 <p>当初 Perplexity API を主要な情報源として使う計画だったが、<strong>全レーンで HTTP 401（insufficient_quota）を返し、一度も使用できなかった</strong>。代替として WebFetch、HTTP直接取得、e-Gov 法令API、ヘッドレスブラウザ、pdftotext を使用した。法規制と媒体ポリシーの領域では、要約サービスより一次資料の直接取得のほうが証拠として強いため、実質的な品質低下は生じていない。WebSearch もセッション上限（200回）に到達し、後半のレーンでは使用できなかった。</p>
 
-<h1>3. 発見1：日本のLPには2つの母集団がある</h1>
+<h1>3. 発見1：装飾濃度は「誰が作ったか」で決まる</h1>
 
-<p>ギャラリー掲載型49件と広告配信型55件を、同じ判定基準でタリーした結果。</p>
+<p>ギャラリー掲載型49件と広告配信型55件を、同じ判定基準でタリーした結果。<strong>数値は残すが、下記の交絡を必ず添えて読むこと</strong>（第0章参照）。</p>
+
+<div class="warn">
+<span class="label">この数値に含まれる交絡</span>
+(1) 測定手法が非対称（HTML取得 対 スクリーンショット目視）で、画像焼き込みがある以上HTML側は装飾を取り逃す。(2) 2つの群はサンプリング枠が重なっている。(3) LPアーカイブ側はキュレーションが入っている。(4) 広告配信側はMeta広告ライブラリの出稿量上位に寄っている。<strong>差の向きは実務者の認識と整合するが、倍率をそのまま引用してはいけない。</strong>
+</div>
 
 <figure>
 <svg viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="装飾要素の出現率比較">
@@ -504,15 +566,141 @@ Metaは広告が個人的属性を主張・示唆することを禁じている�
 <strong>Yahoo!広告のポリシーは未確認。</strong> 本調査では <code>ads-help.yahoo.co.jp</code> がDNS解決不可、代替ドメインがSPAで本文を取得できなかった。日本市場では無視できない媒体であり、健康食品・美容・医療の審査基準や必要書類の提出要件が独自にある。到達可能な環境からの再取得が最優先の積み残しである。
 </div>
 
+<h1>9-2. Google と Meta の配信構造に合わせるLP設計</h1>
+
+<p>媒体ポリシー適合（審査に落ちない）とは別レイヤーの話。<strong>配信の仕組みに合わせてLPをどう設計するか</strong>を、公式ドキュメント原文から整理した。</p>
+
+<h2>9-2-1. 最初の分岐は「温度」ではなく算数</h2>
+
+<div class="key">
+<span class="label">LPを分ける前に確認すること</span>
+<code>月間予算 ÷ 許容CPA &lt; 30</code> なら、<strong>LPを分けない。まず中間CVを1枚に足す。</strong><br><br>
+Googleのスマート自動入札は「1か月以上の期間に30回以上のコンバージョン」を推奨（tROASは50回以上）。この水準に届かない案件でLPを増やすのは、少ないデータをさらに割る自傷行為になる。
+</div>
+
+<p>なお <strong>GoogleとMetaでLPを2枚に割っても学習データは分割されない</strong>（アカウントが別のため）。分けるコストは制作費と計測実装費だけ。<strong>危険なのは同一媒体内でLPを増やすほう</strong>である。</p>
+
+<h2>9-2-2. Google：前提が壊れている点が2つある</h2>
+
+<div class="warn">
+<span class="label">最終ページURLの拡張はデフォルトでオン</span>
+P-MAXでは、オンの間Googleが<strong>入稿したLPを無視してドメイン内の別ページへ送る</strong>。つまりLP設計の対象は「作った1枚」ではなく<strong>ドメイン全ページ</strong>になる。LPが1枚しかないなら、公式が明示的にオフにするよう書いている。<br><br>
+<strong>さらに2025年以降、同じ拡張が検索キャンペーンにも来た</strong>（AI最大化設定を有効にするとデフォルトで有効）。「検索広告なら指定したLPに着地する」という前提はもう成立しない。
+</div>
+
+<p>もう1点。<strong>拡張がオンのとき、LP上の画像がGoogleに取り込まれて広告アセットとして使われる。</strong>LPは遷移先であると同時に<strong>素材倉庫</strong>になる。画像の利用許諾が広告利用まで及んでいるか、焼き込んだ文言が単独で流通しても薬機法・景表法に耐えるかを、LP側で先に潰す必要がある。</p>
+
+<h3>品質スコアについて言えること・言えないこと</h3>
+
+<table>
+<thead><tr><th>よくある言い方</th><th>実際</th></tr></thead>
+<tbody>
+<tr><td>品質スコアが上がるとCPCが下がる</td><td><strong>1から10の数字はオークションに入らない。</strong>公式に「診断ツール」と明記</td></tr>
+<tr><td>LPを直せばCPCがX%下がる</td><td><strong>公式には言えない。</strong>ただし「ランディングページの利便性」は広告ランクに入り、広告ランクが実際のCPCを決めるので、経路は追える</td></tr>
+<tr><td>Core Web Vitalsを満たせば広告評価が上がる</td><td><strong>CWVの閾値はGoogle広告側の基準ではない。</strong>SEOの話と混同しない</td></tr>
+</tbody>
+</table>
+
+<p>「ランディングページの利便性」の<strong>判定要件リストは公式に存在しない</strong>（旧記事はリダイレクト済み）。要件表を作って「これを満たせば高得点」と提案してはいけない。</p>
+
+<h3>日本のLPで最も多い計測事故</h3>
+
+<div class="warn">
+<span class="label">サンクスページに「送信完了しました」しか出さない設計</span>
+これだと<strong>拡張コンバージョンの自動収集もCSSセレクタ指定も空振りする。</strong>対処はメールアドレス等をDOMに出すか、<code>dataLayer.push()</code> のコード方式に切り替えるか。
+</div>
+
+<p>実装上の要点：フォームの各 <code>input</code> に <code>id</code> を付ける。<strong>姓と名を2フィールドに分ける</strong>（別フィールド仕様のため）。hidden に <code>gclid</code> / <code>gbraid</code> / <code>wbraid</code> を<strong>3つ別々</strong>に持ち、<strong><code>gbraid</code> は大文字小文字が区別されるので小文字化しない</strong>。ハッシュ化はブラウザ側で自動なので、LP側で事前ハッシュ化は不要。</p>
+
+<h2>9-2-3. Meta：LPを触ると学習は壊れるのか</h2>
+
+<p>公式の significant edits 一覧に<strong>「LPの内容変更」は無く</strong>、「Any change to ad creative」は<strong>ある</strong>。</p>
+
+<ul>
+<li><strong>同一URLのまま中身を書き換える → 学習はリセットされない</strong></li>
+<li><strong>リンク先URLを切り替える → 踏む</strong></li>
+</ul>
+
+<p>したがって<strong>LPはURL1本に固定し、訴求軸はFVブロックの内部出し分けで処理する</strong>。A/Bを広告側でURLを振って回すのは学習を壊す。</p>
+
+<h3>個人的属性ポリシーの正しい直し方</h3>
+
+<p>初版は「『あなたも◯◯でお悩みでは？』型が該当し得る」とだけ書いたが、これでは直しようがなかった。公式のDo/Don't原文の対比が決定的だった。</p>
+
+<table>
+<thead><tr><th>可</th><th>不可</th></tr></thead>
+<tbody>
+<tr><td><code>Meet seniors</code></td><td><code>Meet other seniors</code></td></tr>
+<tr><td><code>Depression counseling</code></td><td><code>Do you have diabetes?</code></td></tr>
+</tbody>
+</table>
+
+<div class="key">
+<span class="label">禁止されているのは属性への言及ではない</span>
+<strong>「広告主が読者の属性を知っていると示唆すること」</strong>が禁止されている。したがって消すべきは「あなた」そのものではなく、<strong>"other" 相当語と二人称疑問形</strong>。属性の帰属先を読者からサービス・市場へ移せば通る。<strong>訴求を捨てる必要はない。</strong>
+</div>
+
+<p>また <strong>Advantage+ audience で拡張されない項目は「地域・最低年齢・言語・除外カスタムオーディエンス」の4つのみ</strong>で、詳細ターゲティングは拘束力を持たない。「40代女性に配信しているはず」という前提でFVを書くと外れる。<strong>FVは属性ではなく「場面」で名乗らせ、属性による絞り込みはLP中盤に置く。</strong></p>
+
+<h3>インスタントフォーム vs LPフォーム</h3>
+
+<p><strong>既定はLPフォーム。</strong>インスタントフォームは<strong>LP側のイベントが1件も発生せず</strong>、<code>external_id</code> の発行が<strong>Meta離脱後</strong>になる。つまり<strong>LP資産にもEMQにもGoogle共用にも一切寄与しない</strong>。使うのは検証と立ち上げ期の暫定に限る。</p>
+
+<p class="src">日本でのCPL差・商談化率差の数値は、母数を示した出典が皆無だったため本レポートでは採用していない。「インスタントフォームはCPLが安いがリード品質が低い」という定説の定量的裏付けは見つかっていない。</p>
+
+<h2>9-2-4. 実測：GoogleとMetaの遷移先LPはどう違うか</h2>
+
+<p>Google広告の着地点18件（<code>gclid</code> 付きURLから特定）と Meta 51件を、同一の計測スクリプトで比較した。</p>
+
+<table>
+<thead><tr><th>要素</th><th>Google（n=18）</th><th>Meta（n=51）</th></tr></thead>
+<tbody>
+<tr><td>記事LP（<code>sb-</code> ドメイン）</td><td><strong>0%</strong></td><td>23.5%</td></tr>
+<tr><td>記事LP（<code>/ab/</code> パス）</td><td><strong>0%</strong></td><td>29.4%</td></tr>
+<tr><td>赤字</td><td>22%</td><td>47%</td></tr>
+<tr><td>フォーム設置</td><td>17%</td><td>49%</td></tr>
+<tr><td>Q&amp;A</td><td>78%</td><td>49%</td></tr>
+<tr><td>table要素</td><td>44%</td><td>20%</td></tr>
+</tbody>
+</table>
+
+<div class="warn">
+<span class="label">ただし業種を揃えると差の大半が消える</span>
+脱毛のみ（Google 8件 対 Meta 7件）で比較すると、Q&amp;Aは75%対71%、tableは62%対43%となり、<strong>「Googleは説明で押す」という差は相当部分が業種構成の交絡</strong>だった。業種を揃えても残るのは<strong>フォーム設置（0%対43%）と吹き出し</strong>のみで、しかもn=8対7なので確証ではない。
+</div>
+
+<p>同一広告主の作り分けは<strong>3類型</strong>が観測された。<strong>別ドメインの記事LPを当てる</strong>（レジーナクリニックはGoogleに自社公式LP、MetaにSquad beyond系記事LP）、<strong>同一LPでCV地点だけ差し替え</strong>（エミナルクリニック、バイト差0.35%）、<strong>同一ビルドで文言・権威パーツのみ差し替え</strong>（ASSIGNは入力欄42個・ラジオ36個まで一致し、FVコピー1行と赤の面積だけが違う）。</p>
+
+<p><strong>「媒体ごとに全部作り直す」は実勢ではない。骨格を1本持ち、差分だけ当てるのが主流である。</strong></p>
+
+<h2>9-2-5. どこを分け、どこを揃えるか</h2>
+
+<div class="key">
+<span class="label">分ける価値が高いのはFVの入り方</span>
+<strong>Google側は「答えから始める」</strong>（公式が重要な情報のページ上部配置を要求）。検索で言語化して来た人に共感の前置きは冗長。<br>
+<strong>Meta側は「場面・問題提起から始める」</strong>。フィードに割り込んでいるので、なぜ自分に関係あるのかを先に立てる必要がある。<br><br>
+<strong>1枚で兼用すると、この2つがFVの同じ場所を奪い合い、必ずどちらかが妥協する。</strong>
+</div>
+
+<p>逆に<strong>揃えるべきもの</strong>：サンクスページは1本に統合する。<code>event_id</code> はLPテンプレート側で採番する。そして<strong>CVRの分子は媒体管理画面の合計ではなくGA4/CRMの実CVに固定する</strong>（両媒体が同じCVを自分の成果として報告するため、合計すると必ず水増しになる）。</p>
+
 <h1>10. 計測とABテストの現実</h1>
 
 <h2>10.1 使えるベンチマークが存在しない</h2>
 
-<p>日本市場の業種別CVRベンチマークとして国内・出典付きで見つかったのは、Ptengine「13業界別Webサイトのベンチマーク指標」<strong>1件のみ</strong>。母数は「各業界30程度・大手中心」と明記されている一方、調査期間・セッション基準かユーザー基準か・マイクロCVを含むかは未記載である。</p>
+<div class="warn">
+<span class="label">第2次調査でさらに厳しい側へ訂正</span>
+初版は「出典付きのものが1件しか存在しない」と書いたが、その1件を原典で再検証した結果、<strong>母数・集計期間・CVR定義がすべて記載なし</strong>だった。母数は「30程度の企業」という記述のみで、13業界に割ると1業界あたり2から3社。<strong>正しくは「実務の判断基準に使えるものは0件」である。</strong>初版が指摘した内部矛盾も、誤記ではなく<strong>サンプル不足の必然</strong>だった。
+</div>
 
-<p>しかもこの1件にも実地検証で内部矛盾が見つかった。「上位25%」の意味が同社の別記事と反転している、美容健康のFV離脱率に同値の誤記がある、中央値と平均値が極端に乖離する業種がある（医療 0.72% 対 5.21%）。それ以外の日本語CVR解説記事は、出典が海外（Unbounce等）か出典記載そのものがなかった。</p>
+<p>日本語メディアの「業界別CVR表」は、原典を辿ると<strong>すべて米国データ</strong>だった。リコー＝Invespcro、楽天広告＝WordStream（記事自身が米国データと明記）、Kaizen Platform＝Unbounce＋WordStream。</p>
 
-<p><strong>流入チャネル別のLP CVRは、日本市場で出典の揃った公開データが存在しなかった。</strong>本調査では数値を提示しない判断をした。</p>
+<p><strong>流入チャネル別のLP CVRも、出典の揃った公開データが存在しない。</strong>唯一の日本データ（2011年から2012年）は母数なし・定義なしで、8か月間に検索エンジンCVRが0.24%から1.48%へ6倍振れており使用不可である。</p>
+
+<div class="note">
+<span class="label">ただし指標を広げれば使えるものはある</span>
+初版はCVRに検索を絞ったため取り逃していたが、<strong>カゴ落ち率には母数と期間が明記された日本国内の年次実測データが3年分ある</strong>（CART RECOVERY、母数552／4,374／延べ2,250）。<strong>「日本には何のデータも無い」ではない。指標を変えれば取れる。</strong>
+</div>
 
 <h2>10.2 そのLPでABテストは成立するか</h2>
 
@@ -581,7 +769,8 @@ Metaは広告が個人的属性を主張・示唆することを禁じている�
 <thead><tr><th>用途</th><th>コマンド／ファイル</th></tr></thead>
 <tbody>
 <tr><td>設計・執筆・監査・法務チェック</td><td><code>/jp-lp</code>（または <code>/mb:jp-lp</code>）</td></tr>
-<tr><td>2母集団の全タリー</td><td><code>references/two-populations.md</code></td></tr>
+<tr><td>装飾濃度が何で決まるか・全タリーと交絡</td><td><code>references/two-populations.md</code></td></tr>
+<tr><td><strong>Google / Meta の配信構造に合わせるLP設計</strong></td><td><code>references/ad-delivery-fit.md</code></td></tr>
 <tr><td>業種別ブロック順序</td><td><code>references/structure.md</code></td></tr>
 <tr><td>FV設計</td><td><code>references/first-view.md</code></td></tr>
 <tr><td>日本語コピーと表記規範</td><td><code>references/copy-ja.md</code></td></tr>

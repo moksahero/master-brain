@@ -89,8 +89,10 @@ FVにNo.1を置くなら、合理的根拠の4要件（比較対象の適切な�
 Meta広告のプライマリテキストと同じトーンで続く。
 https://sb.taisho-direct.jp/ab/ej_1st_kiji_facebook （実測 2026-08-05）
 
-そして**媒体ごとに別LPを用意している**ことがURLから読み取れる（`_facebook`、`_fb`、`meta`、
-`asc` などの配信面識別子）。
+URLに配信面識別子（`_facebook`、`_fb`、`meta`、`asc`）が入っている例があるが、
+**これは55件中15件（27.3%）で、全体傾向ではない**（2026-08-06 訂正）。
+作り分けの実勢は [`ad-platforms.md`](ad-platforms.md) と
+[`ad-delivery-fit.md`](ad-delivery-fit.md) を参照。
 
 メッセージマッチの不一致は、LP内のどの微修正よりも先に潰す。ギャプライズの自社LP事例では、
 広告バナーとLPメインコピーのギャップを解消してCTAクリック率が1.05%から3.97%、CVRが1.04%から

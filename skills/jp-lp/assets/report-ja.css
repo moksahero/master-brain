@@ -82,7 +82,10 @@ h4 {
 p { margin: 0 0 3.5mm; text-align: left; }
 
 /* 和文の禁則と折り返し。長いURLだけは途中で折る。 */
-p, li, td, th { word-break: normal; overflow-wrap: anywhere; }
+/* anywhere ではなく break-word。anywhere は列が狭いと「10」のような短い数字まで
+   縦に割ってしまう。break-word なら単語が行に収まらないときだけ折るので、
+   長いURLは折れて、番号列は割れない。 */
+p, li, td, th { word-break: normal; overflow-wrap: break-word; }
 
 ul, ol { margin: 0 0 4mm; padding-left: 6mm; }
 li { margin-bottom: 1.5mm; }
