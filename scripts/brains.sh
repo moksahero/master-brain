@@ -419,6 +419,7 @@ register_skill_aliases() {
 declare -A MB_BRAIN_COMMANDS=(
   ["youtuber.md"]="youtuber.md youtube.md"
   ["website-audit.md"]="website-audit.md"
+  ["jp-lp.md"]="jp-lp.md"
 )
 register_master_brain_commands() {
   [ "${CLAUDE_SKIP_CMD_REGISTER:-0}" = "1" ] && return 0
