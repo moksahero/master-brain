@@ -43,6 +43,7 @@ Then, in Claude Code:
 | `/mb:update` | Fast-forward every installed brain to the latest version. |
 | `/mb:doctor` | Health check: installs, API keys (present/absent), tooling, todo backlog. |
 | `/mb:website-audit` | Full evidence-only website audit → owner-ready Times New Roman PDF. Five parallel specialist lanes, annotated screenshots, validated charts, verified page by page. Also bare `/website-audit`. |
+| `/mb:jp-lp` | 日本市場向けLPの設計・執筆・監査・法務チェック。Measured JP patterns plus the 景表法・薬機法・特商法・医療広告 gate that sits upstream of the copy. Also bare `/jp-lp`. |
 | `/mb:report` | Drive the fused multi-brain client intelligence report for a URL. |
 | `/mb:ship` | You changed master-brain: surface every command/skill system-wide **and** push to GitHub in one shot. |
 | `/mb:ads-google` | Phase-gated Google Ads operator: live GAQL review, small-budget calibration, cross-client playbook/ledger training loop. |
@@ -79,6 +80,7 @@ Regenerate the doc after a re-capture with `node scripts/prompts.mjs markdown > 
 | **claude-ads** (*plugin*) | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
 | **website-audit** (*ships with this plugin*) | Evidence-only site teardown → an owner-ready PDF: ground-truth curl pass, five parallel lanes (technical SEO, page inventory, content/E-E-A-T, visual/UI, marketing & reputation), PIL callouts, inline-SVG charts, WeasyPrint render, page-by-page verification. |
+| **jp-lp** (*ships with this plugin*) | 日本市場向けLP. Built from a 2026-08-05 measurement run (about 890 pages opened in a real browser, 46,006 gallery entries tallied, 34 government primary sources read at statute level). Two distinct JP LP populations, per-vertical block orders, 和文 typography values, form/LINE/payment reality, per-platform ad review, and a pre-launch compliance checklist. Ships a Japanese A4 PDF stylesheet and a 25-page research report. |
 | **claude-mem** (thedotmack · *optional, public plugin*) | Cross-session memory so the brains remember past work. Installs to `~/.claude/plugins`, not `skills/`. |
 | **anti-slop** (AgriciDaniel · *public plugin*) | The substance pass. Finds and repairs padding, vague attribution, hollow analysis, unsourced claims, dead citations, non-existent package imports and vendor residue in prose, docs, code and commit messages. `/slop-review`, `/slop-rewrite`, `/slop-verify`, `/slop-code`. Reports defects, never authorship. **Ships a global `Write`/`Edit` gate** — read the delivery rule in the skill before enabling it. |
 | **humanizer** (blader · *vendored, public*) | Strips AI-writing tells from prose so deliverables read human-written. Ships with the plugin as `mb:humanizer`; `/mb:install` also clones it standalone as `/humanizer`. Runs **after** anti-slop: substance before style. |

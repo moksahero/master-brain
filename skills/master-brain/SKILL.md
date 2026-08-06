@@ -37,6 +37,7 @@ start. Master Brain answers three questions:
 | **claude-ads** (*plugin*) | `AI-Marketing-Hub/claude-ads` | Paid media audit + AI creative across Google/Meta/TikTok/LinkedIn/etc. Installs as a Claude plugin, not a `skills/` clone. |
 | **client-intelligence-report** | `AI-Marketing-Hub/client-intelligence-report` | The fused multi-brain "Mega-Brain" → an agency-grade bilingual PDF. |
 | **website-audit** | *ships with this plugin* (`skills/website-audit/`) | Evidence-only site teardown → an owner-ready Times New Roman PDF. Ground-truth curl pass, five parallel specialist lanes, PIL callouts, inline-SVG charts, WeasyPrint, page-by-page verification. `/mb:website-audit`, bare `/website-audit`. |
+| **jp-lp** | *ships with this plugin* (`skills/jp-lp/`) | 日本市場向けLPの設計・執筆・監査. Measured JP-specific patterns (two distinct LP populations, block orders per vertical, 和文 typography values, form/LINE/payment reality) plus the compliance gate that sits *upstream* of copy: 景表法・薬機法・特商法・医療広告ガイドライン・ステマ規制 and per-platform ad review. Ships a Japanese A4 PDF stylesheet. `/mb:jp-lp`, bare `/jp-lp`. |
 | **anti-slop** (*plugin*) | `AgriciDaniel/anti-slop` | Substance pass over any deliverable: finds and repairs padding, vague attribution, unsourced claims, dead citations, non-existent packages, vendor residue. `/slop-review`, `/slop-rewrite`, `/slop-verify`, `/slop-code`. Reports defects, never authorship. Ships a global write gate — see [the delivery rule](#the-delivery-rule--substance-before-style). |
 | **claude-mem** (*optional · public plugin*) | `thedotmack/claude-mem` | Cross-session memory so the brains remember past work. |
 
@@ -109,6 +110,12 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
 - "Rank a local business / map pack / GBP" → **local-seo-brain**
 - "Audit or build paid ads" → **claude-ads**
 - "What is wrong with my website / audit this site" → **website-audit** (`/mb:website-audit`)
+- **"日本market向けのLPを作る / 直す / 法務チェックする"** → **jp-lp** (`/mb:jp-lp`, bare `/jp-lp`).
+  Use it for *any* Japanese-market landing page, and use it *instead of* reaching for
+  `landing-page-optimization` alone: that skill is English and Western-SaaS shaped, so it
+  misses the two-population split, the 和文 typography values, the form and LINE reality, and
+  the 景表法・薬機法・医療広告 gate that in Japan sits **upstream** of the copy, not after it.
+  Run both when useful; `jp-lp` wins on conflict.
 - "One premium report fusing all of the above" → **client-intelligence-report** (`/mb:report`)
 - "Organize knowledge / persistent wiki" → **claude-obsidian**
 - "Review / clean up a draft, check its sources, de-slop it" → **anti-slop**

@@ -1,0 +1,222 @@
+/* 日本語A4レポート用スタイル（WeasyPrint 向け）
+   本文は明朝、見出しはゴシックという日本のビジネス文書の定番組み合わせ。
+   欧文用CSSをそのまま流用すると行間が詰まって読めなくなるため、
+   line-height と letter-spacing は和文向けに広く取っている。 */
+
+@page {
+  size: A4;
+  margin: 20mm 18mm 18mm 18mm;
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-family: "Noto Sans CJK JP", sans-serif;
+    font-size: 8pt;
+    color: #666;
+  }
+}
+
+@page :first {
+  margin: 0;
+  @bottom-center { content: ""; }
+}
+
+:root {
+  --ink: #1a1a1a;
+  --muted: #555;
+  --rule: #d4d4d4;
+  --accent: #16408a;
+  --accent-soft: #eef2f9;
+  --warn-bg: #fdf3f3;
+  --warn-border: #c0392b;
+}
+
+html {
+  font-family: "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+body { margin: 0; }
+
+/* 見出しはゴシック。和文見出しは字間をわずかに開けたほうが締まる。 */
+h1, h2, h3, h4, th {
+  font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 20pt;
+  margin: 0 0 6mm;
+  padding-bottom: 3mm;
+  border-bottom: 2.5pt solid var(--accent);
+  break-before: page;
+}
+
+h1:first-of-type { break-before: auto; }
+
+h2 {
+  font-size: 14pt;
+  margin: 9mm 0 4mm;
+  padding-left: 3mm;
+  border-left: 4pt solid var(--accent);
+  break-after: avoid;
+}
+
+h3 {
+  font-size: 11.5pt;
+  margin: 6mm 0 2.5mm;
+  color: var(--accent);
+  break-after: avoid;
+}
+
+h4 {
+  font-size: 10.5pt;
+  margin: 4mm 0 2mm;
+  break-after: avoid;
+}
+
+/* 両端揃えにしない。和文だけなら justify で綺麗に揃うが、製品名やコードなど
+   欧文の長い連なりが混ざる行は分割点が少なく、単語間が極端に引き伸ばされる。
+   和欧混植では左揃えのほうが破綻しない。 */
+p { margin: 0 0 3.5mm; text-align: left; }
+
+/* 和文の禁則と折り返し。長いURLだけは途中で折る。 */
+p, li, td, th { word-break: normal; overflow-wrap: anywhere; }
+
+ul, ol { margin: 0 0 4mm; padding-left: 6mm; }
+li { margin-bottom: 1.5mm; }
+
+strong { font-weight: 700; }
+
+a { color: var(--accent); text-decoration: none; }
+
+code {
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 9pt;
+  background: #f4f4f4;
+  padding: 0.4mm 1mm;
+  border-radius: 1mm;
+}
+
+pre {
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 8.5pt;
+  line-height: 1.6;
+  background: #f7f7f7;
+  border: 0.5pt solid var(--rule);
+  padding: 3mm;
+  break-inside: avoid;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  line-height: 1.65;
+  margin: 0 0 5mm;
+  break-inside: auto;
+}
+
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+
+th {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 9pt;
+  font-weight: 700;
+  text-align: left;
+  padding: 2mm 2.5mm;
+  border-bottom: 1pt solid var(--accent);
+}
+
+td {
+  padding: 2mm 2.5mm;
+  border-bottom: 0.5pt solid var(--rule);
+  vertical-align: top;
+}
+
+/* 表紙 */
+.cover {
+  height: 297mm;
+  padding: 45mm 25mm 25mm;
+  box-sizing: border-box;
+  background: var(--accent);
+  color: #fff;
+  break-after: page;
+}
+.cover .kicker {
+  font-family: "Noto Sans CJK JP", sans-serif;
+  font-size: 10pt;
+  letter-spacing: 0.35em;
+  opacity: 0.85;
+}
+.cover h1 {
+  font-family: "Noto Sans CJK JP", sans-serif;
+  font-size: 30pt;
+  line-height: 1.45;
+  border: none;
+  margin: 10mm 0 6mm;
+  padding: 0;
+  break-before: auto;
+}
+.cover .sub { font-size: 12pt; line-height: 1.8; opacity: 0.9; }
+/* 表紙は濃紺地なので、本文用の code スタイル（薄いグレー地）を打ち消す。
+   打ち消さないと白文字＋薄グレー地で塗りつぶしのように見える。 */
+.cover code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+.cover .meta {
+  margin-top: 30mm;
+  font-family: "Noto Sans CJK JP", sans-serif;
+  font-size: 9.5pt;
+  line-height: 2;
+  border-top: 0.75pt solid rgba(255,255,255,0.4);
+  padding-top: 5mm;
+}
+
+/* 注記ブロック */
+.note, .warn, .key {
+  padding: 3.5mm 4mm;
+  margin: 0 0 5mm;
+  font-size: 9.5pt;
+  line-height: 1.8;
+  break-inside: avoid;
+}
+.note { background: #f6f7f9; border-left: 3pt solid var(--muted); }
+.warn { background: var(--warn-bg); border-left: 3pt solid var(--warn-border); }
+.key  { background: var(--accent-soft); border-left: 3pt solid var(--accent); }
+
+.note .label, .warn .label, .key .label {
+  display: block;
+  font-family: "Noto Sans CJK JP", sans-serif;
+  font-weight: 700;
+  font-size: 9pt;
+  margin-bottom: 1.5mm;
+}
+.warn .label { color: var(--warn-border); }
+.key .label { color: var(--accent); }
+
+/* 出典表記 */
+.src { font-size: 8.5pt; color: var(--muted); line-height: 1.7; }
+
+/* 目次 */
+.toc { font-family: "Noto Sans CJK JP", sans-serif; font-size: 10pt; line-height: 2.1; }
+.toc ol { list-style: none; padding-left: 0; }
+.toc .lv2 { padding-left: 6mm; font-size: 9.5pt; color: var(--muted); }
+
+figure { margin: 0 0 5mm; break-inside: avoid; }
+figure svg, figure img { max-width: 100%; height: auto; }
+figcaption {
+  font-family: "Noto Sans CJK JP", sans-serif;
+  font-size: 8.5pt;
+  color: var(--muted);
+  margin-top: 1.5mm;
+}
+
+hr { border: none; border-top: 0.5pt solid var(--rule); margin: 6mm 0; }
