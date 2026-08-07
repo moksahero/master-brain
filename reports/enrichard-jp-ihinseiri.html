@@ -1,0 +1,514 @@
+<meta charset="utf-8">
+<title>Enrichard 新規開拓の手順書 遺品整理事業者への営業</title>
+<link rel="stylesheet" href="../skills/jp-lp/assets/report-ja.css">
+
+<section class="cover">
+  <div class="kicker">MASTER BRAIN / enrichard</div>
+  <h1>新規開拓の手順書</h1>
+  <div class="sub">遺品整理事業者を Enrichard で見つけ、<br>診断し、営業メールを出すまでの9ステップ</div>
+  <div class="meta">
+    作成：2026年8月7日<br>
+    対象：<code>AI-Marketing-Hub/enrichard</code> v1.0.0（コミット 450c81f）<br>
+    根拠：アプリのソースコードとAPI仕様の実物、総務省・消費者庁の一次資料<br>
+    作成：Master Brain <code>enrichard</code> スキル
+  </div>
+</section>
+
+<style>
+.bigmap { margin: 3mm 0 2mm; }
+.band {
+  border: 0.6pt solid var(--rule);
+  border-left: 3pt solid var(--accent);
+  background: var(--accent-soft);
+  padding: 2.6mm 3.5mm;
+}
+.band.auto { border-left-color: #8a8a8a; background: #f6f7f9; }
+.band .who {
+  font-family: "Noto Sans CJK JP", sans-serif;
+  font-size: 8pt; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--accent); margin-bottom: 1mm;
+}
+.band.auto .who { color: #666; }
+.band .what {
+  font-family: "Noto Sans CJK JP", sans-serif;
+  font-size: 11pt; font-weight: 700; line-height: 1.4;
+}
+.band .detail { font-size: 8.5pt; line-height: 1.65; color: var(--muted); margin-top: 1mm; }
+.band .detail b { color: var(--ink); }
+.down {
+  text-align: center; font-size: 9pt; color: #9a9a9a;
+  line-height: 1.1; margin: 0.9mm 0;
+}
+table.four { width: 100%; border-collapse: collapse; margin: 2mm 0 0; }
+table.four td {
+  width: 25%; border: 0.6pt solid var(--rule); background: #fff;
+  padding: 2mm 1.6mm; text-align: center; vertical-align: top;
+  font-family: "Noto Sans CJK JP", sans-serif; font-size: 8.5pt; line-height: 1.5;
+}
+table.four td .n {
+  display: block; font-size: 8pt; font-weight: 700;
+  color: var(--accent); margin-bottom: 1mm;
+}
+table.four td .c { display: block; font-size: 8pt; color: var(--muted); margin-top: 1mm; }
+.io { width: 100%; border-collapse: collapse; margin: 2.5mm 0 0; }
+.io td {
+  width: 50%; border: 0.6pt solid var(--rule); padding: 2.4mm 3mm;
+  vertical-align: top; font-size: 9pt; line-height: 1.7;
+}
+.io td .h {
+  font-family: "Noto Sans CJK JP", sans-serif; font-size: 8pt;
+  font-weight: 700; letter-spacing: 0.08em; color: var(--muted);
+  display: block; margin-bottom: 1.5mm;
+}
+</style>
+
+<h1>1. 全体像</h1>
+
+<p style="margin:2mm 0 0;">上から下に1回流れて終わりです。<span style="font-family:'Noto Sans CJK JP',sans-serif;font-weight:700;">青い帯が人の仕事、灰色の帯が機械の仕事</span>。機械は調べて書くだけで、<strong>誰に送るかを決めるのも、送るのも人</strong>です。</p>
+
+<div class="bigmap">
+
+  <div class="band">
+    <div class="who">あなた（10分）</div>
+    <div class="what">誰に売るかを決める</div>
+    <div class="detail">地域・業種・条件の3つを指定するだけ。<br>
+    例：<b>東京都八王子市／不用品回収業者／サイトあり・クチコミ10件以上・評価4.5以下・20社</b></div>
+  </div>
+
+  <div class="down">▼</div>
+
+  <div class="band auto">
+    <div class="who">Enrichard（自動・20社で約1時間、約300円）</div>
+    <div class="what">調べて、書く</div>
+    <table class="four">
+      <tr>
+        <td><span class="n">①</span>事業者を<br>一覧にする<span class="c">社名・住所・電話<br>サイト・評価</span></td>
+        <td><span class="n">②</span>連絡先と<br>担当者を探す<span class="c">見つからない社は<br>ここで脱落する</span></td>
+        <td><span class="n">③</span>サイトを<br>診断する<span class="c">画面を保存し<br>日本語で講評</span></td>
+        <td><span class="n">④</span>メール4通を<br>下書きする<span class="c">③の指摘を<br>そのまま材料に</span></td>
+      </tr>
+    </table>
+    <div class="detail">②で脱落した社には③も④も走らないので、<b>無駄な費用は出ません</b>。</div>
+  </div>
+
+  <div class="down">▼</div>
+
+  <div class="band">
+    <div class="who">あなた（1時間から2時間）</div>
+    <div class="what">下書きを読み、直し、承認する</div>
+    <div class="detail">承認したものだけがCSVに出ます。直した文面は保護され、後から機械に上書きされません。</div>
+  </div>
+
+  <div class="down">▼</div>
+
+  <div class="band">
+    <div class="who">あなた（30分）</div>
+    <div class="what">自社のメール環境から送る</div>
+    <div class="detail"><b>Enrichard はメールを送りません。</b>CSVを自社のメールソフトに読み込ませて、人が送ります。</div>
+  </div>
+
+  <div class="down">▼</div>
+
+  <div class="band">
+    <div class="who">あなた（随時）</div>
+    <div class="what">返信に対応する</div>
+    <div class="detail">商談に進めるか、配信停止の依頼なら即座に登録するか。<b>停止はEnrichard側と送信ツール側の両方で行います。</b></div>
+  </div>
+
+</div>
+
+<table class="io">
+<tr>
+  <td><span class="h">入れるもの</span>
+  市区町村ひとつ<br>業種カテゴリひとつ<br>絞り込み条件（サイトの有無・クチコミ数・評価）</td>
+  <td><span class="h">出てくるもの</span>
+  承認済みの営業メール4通 × 社数のCSV<br>各社のサイト診断書とスクリーンショット<br>担当者名と、その情報を見つけたページのURL</td>
+</tr>
+</table>
+
+
+<h1>2. 結論</h1>
+
+<div class="key">
+<span class="label">この仕組みで何が起きるか</span>
+「東京都八王子市の不用品回収業者で、サイトを持っていて、クチコミ10件以上、評価4.5以下」と指定すると、該当する事業者が一覧で出てきます。1社ずつサイトを読んで診断コメントを書き、担当者の連絡先を公開情報から探し、その診断内容を材料にした<strong>日本語の営業メール4通</strong>を下書きします。人が読んで承認したものだけがCSVで出てきます。<strong>送信は自社のメールソフトで人間が行います。</strong>
+</div>
+
+<p>費用は1社あたり最大で約0.10ドル。20社の試行なら約2ドル（1ドル150円換算で約300円）です。所要時間は連絡先探しが20社で3分から4分、診断とメール下書きを含めて1回の試行が1時間以内に終わります。</p>
+
+<p>日本で使う場合、<strong>準備段階で3つの設定を入れないとメール下書きが動きません</strong>。設定内容は第4章に書いています。</p>
+
+<h1>3. 全体の流れ</h1>
+
+<table>
+<thead><tr><th>#</th><th>ステップ</th><th>誰がやるか</th><th>20社での目安</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>準備。会社情報と法的根拠を登録する</td><td>人（初回のみ）</td><td>30分・0円</td></tr>
+<tr><td>1</td><td>狙う相手の条件を決める</td><td>人</td><td>10分・0円</td></tr>
+<tr><td>2</td><td>見積もりを取る。件数と費用が出る</td><td>アプリ</td><td>10秒・約0.012ドル</td></tr>
+<tr><td>3</td><td>事業者リストを抽出する</td><td>アプリ</td><td>1分・リスト取得費</td></tr>
+<tr><td>4</td><td>連絡先と担当者を探す</td><td>アプリ</td><td>3分から4分・約0.9ドル</td></tr>
+<tr><td>5</td><td>相手のサイトを診断する</td><td>アプリ</td><td>数分・約0.7ドル</td></tr>
+<tr><td>6</td><td>営業メール4通を下書きする</td><td>アプリ</td><td>数分・約0.4ドル</td></tr>
+<tr><td>7</td><td>下書きを読み、直し、承認し、CSVに出す</td><td><strong>人</strong></td><td>1時間から2時間・0円</td></tr>
+<tr><td>8</td><td>自社のメール環境から送信する</td><td><strong>人</strong></td><td>30分・0円</td></tr>
+<tr><td>9</td><td>返信対応と配信停止の登録</td><td><strong>人</strong></td><td>随時・0円</td></tr>
+</tbody>
+</table>
+
+<p>アプリが担当するのはステップ2から6です。<strong>判断と送信は人の側に残ります。</strong>ここが分かれているので、変な文面がそのまま外に出ることはありません。</p>
+
+<h1>4. ステップ0 準備（初回のみ、30分）</h1>
+
+<p>最初に1回だけ設定します。以降のキャンペーンでは不要です。</p>
+
+<h2>4.1 会社情報</h2>
+
+<table>
+<thead><tr><th>設定項目</th><th>入れる内容</th><th>使われ方</th></tr></thead>
+<tbody>
+<tr><td>送信者名・役職・会社名</td><td>実際の担当者名</td><td>メールの署名になる</td></tr>
+<tr><td>提供サービスの内容</td><td>遺品整理事業者向けの集客支援であること</td><td>メールの提案部分の土台になる</td></tr>
+<tr><td>配信停止の案内文</td><td>配信停止方法を書いた1文</td><td><strong>全メールに自動で付く。未設定だと下書きが動かない</strong></td></tr>
+<tr><td>自社住所</td><td>登記上の住所</td><td>メールに自動で付く。<strong>後述の理由で日本では必須</strong></td></tr>
+<tr><td>出力言語</td><td>日本語</td><td>診断文と営業メールが日本語になる</td></tr>
+<tr><td>上限金額</td><td>例：月50ドル</td><td>直近30日の使用額がこれを超えると全処理が止まる</td></tr>
+</tbody>
+</table>
+
+<h2>4.2 日本で必ず必要な3つ</h2>
+
+<div class="warn">
+<span class="label">これを入れないとステップ6が動きません</span>
+<strong>(1) 配信停止の案内文。</strong>未設定だと下書き生成そのものが拒否されます。<br>
+<strong>(2) 自社住所。</strong>アプリは米国のキャンペーンでしか住所を必須にしませんが、日本では法令上（施行規則第9条第2号）表示が必要です。<strong>アプリは日本の住所未設定を警告しません。</strong>手動で必ず入れてください。<br>
+<strong>(3) 法的根拠の記録。</strong>アプリは日本を「事前同意が必要な国」に分類しており、根拠を記録するまでメール下書きを停止します。記録すべき内容は第11章にあります。
+</div>
+
+<p>3つ目でつまずくと、ステップ5まで費用を払ったのにメールが1通も出てこない、という事態になります。<strong>準備段階で必ず済ませてください。</strong></p>
+
+<h1>5. ステップ1 狙う相手の条件を決める</h1>
+
+<p>指定するのは「地域」「業種カテゴリ」「絞り込み条件」の3つです。</p>
+
+<h2>5.1 記入例</h2>
+
+<div class="note">
+<span class="label">最初の1回はこの粒度で</span>
+地域：<strong>東京都八王子市</strong>（1市区町村だけ）<br>
+カテゴリ：<strong>不用品回収業者</strong>（1カテゴリだけ）<br>
+絞り込み：サイトあり／クチコミ10件以上／評価4.5以下<br>
+取得件数：<strong>20社</strong>
+</div>
+
+<p>絞り込み条件は次の8種類から最大8個まで指定できます。これらは<strong>相手側のデータベースで先に絞り込まれるため、条件に合う事業者の分しか課金されません</strong>。</p>
+
+<ul>
+<li>サイトあり／サイトなし</li>
+<li>オーナー登録済み／未登録</li>
+<li>評価の下限／上限</li>
+<li>クチコミ数の下限／上限</li>
+</ul>
+
+<h2>5.2 なぜこの3条件なのか</h2>
+
+<table>
+<thead><tr><th>条件</th><th>理由</th></tr></thead>
+<tbody>
+<tr><td>サイトあり</td><td>サイトが無ければ診断ができず、提案の入口が作れない</td></tr>
+<tr><td>クチコミ10件以上</td><td>営業実態があり、支払い能力が見込める</td></tr>
+<tr><td>評価4.5以下</td><td>改善余地が数値で見えている先だけが残る。評価4.9の事業者に「集客を改善します」と持ちかけても提案が成立しない</td></tr>
+</tbody>
+</table>
+
+<h2>5.3 カテゴリ選びで注意すること</h2>
+
+<p>Googleのビジネスカテゴリに<strong>「遺品整理業」という項目はありません</strong>。第三者が集計した日本語カテゴリ一覧で確認できた近いものは次のとおりです。</p>
+
+<ul>
+<li>まるごと家財処理業者</li>
+<li>不用品回収業者</li>
+<li>廃棄物リサイクル業</li>
+<li>清掃業／清掃業者／ハウスクリーニング業</li>
+<li>引越業者</li>
+</ul>
+
+<p>遺品整理事業者がどのカテゴリに登録しているかは実際に引いてみないと分かりません。<strong>1カテゴリずつ試して、当たりを見つけてから広げる</strong>のが正しい進め方です。</p>
+
+<div class="warn">
+<span class="label">存在しないカテゴリ名は0件になります</span>
+アプリのソースコードには、実在しないカテゴリ名を指定した場合について「silently match nothing」（何も一致せず、警告も出ない、拙訳）と書かれています。カテゴリ名はアプリの一覧機能から選んでください。手入力も可能ですが、打ち間違えても<strong>エラーではなく「0件」として返ります</strong>。
+</div>
+
+<h1>6. ステップ2 見積もりを取る</h1>
+
+<p>抽出の前に必ず見積もりを取ります。約0.012ドル（2円弱）かかりますが、これは実際に相手のデータベースに問い合わせているためです。</p>
+
+<p>返ってくるのは次の5つの数字です。</p>
+
+<table>
+<thead><tr><th>返る数字</th><th>意味</th><th>使い方</th></tr></thead>
+<tbody>
+<tr><td>該当総数</td><td>条件に合う事業者が全部で何社いるか</td><td>10社しかいなければ条件が厳しすぎる。500社なら地域を絞る</td></tr>
+<tr><td>取得予定数</td><td>今回実際に取る件数</td><td>指定した20社と一致するか確認</td></tr>
+<tr><td>抽出費用</td><td>リスト取得にいくらかかるか</td><td rowspan="3">合計を見て実行するか決める</td></tr>
+<tr><td>連絡先探しの見込み費用</td><td>ステップ4の想定額</td></tr>
+<tr><td>診断の見込み費用</td><td>ステップ5の想定額</td></tr>
+</tbody>
+</table>
+
+<div class="key">
+<span class="label">ここが唯一の引き返し地点</span>
+該当総数が想定と大きく違う場合、条件設定が間違っています。<strong>ここで条件を直せば費用はほぼゼロ</strong>です。見積もりを飛ばして抽出すると、条件ミスに気づいた時点でリスト取得費を払い終わっています。
+</div>
+
+<h1>7. ステップ3 事業者リストを抽出する</h1>
+
+<p>実行すると、条件に合う事業者が社名・住所・電話番号・サイトURL・評価・クチコミ数つきで一覧になります。ここまでは公開情報の収集です。</p>
+
+<div class="warn">
+<span class="label">やり直しは課金されます</span>
+ステップ4から6は、一度終わった社を自動的に飛ばします。ところが<strong>この抽出だけは飛ばしません</strong>。同じ条件でもう一度実行すると、リスト取得費をもう一度払います。API仕様書にも「re-running it pays the listings price again」（再実行するとリスト代を再度支払う、拙訳）と明記されています。条件を変えたい場合は、<strong>新しいキャンペーンとして作る</strong>のが安全です。
+</div>
+
+<h1>8. ステップ4 連絡先と担当者を探す</h1>
+
+<p>各社のサイトと公開情報を読んで、連絡先と、できれば決裁者の名前を探します。20社で3分から4分です。</p>
+
+<h2>8.1 出てくるもの</h2>
+
+<ul>
+<li>担当者の名前と役職（分かった場合）</li>
+<li>メールアドレス</li>
+<li><strong>その人物をどのページで見つけたかのURL一覧</strong>。会社概要ページなのか、代表挨拶ページなのかが残ります</li>
+<li>メールドメインの生存確認結果</li>
+</ul>
+
+<div class="note">
+<span class="label">「ドメインOK」の意味を誤解しないこと</span>
+API仕様書は「<code>domain_ok</code> means the domain accepts mail, never that the mailbox exists」（ドメインがメールを受け付けることを意味するだけで、そのメールボックスが存在することは意味しない、拙訳）と明記しています。<strong>宛先不明で戻ってくる可能性は残ります。</strong>初回送信でのバウンス率は必ず監視してください。
+</div>
+
+<h2>8.2 ここで脱落する社が出ます</h2>
+
+<p>連絡先が取れなかった社は、以降の工程から自動的に外れます。診断もメール下書きも走らないので、<strong>費用は発生しません</strong>。</p>
+
+<div class="key">
+<span class="label">この脱落は、実は法律上も都合が良い</span>
+日本で同意なしに営業メールを送れる根拠は「相手がサイトにメールアドレスを公表していること」です（第11章）。つまり<strong>ステップ4を通過した社は、定義上その要件を満たしています</strong>。アプリの関門と法律の要件がたまたま一致しており、通過した社だけを相手にすれば根拠が揃うことになります。
+</div>
+
+<h1>9. ステップ5 相手のサイトを診断する</h1>
+
+<p>各社のサイトを機械で走査し、<strong>画面のスクリーンショットを保存し、日本語の講評を書きます</strong>。技術スコアと、具体的な指摘事項が出ます。</p>
+
+<p>これが営業の中身になります。「御社のサイトを拝見しました」で始まる一般的な営業メールと違い、<strong>実際に何が問題かを名指しできる</strong>状態になります。</p>
+
+<div class="note">
+<span class="label">診断結果は人が読めるページとして残ります</span>
+社ごとに診断ページとスクリーンショットが保存されます。商談に進んだとき、そのまま提案資料の下敷きに使えます。
+</div>
+
+<h1>10. ステップ6 営業メール4通を下書きする</h1>
+
+<p>1社につき4通が一組で出てきます。送る間隔と各通の役割は決まっています。</p>
+
+<table>
+<thead><tr><th>通</th><th>送るタイミング</th><th>役割</th></tr></thead>
+<tbody>
+<tr><td>1通目</td><td>0日目</td><td>診断で見つけた具体的な指摘から入る</td></tr>
+<tr><td>2通目</td><td>3日目から4日目</td><td>別の切り口を出す</td></tr>
+<tr><td>3通目</td><td>7日目から9日目</td><td>控えめに打診する</td></tr>
+<tr><td>4通目</td><td>12日目から15日目</td><td>今回はここまでにする旨を伝えて終える</td></tr>
+</tbody>
+</table>
+
+<p>1通目の入り方は4種類から選べます。既定は<strong>サイト診断の指摘から入る</strong>形式ですが、他にクチコミとプロフィールから入る形式、業種と地域から入る形式、自由指定の形式があります。遺品整理業への提案なら、サイト診断が最も具体的で外しにくい入り方です。</p>
+
+<div class="key">
+<span class="label">配信停止の文言は機械が消せません</span>
+API仕様書によれば、配信停止の1文は<strong>コード側で強制的に追加されており、生成する側が落とせない設計</strong>です。住所も設定済みなら同様に追加されます。表示義務のうちこの2項目は、機械的に担保されます。
+</div>
+
+<h1>11. 日本で下書きを動かすための法的根拠</h1>
+
+<p>ステップ6を実行しようとすると、日本のキャンペーンでは処理が止まり、こう返ります。「何が適法なのかをキャンペーン画面に記録してから下書きしてください。何も書かれておらず、課金も発生していません」。</p>
+
+<h2>11.1 なぜ止まるのか</h2>
+
+<p>アプリは日本を「事前同意が必要な国」に分類し、内部コードに「Prior opt-in required, with no B2B exemption at all.」（事前のオプトインが必要で、B2Bの例外は一切ない、拙訳）と書いています。<strong>この分類は日本については正確ではありません。</strong></p>
+
+<p>アプリ自身がその出典を注記しています。この国別分類はベンダーのブログ記事に由来し、社内評価でも「信頼度：中」で、<strong>一次資料ではない</strong>とソースコードのコメントに明記されています。</p>
+
+<h2>11.2 一次資料での確認</h2>
+
+<p>特定電子メールの送信の適正化等に関する法律 第3条第1項は、広告宣伝メールの送信先を限定していますが、その第4号に次の定めがあります。</p>
+
+<div class="key">
+<span class="label">法第3条第1項第4号（条文そのまま）</span>
+四　前三号に掲げるもののほか、総務省令・内閣府令で定めるところにより<strong>自己の電子メールアドレスを公表している団体又は個人（個人にあっては、営業を営む者に限る。）</strong>
+</div>
+
+<p>公表の方法は施行規則第3条が「インターネットを利用して公衆が閲覧することができる状態に置く方法」と定めています。ただし<strong>アドレスと併せて広告メールを送らないよう求める文言が掲示されている場合、この例外は適用されません</strong>。</p>
+
+<p>総務省総合通信基盤局消費者行政課と消費者庁取引対策課のガイドラインは、この号の趣旨をこう説明しています。</p>
+
+<div class="note">
+<span class="label">ガイドライン18ページ（原文そのまま）</span>
+「正当な営業活動の一環として事業者間（ＢｔｏＢ）で電子メールを送受信する場合に、ウェブサイト等でメールアドレスを公開している事業者に対してビジネス向けサービス・製品の広告・宣伝メールを送信することは実態的に行われており、ビジネス習慣上も一定の範囲で認められているものと考えられる。」
+</div>
+
+<h2>11.3 記録する内容</h2>
+
+<div class="warn">
+<span class="label">キャンペーンの法的根拠欄に記録する文言（例）</span>
+「特定電子メール法 第3条第1項第4号（公表アドレス例外）。対象は自社サイトにメールアドレスを公開しており、かつ送信拒否の表示が無い法人に限定する。」<br><br>
+選択肢は4つ用意されており、根拠を自由記述できる欄があります。<strong>ただしこの記録は自社の判断です。</strong>本レポートは条文と行政ガイドラインを引用したものであり、法律相談ではありません。運用開始前に顧問弁護士の確認を取ってください。アプリのソースコードにも同じ趣旨の注記があります。
+</div>
+
+<h1>12. ステップ7 人が読んで承認する</h1>
+
+<p>ここからが人の仕事です。下書きを1通ずつ読み、直し、承認します。</p>
+
+<ul>
+<li>直した下書きは<strong>「手直し済み」として保護され、後から機械に上書きされません</strong></li>
+<li>承認済みの下書きだけがCSVに出ます。未承認のものは出ません</li>
+<li>CSVは4通が横並びの列に展開された形式です</li>
+</ul>
+
+<p>初回は<strong>この工程に時間をかけてください</strong>。ここで直した表現が、次回以降の基準になります。</p>
+
+<h1>13. ステップ8 自社のメール環境から送信する</h1>
+
+<p>Enrichard はメールを送りません。CSVを自社のメールソフトや配信ツールに読み込ませて送ります。<strong>送信前に次の5項目が入っているかを目視で確認してください。</strong>法第4条と施行規則第9条が求める表示事項です。</p>
+
+<table>
+<thead><tr><th>表示する内容</th><th>根拠</th><th>表示場所</th><th>アプリが自動で入れるか</th></tr></thead>
+<tbody>
+<tr><td>送信責任者の氏名または名称</td><td>法第4条第1号</td><td>受信者が容易に認識できる場所</td><td>署名として入る</td></tr>
+<tr><td>受信拒否の通知先アドレスまたはURL</td><td>法第4条第2号</td><td>同上</td><td><strong>入る（強制）</strong></td></tr>
+<tr><td>受信拒否の通知ができる旨の記載</td><td>施行規則第9条第1号</td><td>上記の直前または直後</td><td>設定した文面次第。<strong>要確認</strong></td></tr>
+<tr><td>送信責任者の住所</td><td>施行規則第9条第2号</td><td>リンク先を含む任意の場所</td><td>設定していれば入る。<strong>日本では警告が出ない</strong></td></tr>
+<tr><td>苦情・問合せ先の電話番号等</td><td>施行規則第9条第3号</td><td>同上</td><td><strong>入らない。自分で足す</strong></td></tr>
+</tbody>
+</table>
+
+<p>右端の列が実務上の要点です。<strong>3項目は自分で確認または追加する必要があります。</strong>1回ひな形を作ってしまえば以降は使い回せます。</p>
+
+<h1>14. ステップ9 返信対応と配信停止</h1>
+
+<p>返信が来たら、内容に応じて対応します。<strong>配信停止の依頼が来た場合の処理が最も重要です。</strong></p>
+
+<p>受信者から送信拒否の通知を受けた後の送信は、法第3条第3項で禁止されています。Enrichard には配信停止リストの機能があり、メールアドレス単位でも会社ドメイン単位でも登録できます。登録すると、以降の抽出・連絡先探し・下書き・CSV出力のすべてから除外されます。</p>
+
+<div class="warn">
+<span class="label">2か所で止める必要があります</span>
+API仕様書は「It cannot retract a CSV already exported and sent」（すでに書き出して送信済みのCSVは取り消せない、拙訳）と明記しています。配信停止の依頼が来たら、<strong>Enrichard 側と、実際に送信しているメールツール側の両方で止めてください。</strong>片方だけでは次の配信で届いてしまいます。<br><br>
+登録理由は「配信停止依頼」「宛先不明」「苦情」「否定的な返信」「手動」「既存顧客」から選べます。<strong>依頼を受けた時点で即座に登録すること。</strong>キャンペーンの終わりにまとめて処理してはいけません。
+</div>
+
+<h1>15. 進捗の見方</h1>
+
+<p>キャンペーン画面には6つの数字が並びます。どこで詰まっているかがこれで分かります。</p>
+
+<table>
+<thead><tr><th>数字</th><th>意味</th><th>読み方</th></tr></thead>
+<tbody>
+<tr><td>総数</td><td>抽出できた事業者数</td><td>見積もりの取得予定数と一致するか</td></tr>
+<tr><td>サイトあり</td><td>そのうちサイトを持つ社数</td><td>条件を付けていれば総数と同じになる</td></tr>
+<tr><td>情報補完済み</td><td>追加情報を取れた社数</td><td rowspan="2">この2つの差が、連絡先探しの成否</td></tr>
+<tr><td>連絡先あり</td><td><strong>連絡先が取れた社数</strong></td></tr>
+<tr><td>診断済み</td><td>サイト診断が終わった社数</td><td>連絡先ありの数に近づくはず</td></tr>
+<tr><td>下書き済み</td><td>メールが書けた社数</td><td>ここが0のままなら第4章の3設定を確認</td></tr>
+</tbody>
+</table>
+
+<p><strong>「連絡先あり」を「総数」で割った値が、この業種・この地域での歩留まりです。</strong>これが投資対効果を決めます。</p>
+
+<h1>16. 費用</h1>
+
+<table>
+<thead><tr><th>工程</th><th>1社あたり</th><th>20社</th><th>100社</th></tr></thead>
+<tbody>
+<tr><td>見積もり</td><td>1回0.012ドル</td><td>0.012ドル</td><td>0.012ドル</td></tr>
+<tr><td>抽出</td><td>リスト取得費</td><td colspan="2">見積もりで表示される</td></tr>
+<tr><td>連絡先探し</td><td>約0.045ドル</td><td>約0.9ドル</td><td>約4.5ドル</td></tr>
+<tr><td>診断</td><td>約0.035ドル</td><td>約0.7ドル</td><td>約3.5ドル</td></tr>
+<tr><td>下書き</td><td>約0.02ドル</td><td>約0.4ドル</td><td>約2ドル</td></tr>
+<tr><td><strong>合計（上限）</strong></td><td><strong>約0.10ドル</strong></td><td><strong>約2ドル</strong></td><td><strong>約10ドル</strong></td></tr>
+</tbody>
+</table>
+
+<p>1ドル150円換算で、20社が約300円、100社が約1,500円です。<strong>これは全社が最後の工程まで到達した場合の上限</strong>で、連絡先が取れなかった社が脱落する分だけ下回ります。</p>
+
+<div class="note">
+<span class="label">安全装置</span>
+上限金額を設定すると、直近30日の使用額がそれを超えた時点で全処理が止まります。設定画面から確認できます。なお、テストモードは相手のデータベースへの課金だけを止めるもので、<strong>文章生成側は本番と同じく課金されます</strong>。テストモードは安くなるだけで無料ではありません。
+</div>
+
+<h1>17. 最初の30日</h1>
+
+<table>
+<thead><tr><th>週</th><th>やること</th><th>見るべき数字</th></tr></thead>
+<tbody>
+<tr><td>1週目</td><td>準備（第4章）を済ませる。八王子市・不用品回収業者・20社で一巡させる</td><td><strong>連絡先の歩留まり。</strong>日本語の下書きが手直しなしで使える水準か</td></tr>
+<tr><td>2週目</td><td>下書きを人が読み、業種特有の言い回しに直す。表示義務5項目のひな形を作る</td><td><strong>1通あたりの手直し時間。</strong>これが本当のコスト</td></tr>
+<tr><td>3週目</td><td>承認分をCSVに出し、自社環境から送信する。バウンス率を監視する</td><td><strong>返信率。</strong>開封率ではなく返信率で判断する</td></tr>
+<tr><td>4週目</td><td>返信のあった社の共通点を、抽出条件（クチコミ数・評価上限・カテゴリ・地域）に反映して2巡目へ</td><td>この業種で続けるか、条件を変えるか</td></tr>
+</tbody>
+</table>
+
+<p>初回を20社に留めることを推奨します。費用の問題ではありません（20社で約300円です）。<strong>下書きの品質を人が全部読んで確かめられる分量に抑えるため</strong>です。品質を確認しないまま数百社に広げると、粗い文面を業種内に大量に配ることになります。適正な分量は2週目に測る手直し時間から判断してください。</p>
+
+<h1>18. 確認できたことと、できていないこと</h1>
+
+<table>
+<thead><tr><th>項目</th><th>状態</th><th>根拠</th></tr></thead>
+<tbody>
+<tr><td>日本が対応国であること</td><td>確認済み</td><td>アプリのソースコード実物</td></tr>
+<tr><td>日本語での診断文・メール生成が可能なこと</td><td>確認済み</td><td>アプリのソースコードとAPI仕様</td></tr>
+<tr><td>日本では下書きが既定で停止すること</td><td>確認済み</td><td>アプリのソースコード実物</td></tr>
+<tr><td>公表アドレス宛のB2B広告メールが適法であること</td><td>確認済み</td><td>法第3条第1項第4号、施行規則第3条、行政ガイドライン18ページ</td></tr>
+<tr><td>表示義務の5項目と、アプリが自動化しない3項目</td><td>確認済み</td><td>法第4条、施行規則第9条、API仕様</td></tr>
+<tr><td>工程別の単価</td><td>アプリの自己申告</td><td>API仕様書とスキル定義。実測はこれから</td></tr>
+<tr><td>遺品整理に対応するGoogleカテゴリ</td><td><strong>未確定</strong></td><td>専用カテゴリは非存在。近縁カテゴリは第三者集計による</td></tr>
+<tr><td>連絡先の歩留まり</td><td><strong>未測定</strong></td><td>1週目の試行で判明する</td></tr>
+<tr><td>生成される日本語メールの実用水準</td><td><strong>未評価</strong></td><td>実物を読むまで判断できない</td></tr>
+<tr><td>個人情報保護法上の取り扱い</td><td><strong>未検証</strong></td><td>担当者名を取得・保管する運用のため、別途確認が必要</td></tr>
+</tbody>
+</table>
+
+<div class="warn">
+<span class="label">本レポートの性質</span>
+条文と行政ガイドラインを引用していますが、<strong>法律上の助言ではありません</strong>。とくに第11章と第13章は、運用開始前に顧問弁護士の確認を受けてください。
+</div>
+
+<h1>19. 出典</h1>
+
+<p class="src">
+<strong>一次資料</strong><br>
+特定電子メールの送信の適正化等に関する法律（平成14年法律第26号）第2条第2号、第3条第1項第1号・第4号、第3条第3項、第4条<br>
+特定電子メールの送信の適正化等に関する法律施行規則 第3条、第5条、第6条、第7条、第9条<br>
+「特定電子メールの送信等に関するガイドライン」平成23年8月、総務省総合通信基盤局消費者行政課／消費者庁取引対策課（18ページ、19ページ、20ページ、24ページから26ページ）<br>
+https://www.soumu.go.jp/main_sosiki/joho_tsusin/d_syohi/pdf/m_mail_081114_1.pdf
+</p>
+
+<p class="src">
+<strong>アプリのソースコードとAPI仕様（AI-Marketing-Hub/enrichard、コミット 450c81f）</strong><br>
+app/lib/jurisdiction.ts（国別の規制区分、住所要件、法的根拠の選択肢）<br>
+app/lib/pipeline/draft.ts（下書き工程の停止条件、出力言語）<br>
+app/lib/dataforseo/locations.ts（対応国と言語）<br>
+app/lib/dataforseo/categories.ts（カテゴリ照会の仕様）<br>
+app/lib/db/schema.ts（診断文の出力言語、法的根拠の保存欄）<br>
+.claude/skills/enrichard/reference/api.md（絞り込み条件、見積もりの返り値、進捗の6数字、4通の構成、配信停止リスト、テストモードの課金範囲）<br>
+.claude/skills/enrichard/SKILL.md（工程別の単価、見積もり必須、再抽出の課金、所要時間、送信しない設計）<br>
+※本文中の「拙訳」表記のある引用は、英語原文を日本語に訳したものです。原文の文字列はカッコ内に併記しています。
+</p>
+
+<p class="src">
+<strong>第三者資料（信頼度は上記より低い）</strong><br>
+Googleビジネスプロフィール カテゴリ一覧（フリースクエア、2026年2月現在4,195件）<br>
+https://freesquare.co.jp/media/meo/category-list/<br>
+迷惑メール相談センター（一般財団法人日本データ通信協会）特定電子メール法の解説<br>
+https://www.dekyo.or.jp/soudan/contents/taisaku/1-2.html
+</p>

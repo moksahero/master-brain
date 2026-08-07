@@ -11,7 +11,6 @@ Thumbs.db
 # Anchored to repo root so they don't silently eat vendored brain template files
 # under brains/ (e.g. brains/youtube-brain/**/wiki/reports/).
 /data/
-/reports/
 /wiki/.obsidian/workspace*.json
 
 # Vendored brains: ship the tooling + templates, but never commit generated
@@ -25,6 +24,7 @@ todos/
 # PDF描画のQA中間物。render-ja.sh / render.sh が全ページをPNG化したもので、
 # 目視検証のためだけに存在する。いつでも再生成できるのでコミットしない。
 skills/*/report/verify/
+/reports/verify/
 
 # node
 node_modules/
