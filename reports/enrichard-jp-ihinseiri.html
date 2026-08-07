@@ -5,7 +5,7 @@
 <section class="cover">
   <div class="kicker">MASTER BRAIN / enrichard</div>
   <h1>新規開拓の手順書</h1>
-  <div class="sub">遺品整理事業者を Enrichard で見つけ、<br>診断し、営業メールを出すまでの9ステップ</div>
+  <div class="sub">遺品整理事業者を Enrichard で見つけ、診断し、<br>営業メールを出し、商談資料を作るまでの10ステップ</div>
   <div class="meta">
     作成：2026年8月7日<br>
     対象：<code>AI-Marketing-Hub/enrichard</code> v1.0.0（コミット 450c81f）<br>
@@ -20,9 +20,14 @@
   border: 0.6pt solid var(--rule);
   border-left: 3pt solid var(--accent);
   background: var(--accent-soft);
-  padding: 2.6mm 3.5mm;
+  padding: 2.1mm 3.5mm;
 }
 .band.auto { border-left-color: #8a8a8a; background: #f6f7f9; }
+.band.branch { border-style: dashed; border-left-style: solid; }
+.band .cmd {
+  font-family: "DejaVu Sans Mono", monospace; font-size: 9pt;
+  font-weight: 400; color: var(--accent);
+}
 .band .who {
   font-family: "Noto Sans CJK JP", sans-serif;
   font-size: 8pt; font-weight: 700; letter-spacing: 0.08em;
@@ -31,13 +36,13 @@
 .band.auto .who { color: #666; }
 .band .what {
   font-family: "Noto Sans CJK JP", sans-serif;
-  font-size: 11pt; font-weight: 700; line-height: 1.4;
+  font-size: 10.5pt; font-weight: 700; line-height: 1.35;
 }
 .band .detail { font-size: 8.5pt; line-height: 1.65; color: var(--muted); margin-top: 1mm; }
 .band .detail b { color: var(--ink); }
 .down {
   text-align: center; font-size: 9pt; color: #9a9a9a;
-  line-height: 1.1; margin: 0.9mm 0;
+  line-height: 1.05; margin: 0.5mm 0;
 }
 table.four { width: 100%; border-collapse: collapse; margin: 2mm 0 0; }
 table.four td {
@@ -115,16 +120,16 @@ table.four td .c { display: block; font-size: 8pt; color: var(--muted); margin-t
     <div class="detail">商談に進めるか、配信停止の依頼なら即座に登録するか。<b>停止はEnrichard側と送信ツール側の両方で行います。</b></div>
   </div>
 
+  <div class="down">▼</div>
+
+  <div class="band branch">
+    <div class="who">あなた＋Master Brain（返信があった相手にだけ）</div>
+    <div class="what">商談用のレポートを作る　<span class="cmd">/mb:init</span></div>
+    <div class="detail">相手のサイトを本格的に調べ、日本語のPDFにします。<b>ステップ5の診断は入口用、こちらは商談用</b>です。</div>
+  </div>
+
 </div>
 
-<table class="io">
-<tr>
-  <td><span class="h">入れるもの</span>
-  市区町村ひとつ<br>業種カテゴリひとつ<br>絞り込み条件（サイトの有無・クチコミ数・評価）</td>
-  <td><span class="h">出てくるもの</span>
-  承認済みの営業メール4通 × 社数のCSV<br>各社のサイト診断書とスクリーンショット<br>担当者名と、その情報を見つけたページのURL</td>
-</tr>
-</table>
 
 
 <h1>2. 結論</h1>
@@ -135,6 +140,17 @@ table.four td .c { display: block; font-size: 8pt; color: var(--muted); margin-t
 </div>
 
 <p>費用は1社あたり最大で約0.10ドル。20社の試行なら約2ドル（1ドル150円換算で約300円）です。所要時間は連絡先探しが20社で3分から4分、診断とメール下書きを含めて1回の試行が1時間以内に終わります。</p>
+
+<p>返信が来た相手には、<strong>商談用のレポートを別に作ります</strong>（ステップ10、<code>/mb:init</code>）。こちらは費用も時間も桁が違うので、返信があった相手だけに絞ります。</p>
+<table class="io">
+<tr>
+  <td><span class="h">入れるもの</span>
+  市区町村ひとつ<br>業種カテゴリひとつ<br>絞り込み条件（サイトの有無・クチコミ数・評価）</td>
+  <td><span class="h">出てくるもの</span>
+  承認済みの営業メール4通 × 社数のCSV<br>各社のサイト診断書とスクリーンショット<br>担当者名と、その情報を見つけたページのURL<br>返信があった相手の商談用レポート（日本語PDF）</td>
+</tr>
+</table>
+
 
 <p>日本で使う場合、<strong>準備段階で3つの設定を入れないとメール下書きが動きません</strong>。設定内容は第4章に書いています。</p>
 
@@ -153,6 +169,7 @@ table.four td .c { display: block; font-size: 8pt; color: var(--muted); margin-t
 <tr><td>7</td><td>下書きを読み、直し、承認し、CSVに出す</td><td><strong>人</strong></td><td>1時間から2時間・0円</td></tr>
 <tr><td>8</td><td>自社のメール環境から送信する</td><td><strong>人</strong></td><td>30分・0円</td></tr>
 <tr><td>9</td><td>返信対応と配信停止の登録</td><td><strong>人</strong></td><td>随時・0円</td></tr>
+<tr><td>10</td><td>商談用のレポートを作る（<code>/mb:init</code>）</td><td><strong>人</strong>が起動、あとは自動</td><td>返信があった相手だけ</td></tr>
 </tbody>
 </table>
 
@@ -407,7 +424,57 @@ API仕様書は「It cannot retract a CSV already exported and sent」（すで�
 登録理由は「配信停止依頼」「宛先不明」「苦情」「否定的な返信」「手動」「既存顧客」から選べます。<strong>依頼を受けた時点で即座に登録すること。</strong>キャンペーンの終わりにまとめて処理してはいけません。
 </div>
 
-<h1>15. 進捗の見方</h1>
+<h1>15. ステップ10 商談用のレポートを作る</h1>
+
+<p>返信が来た相手に対してだけ行います。<strong>ステップ5の診断とは目的も深さも別物です。</strong>取り違えると、入口用の軽い診断を商談に持ち込むことになります。</p>
+
+<h2>15.1 2つの診断の違い</h2>
+
+<table class="cmp">
+<colgroup><col style="width:13%"><col style="width:29%"><col style="width:58%"></colgroup>
+<thead><tr><th>観点</th><th>ステップ5の診断</th><th>ステップ10のレポート</th></tr></thead>
+<tbody>
+<tr><td>目的</td><td>メールの書き出しを作る</td><td>商談で提案の根拠にする</td></tr>
+<tr><td>対象</td><td>抽出した全社</td><td><strong>返信があった相手だけ</strong></td></tr>
+<tr><td>中身</td><td>サイト走査、画面保存、講評</td><td>技術SEO・ページ棚卸し・コンテンツ・UI・評判の5分野を並行調査。注釈つきスクリーンショットと検証済みグラフを含む日本語PDF</td></tr>
+<tr><td>費用</td><td>1社あたり約0.035ドル</td><td><strong>桁が違います</strong>（下記参照）</td></tr>
+<tr><td>実行</td><td>Enrichard が自動</td><td><code>/mb:init</code> を人が起動</td></tr>
+</tbody>
+</table>
+
+<h2>15.2 手順</h2>
+
+<ol>
+<li>相手ごとに作業フォルダを作り、その中で <code>/mb:init</code> を実行する</li>
+<li>質問が<strong>1回だけ</strong>まとめて出るので答える。遺品整理事業者が相手なら次の答えになります
+  <ul>
+    <li>新規か既存か → <strong>既存</strong>（相手にはすでにサイトがある）</li>
+    <li>何をやるか → <strong>full website audit</strong> と <strong>report</strong></li>
+    <li>対象地域 → 相手の商圏（例：東京都八王子市）</li>
+    <li>サイトURL → 相手のサイト</li>
+    <li>レポートの言語 → <strong>日本語</strong>（既定値がすでに日本語です）</li>
+  </ul>
+</li>
+<li>あとは自動で最後まで走り、<code>reports/</code> に日本語のPDFが出る</li>
+</ol>
+
+<div class="warn">
+<span class="label">起動前に知っておくこと</span>
+<strong>質問に答えたあと、確認を挟まずに最後まで走ります。</strong>途中で「実行しますか」とは聞かれません。API利用料が自動で発生します。<br><br>
+<strong>APIキーが2種類必要です。</strong>サイト全体の巡回用と、検索順位・キーワード調査用です。未設定でも動きますが、実数値の出ない簡易モードになります。1回設定すれば以降のすべての案件で使えます。<br><br>
+<strong>費用は本レポートでは未測定です。</strong>Enrichard の1社0.10ドルとは桁が違うため、同じ感覚で全社に走らせないでください。返信があった相手に絞る運用が前提です。
+</div>
+
+<div class="note">
+<span class="label">相手のアカウントには触れません</span>
+調べるのは公開されているサイトと検索結果だけです。相手の管理画面や広告アカウントに接続することはありません。許可を取る前の段階で作れる資料です。
+</div>
+
+<h2>15.3 何が残るか</h2>
+
+<p>案件フォルダには、日本語PDFのほかに調査の生データと蓄積用のノートが残ります。<strong>同じ相手に2回目の提案をするとき、ゼロから調べ直す必要がありません。</strong>受注後もそのまま作業の土台として使えます。</p>
+
+<h1>16. 進捗の見方</h1>
 
 <p>キャンペーン画面には6つの数字が並びます。どこで詰まっているかがこれで分かります。</p>
 
@@ -425,7 +492,7 @@ API仕様書は「It cannot retract a CSV already exported and sent」（すで�
 
 <p><strong>「連絡先あり」を「総数」で割った値が、この業種・この地域での歩留まりです。</strong>これが投資対効果を決めます。</p>
 
-<h1>16. 費用</h1>
+<h1>17. 費用</h1>
 
 <table>
 <thead><tr><th>工程</th><th>1社あたり</th><th>20社</th><th>100社</th></tr></thead>
@@ -436,6 +503,7 @@ API仕様書は「It cannot retract a CSV already exported and sent」（すで�
 <tr><td>診断</td><td>約0.035ドル</td><td>約0.7ドル</td><td>約3.5ドル</td></tr>
 <tr><td>下書き</td><td>約0.02ドル</td><td>約0.4ドル</td><td>約2ドル</td></tr>
 <tr><td><strong>合計（上限）</strong></td><td><strong>約0.10ドル</strong></td><td><strong>約2ドル</strong></td><td><strong>約10ドル</strong></td></tr>
+<tr><td>ステップ10 商談用レポート</td><td colspan="3"><strong>別枠。未測定。</strong>返信があった相手にだけ、1件ずつ実行する</td></tr>
 </tbody>
 </table>
 
@@ -446,7 +514,7 @@ API仕様書は「It cannot retract a CSV already exported and sent」（すで�
 上限金額を設定すると、直近30日の使用額がそれを超えた時点で全処理が止まります。設定画面から確認できます。なお、テストモードは相手のデータベースへの課金だけを止めるもので、<strong>文章生成側は本番と同じく課金されます</strong>。テストモードは安くなるだけで無料ではありません。
 </div>
 
-<h1>17. 最初の30日</h1>
+<h1>18. 最初の30日</h1>
 
 <table>
 <thead><tr><th>週</th><th>やること</th><th>見るべき数字</th></tr></thead>
@@ -454,13 +522,13 @@ API仕様書は「It cannot retract a CSV already exported and sent」（すで�
 <tr><td>1週目</td><td>準備（第4章）を済ませる。八王子市・不用品回収業者・20社で一巡させる</td><td><strong>連絡先の歩留まり。</strong>日本語の下書きが手直しなしで使える水準か</td></tr>
 <tr><td>2週目</td><td>下書きを人が読み、業種特有の言い回しに直す。表示義務5項目のひな形を作る</td><td><strong>1通あたりの手直し時間。</strong>これが本当のコスト</td></tr>
 <tr><td>3週目</td><td>承認分をCSVに出し、自社環境から送信する。バウンス率を監視する</td><td><strong>返信率。</strong>開封率ではなく返信率で判断する</td></tr>
-<tr><td>4週目</td><td>返信のあった社の共通点を、抽出条件（クチコミ数・評価上限・カテゴリ・地域）に反映して2巡目へ</td><td>この業種で続けるか、条件を変えるか</td></tr>
+<tr><td>4週目</td><td>返信のあった社に <code>/mb:init</code> で商談用レポートを作る。あわせて、返信のあった社の共通点を抽出条件（クチコミ数・評価上限・カテゴリ・地域）に反映して2巡目へ</td><td>この業種で続けるか、条件を変えるか</td></tr>
 </tbody>
 </table>
 
 <p>初回を20社に留めることを推奨します。費用の問題ではありません（20社で約300円です）。<strong>下書きの品質を人が全部読んで確かめられる分量に抑えるため</strong>です。品質を確認しないまま数百社に広げると、粗い文面を業種内に大量に配ることになります。適正な分量は2週目に測る手直し時間から判断してください。</p>
 
-<h1>18. 確認できたことと、できていないこと</h1>
+<h1>19. 確認できたことと、できていないこと</h1>
 
 <table>
 <thead><tr><th>項目</th><th>状態</th><th>根拠</th></tr></thead>
@@ -473,6 +541,7 @@ API仕様書は「It cannot retract a CSV already exported and sent」（すで�
 <tr><td>工程別の単価</td><td>アプリの自己申告</td><td>API仕様書とスキル定義。実測はこれから</td></tr>
 <tr><td>遺品整理に対応するGoogleカテゴリ</td><td><strong>未確定</strong></td><td>専用カテゴリは非存在。近縁カテゴリは第三者集計による</td></tr>
 <tr><td>連絡先の歩留まり</td><td><strong>未測定</strong></td><td>1週目の試行で判明する</td></tr>
+<tr><td>ステップ10の1件あたり費用と所要時間</td><td><strong>未測定</strong></td><td>4週目に1件実行して測る</td></tr>
 <tr><td>生成される日本語メールの実用水準</td><td><strong>未評価</strong></td><td>実物を読むまで判断できない</td></tr>
 <tr><td>個人情報保護法上の取り扱い</td><td><strong>未検証</strong></td><td>担当者名を取得・保管する運用のため、別途確認が必要</td></tr>
 </tbody>
@@ -483,7 +552,7 @@ API仕様書は「It cannot retract a CSV already exported and sent」（すで�
 条文と行政ガイドラインを引用していますが、<strong>法律上の助言ではありません</strong>。とくに第11章と第13章は、運用開始前に顧問弁護士の確認を受けてください。
 </div>
 
-<h1>19. 出典</h1>
+<h1>20. 出典</h1>
 
 <p class="src">
 <strong>一次資料</strong><br>
@@ -502,6 +571,7 @@ app/lib/dataforseo/categories.ts（カテゴリ照会の仕様）<br>
 app/lib/db/schema.ts（診断文の出力言語、法的根拠の保存欄）<br>
 .claude/skills/enrichard/reference/api.md（絞り込み条件、見積もりの返り値、進捗の6数字、4通の構成、配信停止リスト、テストモードの課金範囲）<br>
 .claude/skills/enrichard/SKILL.md（工程別の単価、見積もり必須、再抽出の課金、所要時間、送信しない設計）<br>
+master-brain commands/init.md（<code>/mb:init</code> の質問項目、既定のレポート言語、確認を挟まない実行、必要なAPIキー、成果物の置き場所）<br>
 ※本文中の「拙訳」表記のある引用は、英語原文を日本語に訳したものです。原文の文字列はカッコ内に併記しています。
 </p>
 
