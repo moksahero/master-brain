@@ -317,6 +317,18 @@ register_commands() {
         ;;
     esac
   done
+  # Same prune for the generated app-repo wrappers written by Phase 1b of
+  # register_skill_aliases. Those are real files, not symlinks, so the sweep above
+  # cannot see them; each carries a marker naming the SKILL.md it wraps.
+  for link in "$COMMANDS_DIR"/*.md; do
+    [ -L "$link" ] && continue
+    [ -f "$link" ] || continue
+    d="$(sed -n 's/^<!-- mb:skill-wrapper \(.*\) -->$/\1/p' "$link" | head -1)"
+    [ -n "$d" ] || continue
+    [ -e "$d" ] && continue
+    rm -f "$link"
+    printf '        pruned stale /%s (app repo removed its skill upstream)\n' "$(basename "${link%.md}")"
+  done
   for d in "$SKILLS_DIR"/*/; do
     [ -d "$d" ] || continue
     name="$(basename "$d")"
@@ -371,6 +383,62 @@ register_skill_aliases() {
     fi
     [ -e "$dest" ] && [ ! -L "$dest" ] && continue
     ln -sf "$skillmd" "$dest"
+    CMD_OWNER[$bare.md]="$brain"
+    a=$((a+1))
+  done
+  # Phase 1b: APP repos, which ship their operating skill at
+  # <repo>/.claude/skills/<repo>/SKILL.md instead of at the root (enrichard). Phase 1
+  # cannot see those: they sit one level deeper, behind a dot directory. Two rules keep
+  # this narrow and safe.
+  #
+  #   1. Only the SELF-NAMED skill is exposed (dir name == repo name). A repo's other
+  #      .claude/skills entries are its own development chores, not fleet capability
+  #      (marketing-os ships pr-review, testing, bump-version, i18n; exposing those
+  #      globally would squat obvious command names for no benefit).
+  #   2. We WRITE a wrapper instead of symlinking the SKILL.md raw. An app repo's skill
+  #      locates its own code with `git rev-parse --show-toplevel`, which resolves to
+  #      whatever repo the user is sitting in, so a raw alias silently points the skill
+  #      at the wrong checkout. The wrapper pins the real path first.
+  for skillmd in "$SKILLS_DIR"/*/.claude/skills/*/SKILL.md; do
+    [ -e "$skillmd" ] || continue
+    brain="${skillmd#"$SKILLS_DIR"/}"; brain="${brain%%/*}"
+    bare="$(basename "$(dirname "$skillmd")")"
+    [ "$bare" = "$brain" ] || continue
+    skip_cmd_register "$brain" && continue
+    dest="$COMMANDS_DIR/$bare.md"
+    if [ -n "${CMD_OWNER[$bare.md]:-}" ]; then
+      [ "${CMD_OWNER[$bare.md]}" = "$brain" ] || \
+        printf '        \xe2\x9a\xa0  /%s alias skipped: already owned by %s\n' "$bare" "${CMD_OWNER[$bare.md]}"
+      continue
+    fi
+    # Never clobber a hand-written command; our own wrapper carries the marker.
+    if [ -e "$dest" ] && [ ! -L "$dest" ] && ! grep -q '^<!-- mb:skill-wrapper ' "$dest" 2>/dev/null; then
+      continue
+    fi
+    rm -f "$dest"
+    cat > "$dest" <<WRAPPER
+---
+description: Operate the ${brain} app, cloned at ${SKILLS_DIR}/${brain}. Reads that repo's own skill.
+argument-hint: "see the skill's own commands"
+---
+<!-- mb:skill-wrapper ${skillmd} -->
+
+\`${brain}\` is an app repository, not a brain clone. Its checkout lives at:
+
+\`\`\`
+${SKILLS_DIR}/${brain}
+\`\`\`
+
+Work from that directory. Its skill resolves the app with
+\`git rev-parse --show-toplevel\`, so running it from any other project points it
+at the wrong repository.
+
+Now read \`${skillmd}\` and follow it exactly, including every spend gate,
+confirmation step, and hard stop it defines. Its sibling \`reference/\` directory
+holds the API contract it refers to.
+
+Arguments: \$ARGUMENTS
+WRAPPER
     CMD_OWNER[$bare.md]="$brain"
     a=$((a+1))
   done
