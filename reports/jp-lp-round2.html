@@ -1,0 +1,407 @@
+<meta charset="utf-8">
+<title>日本市場LP調査 第2次レポート 2026</title>
+<link rel="stylesheet" href="../skills/jp-lp/assets/report-ja.css">
+
+<section class="cover">
+  <div class="kicker">MASTER BRAIN / jp-lp</div>
+  <h1>日本市場LP調査<br>第2次レポート</h1>
+  <div class="sub">初版の15項目を訂正し、<br>Google / Meta の配信最適化を新設</div>
+  <div class="meta">
+    第1次調査：2026年8月5日（14レーン・実測中心）<br>
+    第2次調査：2026年8月6日（12レーン・穴埋めと反証）<br>
+    作成：Master Brain <code>jp-lp</code> スキル
+  </div>
+</section>
+
+<h1>1. このレポートの位置づけ</h1>
+
+<div class="warn">
+<span class="label">これは訂正報告である</span>
+第1次調査の結論を第2次調査で<strong>反証にかけた</strong>結果、<strong>初版の看板だった発見を含む15項目</strong>を訂正した。初版のレポートを読んだ人は、この文書で差分だけを把握できる。<br><br>
+訂正の方向は<strong>ほとんどが「より慎重な側」</strong>である。断定していたものを解釈に格下げし、母集団と呼んでいたものを連続分布に改め、「1件は存在する」としていたものを「使えるものは0件」に厳しくした。
+</div>
+
+<h2>1.1 なぜ再調査したか</h2>
+
+<p>第1次調査では、指定ツールだった Perplexity API が全レーンで HTTP 401（クォータ超過）を返し、一度も使用できなかった。代替として WebFetch・e-Gov法令API・ヘッドレスブラウザ・pdftotext で調査を完遂したが、<strong>到達できなかった一次資料が22項目残った</strong>。</p>
+
+<p>APIキーの差し替えで Perplexity が復旧したため、12レーンで再調査した。ただし<strong>同一条件の再実行はしていない</strong>。実測ベースの結論（和文タイポの実測値、CTA寸法など）は同じ手法で測れば同じ数字が出るだけなので、火力を次の3点に集中した。</p>
+
+<ol>
+<li>第1次で埋められなかった穴</li>
+<li><strong>主要結論の反証</strong>（追認ではなく、壊しにいく専任レーンを置いた）</li>
+<li>依頼主が実際に出稿している Google / Meta の2媒体への最適化</li>
+</ol>
+
+<h2>1.2 証拠プロトコルを1点強化した</h2>
+
+<div class="key">
+<span class="label">Perplexityの回答をそのまま「公式」にしない</span>
+返ってきた出典URLを WebFetch で開き、<strong>原文を確認できたものだけを一次情報として扱う</strong>。開けなければ弱いラベルのまま残す。要約は結論ではなく<strong>原典への地図</strong>として使う。
+</div>
+
+<p><strong>この運用は機能した。</strong>12レーンのうち少なくとも5レーンが、Perplexityの誤りを実地で検出している。</p>
+
+<ul>
+<li>提示URLが404、または別法令（いじめ防止対策推進法）へ転送された</li>
+<li>調査時期が半年ずれていた</li>
+<li>キャッシュレス比率を58.5%と回答（実際は58.0%）</li>
+<li>ステマ規制の確約4件を「措置命令」と誤記</li>
+<li><strong>ABテストの「事例」として、架空のサンプルサイズ設計例を提示した</strong></li>
+</ul>
+
+<p>要約をそのまま採用していれば、これらは成果物に入っていた。</p>
+
+<h1>2. 最も重い訂正：「2つの母集団」は成立しない</h1>
+
+<p>初版は「日本のLPは統計的に別物の2母集団に分かれる」と書き、これを最大の発見として提示した。<strong>この言い方は支えられない。</strong></p>
+
+<h2>2.1 4つの理由</h2>
+
+<table>
+<thead><tr><th>#</th><th>問題</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>サンプリング枠が重なっている</strong></td><td>「ギャラリー」として扱ったLPアーカイブ（rdlp.jp）は、公式に「<strong>広告をクリックした際に表示されるランディングページ</strong>」を集めると明記しており、fbclid付きの記事LPが実際に登録されている。2群は互いに素ではない</td></tr>
+<tr><td>2</td><td><strong>測定手法が非対称で中立でない</strong></td><td>一方はHTML取得ベース、他方はスクリーンショット目視。初版が別途「日本のLPは装飾を画像に焼き込む」と結論している以上、<strong>HTML側は構造的に装飾を取り逃す</strong>。この2つの発見は並置できない</td></tr>
+<tr><td>3</td><td><strong>キュレーションが入っている</strong></td><td>LPアーカイブの掲載基準は「弊社で良いと思ったデザイン」という主観選定。母集団統計ではない</td></tr>
+<tr><td>4</td><td><strong>件数の読み違い</strong></td><td>「46,006件」は登録総数ではなく<strong>PCデザインの表示件数</strong>。登録総数は2025年3月時点で約7.6万件</td></tr>
+</tbody>
+</table>
+
+<h2>2.2 訂正後の結論</h2>
+
+<div class="key">
+<span class="label">装飾濃度は連続的に分布する</span>
+位置を決めるのは業種ではなく、<strong>(1) 誰が作ったか（ブランド本体かDR事業部か）、(2) どの制作SaaSを使ったか、(3) どの面に配信するか</strong>の3つ。<br><br>
+設計に入る前にこの3つを確定させる。<strong>「日本のLPの型」という単一の答えを探さない。</strong>
+</div>
+
+<p>なお<strong>差の向きそのものは実務者の認識と整合しており、数値は取り下げていない</strong>。取り下げたのは「境界のある2集団」という枠組みである。数値を引用するときは上記4つの交絡を必ず添える。</p>
+
+<h1>3. 「記事LP」は市場の型ではなくベンダーの処方だった</h1>
+
+<p>初版は <code>/ab/</code> というパスを「記事LPのパス」として一般化した。<strong>これは Squad beyond というツールのホスティング規約である。</strong>n=17 は1ベンダーの標本にすぎない。</p>
+
+<p>そして赤字・黄色マーカー <strong>17/17（100%）</strong> という数字は、<strong>同社が公式ブログで「太字＋マーカー」「吹き出しを多用」と処方した結果</strong>だった。市場が自然にそこへ収束したのではない。</p>
+
+<div class="warn">
+<span class="label">規模感は無視できない</span>
+Squad beyond は自社システム製ページが<strong>年間推定9,000億円（国内ネット広告媒体費の約30%相当）</strong>の広告配信に使われていると自己申告している。<strong>初版が「日本の広告LPの型」と呼んだものの相当部分は、単一SaaSのテンプレート効果</strong>である可能性が高い。
+</div>
+
+<h2>3.1 ただしベンダー差は媒体差の「実装手段」でもある</h2>
+
+<p>同じレジーナクリニックが、<strong>Googleには自社公式LP、MetaにはSquad beyond系の記事LPを当てている</strong>ことが実測で確認された。Google側18件では <code>sb-</code> ドメインも <code>/ab/</code> パスも<strong>0件</strong>、Meta側51件では23.5%と29.4%。</p>
+
+<p>つまりベンダー差と媒体差は対立しない。<strong>媒体ごとの狙いを実装する手段としてベンダーが選ばれている。</strong></p>
+
+<h1>4. 訂正一覧（全15項目）</h1>
+
+<table>
+<thead><tr><th>#</th><th>初版の記述</th><th>訂正</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>統計的に別物の2母集団に分かれる</td><td><strong>支えられない。</strong>連続分布で境界はない</td></tr>
+<tr><td>2</td><td><code>/ab/</code> は記事LPのパス。装飾100%は市場の型</td><td><strong>Squad beyond のホスティング規約。</strong>同社の公開処方の再現</td></tr>
+<tr><td>3</td><td>媒体ごとに別LPを作るのが実勢</td><td>誇張。Meta識別子は55件中15件（27.3%）。分ける単位は媒体より<strong>面</strong></td></tr>
+<tr><td>4</td><td>業種別CVRベンチマークは出典付き1件</td><td><strong>実務判断に使えるものは0件</strong></td></tr>
+<tr><td>5</td><td>PASONA / PASBECONA はどちらが正か不明</td><td>2016年書籍は<strong>PASONAが正</strong>。PASBECONAは2021年の別書籍</td></tr>
+<tr><td>6</td><td>AIDMA はホールが提唱</td><td><strong>誤り。</strong>Hall原著5冊の検証で不在。実際はAICCA（1915）</td></tr>
+<tr><td>7</td><td>漢字率3割説は裏付け未確認</td><td><strong>実験で否定済み。</strong>効くのは漢字連続長</td></tr>
+<tr><td>8</td><td>外部送信規律「自社商材LPは対象外」（公式）</td><td><strong>推定に格下げ。</strong>4類型からの解釈で明言ではない</td></tr>
+<tr><td>9</td><td>Yahoo!広告は未確認</td><td><strong>解消。</strong>公式31件を原文取得</td></tr>
+<tr><td>10</td><td>LINE広告は急かし表現を明示的に否認</td><td><strong>出典なし。取り下げ</strong></td></tr>
+<tr><td>11</td><td>TikTokのQR禁止に日本を含む</td><td>根拠が誤り（対象60市場に日本は不在）。結論は不変</td></tr>
+<tr><td>12</td><td>機能性表示食品のガイドライン</td><td><strong>廃止済み。</strong>現行は「手引き」（令和7年）</td></tr>
+<tr><td>13</td><td>BEAF初出は2011年</td><td>2010年5月（NDL書誌）</td></tr>
+<tr><td>14</td><td>縦の長さは母集団の特徴</td><td>記事LPを挟むかどうかで決まる</td></tr>
+<tr><td>15</td><td>マンガ2件は投資・不動産に偏る</td><td>小標本の産物。業界の見解ではコンプレックス商材が主戦場</td></tr>
+</tbody>
+</table>
+
+<div class="note">
+<span class="label">第2次で追認されたもの</span>
+医療広告の二段構え（限定解除①を満たさないのは広告クリエイティブのみで、遷移先LPは限定解除可能）、マンガLPが日本の型ではないこと（3.8%を独立に再現）、日本語CVR記事の出典が米国であること、同意モードv2が日本で不要であること、LPOツールの価格。
+</div>
+
+<h1>5. コピー理論：3つの通説が覆った</h1>
+
+<h2>5.1 PASONA 問題の決着</h2>
+
+<p>初版は、著者公式サイトの表記（新・PASBECONAの法則）と二次情報（新・PASONAの法則）が食い違うため保留とした。決着した。</p>
+
+<ul>
+<li><strong>2016年『稼ぐ言葉の法則』は「新・PASONAの法則」が正。</strong>国立国会図書館の書誌（納本現物由来）2件が一致し、ダイヤモンド社の発売日記事も本文・見出しとも一致</li>
+<li><strong>著者公式サイトの PASBECONA 表記は、サイト全体の文字列一括置換の産物。</strong>決め手は内部矛盾で、同ページが「17年前に開発したPASBECONAの法則」と書いているが、17年前＝1999年に PASBECONA は存在しない。置換痕は著者会社サイトの別2ページでも実測された</li>
+<li><strong>PASBECONA は実在するが2021年の別書籍</strong>（『コピーライティング技術大全』）。9要素は Problem / Affinity / Solution / Benefit / Evidence / Contents / Offer / Narrow down / Action</li>
+</ul>
+
+<p><strong>実務判断</strong>：2016年書籍を参照するなら「新・PASONA」、2021年書籍なら「PASBECONA」と年で分ける。「1999年にPASBECONAを提唱」は著者側サイトの記述であっても誤り。</p>
+
+<h2>5.2 AIDMA をホールに帰属させてはいけない</h2>
+
+<p>岸志津江（東京経大学会誌326号）が <strong>Hall の原著5冊を直接検証し「AIDMAの5文字は見当たらなかった」と結論</strong>している。Hall が実際に用いた型は <strong>AICCA（1915）</strong>。</p>
+
+<p>AIDMA は日本で広まった通説である。提案資料で「ホールが提唱した AIDMA」と書かない。</p>
+
+<h2>5.3 「漢字率3割が読みやすい」は実験で否定されている</h2>
+
+<p>杉山・小田（2015、日本心理学会第79回大会）は、<strong>読みやすさは漢字要因では説明されず</strong>、むしろ<strong>漢字率を下げると「子ども向け」という印象が出る</strong>ことを報告している。可読性に効くのは漢字率ではなく<strong>漢字の連続長</strong>。</p>
+
+<p><strong>実務判断</strong>：「漢字率3割に抑える」という指針を使わない。代わりに<strong>漢字が長く連続する箇所を割る</strong>（読点、ひらがなの接続語、改行）。</p>
+
+<h1>6. Google と Meta の配信構造に合わせるLP設計</h1>
+
+<p>依頼主が実際に出稿しているのは Google と Meta の2媒体である。初版は「審査に落ちない要件」しか押さえておらず、<strong>配信構造に合わせた設計がまったく無かった</strong>。今回の最大の新規追加である。</p>
+
+<h2>6.1 最初の分岐は「温度」ではなく算数</h2>
+
+<div class="key">
+<span class="label">LPを分ける前に確認する</span>
+<code>月間予算 ÷ 許容CPA &lt; 30</code> なら、<strong>LPを分けない。まず中間CVを1枚に足す。</strong><br><br>
+Googleのスマート自動入札は「1か月以上の期間に30回以上のコンバージョン」を推奨（tROASは50回以上）。この水準に届かない案件でLPを増やすのは、少ないデータをさらに割る自傷行為になる。
+</div>
+
+<p>なお <strong>GoogleとMetaでLPを2枚に割っても学習データは分割されない</strong>（アカウントが別のため）。分けるコストは制作費と計測実装費だけ。<strong>危険なのは同一媒体内でLPを増やすほう</strong>である。</p>
+
+<h2>6.2 Google：前提が壊れている点が2つ</h2>
+
+<div class="warn">
+<span class="label">最終ページURLの拡張はデフォルトでオン</span>
+P-MAXでは、オンの間Googleが<strong>入稿したLPを無視してドメイン内の別ページへ送る</strong>。つまりLP設計の対象は「作った1枚」ではなく<strong>ドメイン全ページ</strong>になる。LPが1枚しかないなら、公式が明示的にオフにするよう書いている。<br><br>
+<strong>さらに2025年以降、同じ拡張が検索キャンペーンにも来た</strong>（AI最大化設定を有効にするとデフォルトで有効）。<strong>「検索広告なら指定したLPに着地する」という前提はもう成立しない。</strong>
+</div>
+
+<p>もう1点。<strong>拡張がオンのとき、LP上の画像がGoogleに取り込まれて広告アセットとして使われる。</strong>LPは遷移先であると同時に<strong>素材倉庫</strong>になる。画像の利用許諾が広告利用まで及んでいるか、焼き込んだ文言が単独で流通しても薬機法・景表法に耐えるかを、LP側で先に潰す必要がある。</p>
+
+<h3>品質スコアについて言えること・言えないこと</h3>
+
+<table>
+<thead><tr><th>よくある言い方</th><th>実際</th></tr></thead>
+<tbody>
+<tr><td>品質スコアが上がるとCPCが下がる</td><td><strong>1から10の数字はオークションに入らない。</strong>公式に「診断ツール」と明記</td></tr>
+<tr><td>LPを直せばCPCがX%下がる</td><td><strong>公式には言えない。</strong>ただし「ランディングページの利便性」は広告ランクに入り、広告ランクが実際のCPCを決めるので経路は追える</td></tr>
+<tr><td>Core Web Vitalsを満たせば広告評価が上がる</td><td><strong>CWVの閾値はGoogle広告側の基準ではない。</strong>SEOの話と混同しない</td></tr>
+</tbody>
+</table>
+
+<p>「ランディングページの利便性」の<strong>判定要件リストは公式に存在しない</strong>（旧記事はリダイレクト済み）。要件表を作って「これを満たせば高得点」と提案してはいけない。</p>
+
+<h2>6.3 日本のLPで最も多い計測事故</h2>
+
+<div class="warn">
+<span class="label">サンクスページに「送信完了しました」しか出さない設計</span>
+これだと<strong>拡張コンバージョンの自動収集もCSSセレクタ指定も空振りする。</strong>対処はメールアドレス等をDOMに出すか、<code>dataLayer.push()</code> のコード方式に切り替えるか。
+</div>
+
+<p>実装上の要点：</p>
+
+<ul>
+<li>フォームの各 <code>input</code> に <code>id</code> を付ける</li>
+<li><strong>姓と名を2フィールドに分ける</strong>（別フィールド仕様のため）</li>
+<li>hidden に <code>gclid</code> / <code>gbraid</code> / <code>wbraid</code> を<strong>3つ別々</strong>に持つ</li>
+<li><strong><code>gbraid</code> は大文字小文字が区別されるので小文字化しない</strong></li>
+<li><code>click_time</code> と <code>order_id</code> をCRMまで引き回す</li>
+<li>ハッシュ化はブラウザ側で自動。<strong>LP側で事前ハッシュ化は不要</strong></li>
+</ul>
+
+<h2>6.4 Meta：LPを触ると学習は壊れるのか</h2>
+
+<p>公式の significant edits 一覧に<strong>「LPの内容変更」は無く</strong>、「Any change to ad creative」は<strong>ある</strong>。</p>
+
+<ul>
+<li><strong>同一URLのまま中身を書き換える → 学習はリセットされない</strong></li>
+<li><strong>リンク先URLを切り替える → 踏む</strong></li>
+</ul>
+
+<p>したがって<strong>LPはURL1本に固定し、訴求軸はFVブロックの内部出し分けで処理する</strong>。A/Bを広告側でURLを振って回すのは学習を壊す。</p>
+
+<h2>6.5 個人的属性ポリシーの正しい直し方</h2>
+
+<p>初版は「『あなたも◯◯でお悩みでは？』型が該当し得る」とだけ書いた。これでは直しようがなかった。公式のDo/Don't原文の対比が決定的だった。</p>
+
+<table>
+<thead><tr><th>可</th><th>不可</th></tr></thead>
+<tbody>
+<tr><td><code>Meet seniors</code></td><td><code>Meet other seniors</code></td></tr>
+<tr><td><code>Depression counseling</code></td><td><code>Do you have diabetes?</code></td></tr>
+</tbody>
+</table>
+
+<div class="key">
+<span class="label">禁止されているのは属性への言及ではない</span>
+<strong>「広告主が読者の属性を知っていると示唆すること」</strong>が禁止されている。したがって消すべきは「あなた」そのものではなく、<strong>"other" 相当語と二人称疑問形</strong>。属性の帰属先を読者からサービス・市場へ移せば通る。<strong>訴求を捨てる必要はない。</strong>
+</div>
+
+<p>また <strong>Advantage+ audience で拡張されない項目は「地域・最低年齢・言語・除外カスタムオーディエンス」の4つのみ</strong>で、詳細ターゲティングは拘束力を持たない。「40代女性に配信しているはず」という前提でFVを書くと外れる。<strong>FVは属性ではなく「場面」で名乗らせ、属性による絞り込みはLP中盤に置く。</strong></p>
+
+<h2>6.6 インスタントフォーム vs LPフォーム</h2>
+
+<p><strong>既定はLPフォーム。</strong>インスタントフォームは<strong>LP側のイベントが1件も発生せず</strong>、<code>external_id</code> の発行が<strong>Meta離脱後</strong>になる。つまり<strong>LP資産にもEMQにもGoogle共用にも一切寄与しない</strong>。使うのは検証と立ち上げ期の暫定に限る。</p>
+
+<p class="src">日本でのCPL差・商談化率差の数値は、母数を示した出典が皆無だったため採用していない。「インスタントフォームはCPLが安いがリード品質が低い」という定説の定量的裏付けは見つかっていない。</p>
+
+<h2>6.7 実測：GoogleとMetaの遷移先LPはどう違うか</h2>
+
+<p>Google広告の着地点18件（Wayback CDX で <code>gclid</code> 付きURLを掘って特定）と Meta 51件を、同一の計測スクリプトで比較した。</p>
+
+<table>
+<thead><tr><th>要素</th><th>Google（n=18）</th><th>Meta（n=51）</th></tr></thead>
+<tbody>
+<tr><td>記事LP（<code>sb-</code> ドメイン）</td><td><strong>0%</strong></td><td>23.5%</td></tr>
+<tr><td>記事LP（<code>/ab/</code> パス）</td><td><strong>0%</strong></td><td>29.4%</td></tr>
+<tr><td>赤字</td><td>22%</td><td>47%</td></tr>
+<tr><td>フォーム設置</td><td>17%</td><td>49%</td></tr>
+<tr><td>Q&amp;A</td><td>78%</td><td>49%</td></tr>
+<tr><td>table要素</td><td>44%</td><td>20%</td></tr>
+</tbody>
+</table>
+
+<div class="warn">
+<span class="label">ただし業種を揃えると差の大半が消える</span>
+脱毛のみ（Google 8件 対 Meta 7件）で比較すると、Q&amp;Aは75%対71%、tableは62%対43%となり、<strong>「Googleは説明で押す」という差は相当部分が業種構成の交絡</strong>だった。業種を揃えても残るのは<strong>フォーム設置（0%対43%）と吹き出し</strong>のみで、しかもn=8対7なので確証ではない。
+</div>
+
+<p>同一広告主の作り分けは<strong>3類型</strong>が観測された。</p>
+
+<table>
+<thead><tr><th>類型</th><th>実例</th><th>中身</th></tr></thead>
+<tbody>
+<tr><td>別ドメインの記事LPを当てる</td><td>レジーナクリニック</td><td>Googleに自社公式LP、MetaにSquad beyond系記事LP</td></tr>
+<tr><td>同一LPでCV地点だけ差し替え</td><td>エミナルクリニック</td><td>バイト差0.35%。GoogleとYahooで同一LPを共用する例もある</td></tr>
+<tr><td>同一ビルドで文言のみ差し替え</td><td>ASSIGN、ゴリラクリニック</td><td>入力欄42個・ラジオ36個まで一致し、FVコピー1行と赤の面積だけが違う</td></tr>
+</tbody>
+</table>
+
+<p><strong>「媒体ごとに全部作り直す」は実勢ではない。骨格を1本持ち、差分だけ当てるのが主流である。</strong></p>
+
+<h2>6.8 どこを分け、どこを揃えるか</h2>
+
+<div class="key">
+<span class="label">分ける価値が高いのはFVの入り方</span>
+<strong>Google側は「答えから始める」</strong>（公式が重要な情報のページ上部配置を要求）。検索で言語化して来た人に共感の前置きは冗長。<br>
+<strong>Meta側は「場面・問題提起から始める」</strong>。フィードに割り込んでいるので、なぜ自分に関係あるのかを先に立てる必要がある。<br><br>
+<strong>1枚で兼用すると、この2つがFVの同じ場所を奪い合い、必ずどちらかが妥協する。</strong>
+</div>
+
+<p>逆に<strong>揃えるべきもの</strong>：サンクスページは1本に統合する。<code>event_id</code> はLPテンプレート側で採番する。そして<strong>CVRの分子は媒体管理画面の合計ではなくGA4/CRMの実CVに固定する</strong>（両媒体が同じCVを自分の成果として報告するため、合計すると必ず水増しになる）。</p>
+
+<h1>7. Yahoo!広告の空白を解消した</h1>
+
+<p>初版で唯一まるごと空白だった領域である。<code>ads-help.yahoo.co.jp</code> はDNS解決不可で死んでいるが、突破口が見つかった。</p>
+
+<div class="key">
+<span class="label">技術的な突破口</span>
+<code>ads-help.yahoo-net.jp</code> は <strong>User-Agent を Googlebot にするとサーバーサイドレンダリングされて本文が返る。</strong>さらに掲載基準の原典PDF（41ページ、2024年3月6日）が生きていた。公式31件を原文取得。
+</div>
+
+<h2>7.1 統合の現状（2つのフェーズを混同しない）</h2>
+
+<table>
+<thead><tr><th>フェーズ</th><th>状態</th></tr></thead>
+<tbody>
+<tr><td><strong>広告商品・プラットフォーム名の統合</strong></td><td><strong>2026年4月に開始済み。</strong>Yahoo!広告は「LINEヤフー広告」へ名称変更</td></tr>
+<tr><td><strong>広告掲載基準の完全一元化</strong></td><td><strong>移行中。</strong>2025年11月の公式ニュースで「2026年春頃のプラットフォーム統合と同日予定」と告知されたが、2026年8月時点で完了記載がない</td></tr>
+</tbody>
+</table>
+
+<p>方向性は公式に「<strong>概ねこれまでのYahoo!広告 広告掲載基準に基づいた方針で統一</strong>」と明記されている。一部項目は既に統合適用済み（不快な表現 2023年11月、食品・健康食品 2024年6月、化粧品・薬用化粧品 2024年7月）。</p>
+
+<h2>7.2 Googleとの明確な差分</h2>
+
+<div class="note">
+<span class="label">Yahoo!はLP表示速度を評価軸にしていない</span>
+掲載基準と品質関連ヘルプを全文検索して<strong>記述ゼロを実測確認</strong>した。品質インデックスの3要素にページ速度は含まれない。Googleと同じチェックリストを当てると、意味のない項目を追うことになる。
+</div>
+
+<h2>7.3 引用時の罠</h2>
+
+<p><strong>原典PDF（2024年版）と現行Web版で章番号が1つずれている</strong>（Yahoo!きっずの章が消滅）。チケット不正転売の禁止追加、士業への懲戒処分条項追加など、<strong>Web版のみの更新が10件</strong>ある。<strong>PDFを一次資料として引用すると古い内容を引くことになる。</strong></p>
+
+<h1>8. 2026年の環境変化</h1>
+
+<h2>8.1 景表法の執行スタイルが変わった</h2>
+
+<table>
+<thead><tr><th>指標</th><th>推移（3年）</th></tr></thead>
+<tbody>
+<tr><td>措置命令</td><td>44件 → 26件 → <strong>13件</strong>（約70%減）</td></tr>
+<tr><td>指導</td><td>85件 → 339件 → <strong>388件</strong></td></tr>
+<tr><td>確約認定</td><td>0件 → 1件 → <strong>8件</strong></td></tr>
+<tr><td>ステマ告示</td><td>令和7年度は<strong>措置命令ゼロ</strong>（確約4件＋指導7件）</td></tr>
+</tbody>
+</table>
+
+<p>初版は「措置命令は公表されるので報道インパクトが大きい」と書いたが、<strong>実態は確約と指導で処理される方向にシフトしている</strong>。ただし直罰と課徴金の条文は生きているので、リスクが消えたわけではない。</p>
+
+<h2>8.2 個人情報保護法に初の課徴金制度</h2>
+
+<p><strong>令和8年改正個人情報保護法が2026年7月17日公布。</strong>LPの計測タグとフォームが射程に入る。施行は政令待ちなので、現時点は監視対象。</p>
+
+<h2>8.3 Cookie についての誤解を正す</h2>
+
+<div class="key">
+<span class="label">サードパーティ Cookie は残る</span>
+<strong>2025年10月17日に廃止が発表されたのは Privacy Sandbox の広告系API 10本</strong>であって、Cookie自体ではない。Chromeは "maintain our current approach to offering users third-party cookie choice" と明記している。<br><br>
+つまり<strong>「Cookieの移行先」として用意されていたものが先に消えた</strong>。Cookie消失を前提にした設計は不要である。
+</div>
+
+<h2>8.4 LP制作の単価環境</h2>
+
+<p>インターネット広告費は4兆459億円（前年比110.8%、構成比50.2%で初の過半数）だが、<strong>制作費は4,922億円で104.0%</strong>と媒体費の111.8%に7.8ポイント劣後している。<strong>LP制作の単価環境は悪化方向</strong>である。ただしAIとの因果を示す調査は存在しない。</p>
+
+<h1>9. 明日から何をするか</h1>
+
+<p>今回の発見を、依頼主の運用（Google＋Meta、日本市場）に落とした行動リスト。</p>
+
+<h2>9.1 すぐ確認すべきこと</h2>
+
+<ul>
+<li><strong>P-MAXを使っているなら、最終ページURLの拡張の設定を今すぐ見る。</strong>デフォルトでオンなので、意図せずドメイン内の別ページに送られている可能性がある。LPが1枚しかないならオフにする</li>
+<li><strong>検索キャンペーンでAI最大化設定を使っているか確認する。</strong>同じ拡張が効く</li>
+<li><strong>サンクスページにメールアドレス等がDOMに出ているか確認する。</strong>「送信完了しました」だけなら拡張コンバージョンが空振りしている</li>
+<li><strong><code>gbraid</code> を小文字化していないか確認する</strong></li>
+<li><strong>Meta広告のLPをURL単位でA/Bしていないか確認する。</strong>していたら学習をリセットし続けている</li>
+</ul>
+
+<h2>9.2 LP設計に反映すること</h2>
+
+<ul>
+<li><strong>Google用とMeta用でFVの入り方を分ける</strong>（答えから始める 対 場面から始める）。骨格は1本でよい</li>
+<li><strong>Meta配信のコピーから "other" 相当語と二人称疑問形を消す。</strong>属性の帰属先をサービス側へ移す</li>
+<li><strong>インスタントフォームを使っているなら、LPフォームへの移行を検討する</strong></li>
+<li><strong>月間予算 ÷ 許容CPA が30未満なら、LPを増やさず中間CVを足す</strong></li>
+<li><strong>P-MAXの拡張をオンで使うなら、LP上の画像の権利と表現を広告利用前提で点検する</strong></li>
+</ul>
+
+<h2>9.3 提案資料の書き方を直すこと</h2>
+
+<ul>
+<li><strong>「PASONAの法則に基づき」と書くなら年を添える</strong>（2016年＝PASONA、2021年＝PASBECONA）</li>
+<li><strong>「ホールが提唱したAIDMA」と書かない</strong></li>
+<li><strong>「漢字率3割」を指針として使わない</strong></li>
+<li><strong>「LPを直せばCPCが下がる」と断定しない</strong>（経路は説明できるが数値は公式に言えない）</li>
+<li><strong>他社CVRベンチマークとの比較でLPの良し悪しを判断しない</strong>（日本市場に使えるデータは存在しない）</li>
+<li><strong>ABテスト事例を引くなら「条件不明」と併記する</strong>（国内50件中、期間と母数の両方が明記されていたのは1件のみ）</li>
+</ul>
+
+<h1>10. 残る未解決</h1>
+
+<p>第2次調査でも埋まらなかったもの。<strong>成果物でこれらに触れるときは「要確認」と明記すること。</strong></p>
+
+<ul>
+<li><strong>総務省パンフレット p.15 の外部送信規律フローチャート。</strong>2回の調査ともPDFがタイムアウトで未読。本文ページとFAQでは裏が取れているが、<strong>「自社商材LPは対象外」は解釈であって明言ではない</strong></li>
+<li><strong>保険業法300条の条文原文</strong>（e-GovがJS描画で到達できず）</li>
+<li><strong>QUEST フレームワークの出典</strong>（一次資料ゼロ）</li>
+<li>各コピーフレームワークの<strong>定義原文</strong>（書籍本文には到達できていない）</li>
+<li><strong>指名検索と一般検索でLPを分けるべきか</strong>（観測手段がなく検証不能）</li>
+<li><strong>温度帯別のLP CVR</strong>（日本の実測値が存在しない）</li>
+<li><strong>Metaの「7日50件」学習期基準</strong>（公式ページ本文を3回とも取得できず二次情報どまり）</li>
+<li>アプリインストール系の業種（未着手）、飲食・食品通販（実物1件のみ）</li>
+</ul>
+
+<div class="note">
+<span class="label">本レポートの位置づけ</span>
+本レポートは<strong>法的助言ではない</strong>。条文・ガイドラインの原文と公式URLを添えているが、個別案件の適法性は表示全体・商品特性・取引実態によって判断が変わる。最終判断は弁護士・薬事コンサル等の専門家、および所管官庁に確認すること。<br><br>
+また本調査は<strong>CVRを測定していない</strong>。記載した出現率はすべて「その業界で慣行として定着していること」を示すのみで、成果との因果を示すものではない。<br><br>
+完全版（31ページ）は <code>skills/jp-lp/report/</code> に、運用手順とチェックリストは <code>/jp-lp</code> コマンドから参照できる。
+</div>
