@@ -28,11 +28,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f todos/todos.db ] && n=$(node \"${CLAUDE_PLUGIN_ROOT}/scripts/todos.mjs\" count open 2>/dev/null); [ \"${n:-0}\" != \"0\" ] && echo \"master-brain: ${n} open todo(s) — run /mb:todos-list to review or /mb:todos-execute to work them.\" || true"
+            "command": "[ -f todos/todos.db ] && n=$(node \"${CLAUDE_PLUGIN_ROOT}/scripts/todos.mjs\" count open 2>/dev/null); [ \"${n:-0}\" != \"0\" ] && echo \"master-brain: ${n} open todo(s): run /mb:todos-list to review or /mb:todos-execute to work them.\" || true"
           },
           {
             "type": "command",
-            "command": "echo \"master-brain · delivery rule (two passes, in this order): (1) SUBSTANCE — run the anti-slop pass over any prose you produce (marketing copy, reports, emails, blog drafts, deliverables): /slop-review to find defects, /slop-rewrite to repair only what it lists, /slop-verify for citations, links and package names, /slop-code for code, tests and docs. It reports defects, never authorship. (2) STYLE — then pass the repaired text through the humanizer skill (mb:humanizer / /humanizer) so it reads human-written. Substance before style: stripping style markers off an unsourced paragraph only removes the warning label. Skip both only for code, raw data, or when the user asks for verbatim output.\""
+            "command": "echo \"master-brain · NDA rule (hard constraint, not style): any client-facing deliverable (report, proposal, audit, deck, PDF, email) names ONLY the company that deliverable is FOR. Never name another client anywhere in it: body, headings, tables, figures, captions, footnotes, filenames, metadata. Not even as a benchmark or comparison. Each client is under a separate NDA. Anonymise instead ('another account we run', 'a competitor in the same category') or use public industry data. Cross-client analysis is fine as an internal working file; strip every other client name at the point it becomes a deliverable. Before rendering or sending, grep the deliverable for other client names. When unsure, cut it.\""
+          },
+          {
+            "type": "command",
+            "command": "echo \"master-brain · delivery rule (two passes, in this order): (1) SUBSTANCE: run the anti-slop pass over any prose you produce (marketing copy, reports, emails, blog drafts, deliverables): /slop-review to find defects, /slop-rewrite to repair only what it lists, /slop-verify for citations, links and package names, /slop-code for code, tests and docs. It reports defects, never authorship. (2) STYLE: then pass the repaired text through the humanizer skill (mb:humanizer / /humanizer) so it reads human-written. Substance before style: stripping style markers off an unsourced paragraph only removes the warning label. Skip both only for code, raw data, or when the user asks for verbatim output.\""
           }
         ]
       }
