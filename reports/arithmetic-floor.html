@@ -1,0 +1,776 @@
+<title>The Arithmetic Floor</title>
+<style>
+  :root {
+    --paper: #F6F7F9;
+    --surface: #FFFFFF;
+    --ink: #14181D;
+    --ink-soft: #4A5560;
+    --muted: #6B7783;
+    --indigo: #234A73;
+    --indigo-soft: #E8EDF4;
+    --shu: #B83400;
+    --shu-soft: #FBEDE8;
+    --rule: #DDE2E8;
+    --rule-strong: #C3CBD4;
+
+    --measure: 68ch;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0F1319;
+      --surface: #161B22;
+      --ink: #E4E9EF;
+      --ink-soft: #B3BDC8;
+      --muted: #8A95A2;
+      --indigo: #86AEDA;
+      --indigo-soft: #1B2939;
+      --shu: #E97A55;
+      --shu-soft: #2E1810;
+      --rule: #242C36;
+      --rule-strong: #37414E;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0F1319;
+    --surface: #161B22;
+    --ink: #E4E9EF;
+    --ink-soft: #B3BDC8;
+    --muted: #8A95A2;
+    --indigo: #86AEDA;
+    --indigo-soft: #1B2939;
+    --shu: #E97A55;
+    --shu-soft: #2E1810;
+    --rule: #242C36;
+    --rule-strong: #37414E;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 clamp(1.1rem, 5vw, 3rem) 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 82ch; margin: 0 auto; }
+
+  header.masthead {
+    padding: clamp(3rem, 9vw, 6rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.3rem, 7vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    font-size: 1.16rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 58ch;
+  }
+
+  .verdict {
+    margin: clamp(2.5rem, 7vw, 4rem) 0 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 2rem 0 2.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .verdict p {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.35rem, 3.6vw, 1.72rem);
+    line-height: 1.38;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .verdict p em { font-style: italic; color: var(--indigo); }
+
+  .verdict .sub {
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.62;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+  }
+
+  section {
+    margin-top: clamp(3.2rem, 8vw, 5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .sec-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    margin: 0;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.6rem, 4.4vw, 2.1rem);
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-weight: 650;
+    font-size: 1.02rem;
+    line-height: 1.4;
+    letter-spacing: 0.005em;
+    margin: 1.2rem 0 0;
+    color: var(--ink);
+  }
+
+  p { margin: 0; }
+
+  a {
+    color: var(--indigo);
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  strong { font-weight: 650; }
+
+  em.term {
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 0.9em;
+    color: var(--ink-soft);
+  }
+
+  ul, ol {
+    margin: 0;
+    padding-left: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  li { padding-left: 0.2rem; }
+
+  .tablewrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.93rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--muted);
+    padding: 0.7rem 0.9rem 0.2rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.62rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  thead th {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    border-bottom: 1px solid var(--rule-strong);
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td { border-bottom: none; }
+
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  tbody th { font-weight: 600; white-space: nowrap; }
+  tr.flag td, tr.flag th { background: var(--shu-soft); }
+
+  .note {
+    border-left: 2px solid var(--indigo);
+    background: var(--indigo-soft);
+    padding: 1.1rem 1.25rem;
+    border-radius: 0 3px 3px 0;
+    font-size: 0.97rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .note .h {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--indigo);
+  }
+
+  .clock {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .tick {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 0 1.4rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+
+  .tick .when {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    color: var(--shu);
+    padding-top: 0.15rem;
+  }
+
+  .tick .when .days {
+    display: block;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+  }
+
+  .tick .what { display: flex; flex-direction: column; gap: 0.35rem; }
+  .tick .what b { font-weight: 650; font-size: 1rem; }
+
+  .tick .what span {
+    font-size: 0.94rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 34rem) {
+    .tick { grid-template-columns: 1fr; gap: 0.5rem; }
+    .tick .when { display: flex; gap: 0.7rem; align-items: baseline; }
+    .tick .when .days { display: inline; }
+  }
+
+  .moves {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    counter-reset: move;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .move {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 0 1.1rem;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .move::before {
+    counter-increment: move;
+    content: counter(move);
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--indigo);
+    padding-top: 0.1rem;
+  }
+
+  .move .body { display: flex; flex-direction: column; gap: 0.45rem; }
+  .move b { font-weight: 650; font-size: 1.04rem; line-height: 1.4; }
+
+  .move span {
+    font-size: 0.96rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .move .cost {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  details.sources {
+    margin-top: 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+  }
+
+  details.sources summary {
+    cursor: pointer;
+    padding: 0.85rem 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  details.sources[open] summary { border-bottom: 1px solid var(--rule); }
+
+  details.sources .inner {
+    padding: 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.62;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    color: var(--ink-soft);
+  }
+
+  details.sources .inner a { word-break: break-word; }
+
+  footer {
+    margin-top: clamp(3.5rem, 9vw, 5.5rem);
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  hr.div { border: none; border-top: 1px solid var(--rule); margin: 0.6rem 0; }
+</style>
+
+<header class="masthead wrap">
+  <div class="eyebrow">
+    <span>Internal diagnosis</span>
+    <span>12 August 2026</span>
+    <span>Five-agent research synthesis</span>
+  </div>
+  <h1>The Arithmetic Floor</h1>
+  <p class="standfirst">Why the pilots show no clear win on CTR and ROAS, what that says about the business model, and the changes that follow.</p>
+</header>
+
+<div class="wrap verdict">
+  <p>The offer is sound. You have been selling it to accounts that are <em>arithmetically incapable</em> of demonstrating that it works.</p>
+  <p class="sub">Nothing in the research supports the conclusion that building LPs and running ads is a broken model. The Japanese internet ad market grew 10.8% in 2025 and crossed 50% of all advertising for the first time. What the research does support is narrower and more useful: a paid-media-plus-LP offer has a hard minimum account size baked into it by Google's and Meta's own stated requirements, and selling below that minimum produces exactly the outcome you are describing. Publishing the floor is the first change, and it costs nothing.</p>
+</div>
+
+<section class="wrap">
+  <p class="sec-label">The measurement problem</p>
+  <h2>Your pilots are not failing. Your instrument cannot resolve the effect.</h2>
+
+  <p>Ad spend is known exactly. Revenue is not. When conversions arrive as a Poisson process, the relative standard error on observed ROAS is 1/&radic;N, where N is the conversion count. For a two-month pilot at ¥300,000/month and a ¥30,000 average order value:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Exact Poisson (Garwood) intervals. ¥600,000 total spend, AOV ¥30,000.</caption>
+      <thead>
+        <tr>
+          <th>Conversions</th>
+          <th class="num">Reported ROAS</th>
+          <th class="num">True ROAS, 95% CI</th>
+          <th class="num">Reported CPA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="flag"><th>10</th><td class="num">0.50x</td><td class="num">0.24x &ndash; 0.92x</td><td class="num">¥60,000</td></tr>
+        <tr class="flag"><th>20</th><td class="num">1.00x</td><td class="num">0.61x &ndash; 1.54x</td><td class="num">¥30,000</td></tr>
+        <tr><th>30</th><td class="num">1.50x</td><td class="num">1.01x &ndash; 2.14x</td><td class="num">¥20,000</td></tr>
+        <tr><th>50</th><td class="num">2.50x</td><td class="num">1.86x &ndash; 3.30x</td><td class="num">¥12,000</td></tr>
+        <tr><th>100</th><td class="num">5.00x</td><td class="num">4.07x &ndash; 6.08x</td><td class="num">¥6,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>At 20 conversions, a pilot reporting break-even is consistent with losing 40% or making 54%. And that table assumes every order is worth the same. Real order values vary: at typical ecommerce variance the interval at n=20 widens to &plusmn;62%, and for high-ticket B2B with variable deal sizes, &plusmn;79%.</p>
+
+  <h3>Beating the client's prior period is harder still</h3>
+
+  <p>Comparing the pilot against the previous period at equal spend, this is the smallest <em>observed</em> improvement that reaches p&lt;0.05:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Conditional binomial test, the exact test for comparing two Poisson counts.</caption>
+      <thead>
+        <tr>
+          <th>Prior period conversions</th>
+          <th class="num">Pilot needs</th>
+          <th class="num">Observed improvement of</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="flag"><th>10</th><td class="num">23</td><td class="num">+130%</td></tr>
+        <tr class="flag"><th>20</th><td class="num">36</td><td class="num">+80%</td></tr>
+        <tr class="flag"><th>30</th><td class="num">47</td><td class="num">+57%</td></tr>
+        <tr><th>50</th><td class="num">71</td><td class="num">+42%</td></tr>
+        <tr><th>100</th><td class="num">129</td><td class="num">+29%</td></tr>
+        <tr><th>200</th><td class="num">243</td><td class="num">+22%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Take over an account running 30 conversions a month. Improve it by a genuinely excellent 25%. The result is statistically indistinguishable from luck, and the client sees "37 versus 30, could be a good month." The work was good. The instrument was too coarse.</p>
+
+  <div class="note">
+    <span class="h">The rule to carry</span>
+    <p>Ignore sessions. Count conversions. Roughly <strong>150 conversions total</strong> to detect a 50% lift; roughly <strong>800</strong> to detect 20%. That figure is nearly independent of the baseline rate, which is why session-count rules of thumb mislead.</p>
+  </div>
+
+  <h3>The learning phase is not a phase, it is the steady state</h3>
+
+  <p>Meta's stated requirement is about 50 optimization events per ad set before costs stabilise, measured since the last significant edit, where a significant edit includes changing the optimization event, the audience, or the creative. One caveat worth carrying: Meta's help page is JavaScript-rendered and resisted direct retrieval, so this is high-confidence secondary rather than a page anyone actually read. A ¥300,000/month account at a ¥15,000 CPA produces 20 conversions a month across the entire account. Split across three ad sets, none will ever exit learning, and every optimization you make resets the clock.</p>
+
+  <p>Google's Target CPA guidance recommends measuring over at least 30 conversions in 30 days. Its bid-strategy documentation allows up to three weeks to calibrate, and Think with Google adds that after learning ends you should let the campaign run "a few weeks more," then wait out the full conversion lag before analysing. For JP B2B with a 30 to 60 day 商談 cycle, that is <strong>10 to 16 weeks before Google itself says to run the analysis</strong>. An eight-week pilot is being judged inside the window the platform explicitly tells you not to judge in.</p>
+
+  <h3>Why you drift to CTR, and why it is a trap</h3>
+
+  <p>A ¥300,000/month search account produces 40,000 to 100,000 impressions. At a 2% baseline, detecting a 20% CTR change needs about 21,000 impressions per arm, or 42,000 across two. That is marginal at the bottom of the range and comfortable at the top. The same 20% change in ROAS is out of reach anywhere in it, by a factor of roughly twenty.</p>
+
+  <p>So CTR is close to the only thing that visibly moves. Reporting it is not laziness, it is the structure of the situation. Presenting it as evidence of a revenue gain is the specific dishonesty to avoid, and Search Engine Land has documented B2B cases where CTR and conversion rate move in opposite directions, because higher CTR can mean curiosity clicks rather than qualified intent.</p>
+
+  <div class="note">
+    <span class="h">The uncomfortable corollary</span>
+    <p>Because pilot results are noise-dominated, roughly half of competently-run pilots will show apparent improvement by pure chance. If you have been reading both your wins and your losses causally, some of what you believe about what works is built on coin flips.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">What you already built</p>
+  <h2>You invented half of this answer already, then pointed it at the wrong accounts.</h2>
+
+  <p>Rule C6 in <em class="term">shared/findings/google-ads-playbook.md</em> states that before calling zero conversions a failure, you compute whether the sample could ever have shown one: with 0 conversions in N clicks the 95% upper bound on CVR is approximately 3/N, so 40 clicks rules out nothing, 100 clicks rules out CVR above 3%, and 300 clicks rules out 1%. Its corollary bans unfalsifiable ledger hypotheses.</p>
+
+  <p>That is the same insight as the Poisson arithmetic above, derived independently from your own client data. The playbook also retracts the widely-repeated "Smart Bidding needs 30 conversions per month" claim by citing Google's own JP documentation, and records a rule demoted after a re-run traced its original signal to an aggregation bug.</p>
+
+  <p>The 53-entry ledger requires a measurable hypothesis and a check-on date for every entry, promotes a rule to CONFIRMED only when a second client reproduces it, and keeps REFUTED rules as negative knowledge. One CONFIRMED entry records that both hypothesis conditions were met and the campaign still lost money, concluding that launch hygiene is not profitability.</p>
+
+  <p>The audit of everything installed on this machine found nothing else that comes close. Not the twelve <em class="term">ads-*</em> skills, which invoke no code at all and whose v2.0.1 upgrade deleted every statistical formula the v1.8.1 version contained. Not <em class="term">ads-brain</em>, which is 10,500 lines of well-tested Python that has never held a single client fact. The <em class="term">jp-lp</em> reference set independently reached the same conclusion the external research did: there are zero usable Japanese CVR benchmarks, and every Japanese "industry CVR table" in circulation traces back to US source data.</p>
+
+  <p>The instrument is good. It has been aimed at accounts too small to register.</p>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">The floor</p>
+  <h2>Publish a minimum, and compute it before every proposal.</h2>
+
+  <p>Japanese practitioners converge on ¥300,000&ndash;500,000/month as the point where an improvement cycle actually turns, with ¥100,000&ndash;300,000 described as a test range that is frequently data-starved. The common local rule of thumb is that monthly budget should be roughly 10 to 20 times target CPA, sustained three months. Note that 10&ndash;20x CPA yields only 10&ndash;20 conversions a month, which clears Google's evaluation minimum only at the top of the range and sits four to twenty times below Meta's learning requirement. The Japanese "acceptable minimum" and the platform's stated requirement are not the same number.</p>
+
+  <p>Put this table in the proposal. It converts an argument about your competence into an arithmetic fact the client can check themselves.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>What is honestly claimable, by monthly conversion volume.</caption>
+      <thead>
+        <tr><th>Conversions / month</th><th>What can honestly be measured</th></tr>
+      </thead>
+      <tbody>
+        <tr class="flag"><th>under 20</th><td>Nothing about performance. Operational evidence only. Report CPA and ROAS with their intervals and claim nothing from them.</td></tr>
+        <tr class="flag"><th>20 &ndash; 50</th><td>A doubling, over a full quarter, against a clean baseline. Nothing smaller.</td></tr>
+        <tr><th>50 &ndash; 200</th><td>+40% to +50% over a quarter.</td></tr>
+        <tr><th>200 &ndash; 800</th><td>+20% to +30% over a quarter.</td></tr>
+        <tr><th>over 800</th><td>Conventional A/B testing becomes available for large changes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The diagnostic that tells you which constraint is actually binding</h3>
+
+  <p>Run this before changing anything about the business.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>If this is true</th><th>The binding constraint is</th></tr>
+      </thead>
+      <tbody>
+        <tr class="flag"><th>Median client spend is below 20x their target CPA, or below ¥300,000</th><td><strong>Client selection.</strong> Wins are arithmetically unavailable.</td></tr>
+        <tr><th>Accounts clear the data floor but revenue per client is under ¥150,000/month</th><td><strong>Pricing.</strong> You are subsidising accounts large enough to work.</td></tr>
+        <tr><th>You are declining or deferring work you could win</th><td><strong>Delivery capacity.</strong></td></tr>
+        <tr><th>Pipeline is thin and you have open capacity</th><td><strong>Sales.</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The evidence points at the first row. Compute conversions per ad set per week for every pilot. If they are under 50 on Meta and under 30 per 30 days on Google, the engagement structure produced the result, not your work.</p>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">The business model</p>
+  <h2>Three things are structurally wrong, and none of them is your execution.</h2>
+
+  <h3>You are narrow on channel and broad on industry</h3>
+
+  <p>Agencies that narrowed their service set posted 30% net margins against a 13% industry average, and grew 13% against a 7.5% average (Promethean Research, n=119, disclosed methodology). Hinge finds specialisation correlated with growth and profitability across ten editions of their study.</p>
+
+  <p>But narrowing by <em>channel</em> does the opposite. Paid advertising is the highest-churn service line measured, at 49% annually. Full-service-per-client is the lowest, at 25%. You have taken the narrowing that raises churn and skipped the narrowing that raises margin. The evidenced move is to invert it: narrow the industry, broaden what you own inside each client.</p>
+
+  <h3>Performance pricing would make this worse, not better</h3>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Focus Digital churn study, Jan&ndash;Apr 2026. Methodology described in general terms; treat as directional.</caption>
+      <thead>
+        <tr><th>Pricing model</th><th class="num">Annual churn</th><th class="num">Avg client lifespan</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>Retainer</th><td class="num">18%</td><td class="num">56 months</td></tr>
+        <tr><th>Hybrid</th><td class="num">28%</td><td class="num">36 months</td></tr>
+        <tr><th>Performance</th><td class="num">33%</td><td class="num">30 months</td></tr>
+        <tr class="flag"><th>Project</th><td class="num">42%</td><td class="num">24 months</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>If the instinct was to move to CPA or revenue share to prove your worth, the data says that shortens relationships. Attribution disputes are the documented endpoint, and performance pricing requires exactly the conversion volume your pilot accounts lack. Use it as a component on top of a base fee, never as the structure.</p>
+
+  <h3>Clients do not leave because you underperformed</h3>
+
+  <p>The top churn driver is budget cuts and economic pressure at 42%, then client-side internal changes at 37%, then perceived value erosion at 32%. ROI clarity is cited by 10% (AgencyAnalytics, n=494). Leverage that depends on proving your results is weaker than leverage that makes you a line item they cannot cut.</p>
+
+  <h3>And your own repository shows the shape of the problem</h3>
+
+  <p>There are 89 client directories in <em class="term">bazinga-projects/</em>. Roughly two-thirds are a capture-analyse-deliver cycle producing two or three artifacts and stopping. Only about 11 have log entries referencing Google Ads runs at all. You have 4 to 8 current retainers.</p>
+
+  <p>So you have run something like 89 engagements and converted a single-digit percentage into ongoing paid-media work. That also explains the reliability complaint mechanically: with around 11 accounts ever reaching live optimisation, you have deep repetition on analysis and deliverables, and thin repetition on operating. The pattern library that makes wins reliable is built from the second kind, and you have not had enough of it.</p>
+
+  <p>The Japanese context sharpens this. 83% of Japanese companies have already in-housed at least part of ad operations, with 62.9% citing 広告運用コスト削減 and 48.9% citing 社内ノウハウの蓄積 as motives. Among firms currently fully outsourcing, 52.9% plan to move in-house within a year. Both of the top two motives are reasons to hire an enablement partner rather than an execution vendor.</p>
+
+  <p>Meanwhile the LP half of your offer is deflating from below. The Japanese market average holds near ¥400,000&ndash;550,000, but a published ¥50,000&ndash;150,000 tier now exists as a normal option, and the band that is holding is explicitly the one that includes 訴求設計 and CVR hypothesis design. The average is not falling; the floor is, and the volume at the floor is growing. That is what commoditisation looks like before it reaches the mean. Meta told its Q2 2026 earnings call that nine million small businesses now use at least one of its generative creative tools, free, inside the platform your buyer already logs into. That is a first-party adoption claim rather than an independent count, but the direction it describes is not in dispute.</p>
+</section>
+
+<section class="wide">
+  <p class="sec-label">Dated</p>
+  <h2>Four things with deadlines on them.</h2>
+
+  <div class="clock">
+    <div class="tick">
+      <div class="when">17 Aug 2026<span class="days">5 days</span></div>
+      <div class="what">
+        <b>Google changes target-based bidding under budget constraint</b>
+        <span>Verified on Google's own page: "your bids are optimized more consistently to your target when your campaign has a limited budget." Every account at ¥300,000&ndash;1,000,000/month is budget-limited by definition, so this moves CPA across your whole book. Watch for it rather than reading the movement as something you caused.</span>
+      </div>
+    </div>
+    <div class="tick">
+      <div class="when">Sep 2026<span class="days">~3 weeks</span></div>
+      <div class="what">
+        <b>AI Max auto-upgrade begins</b>
+        <span>Campaigns using automatically created assets and the campaign-level broad match setting convert automatically. Dynamic Search Ads follow in February 2027. Final URL expansion combined with JP mandatory-disclosure law is a live compliance risk, which is why Google shipped text disclaimers for the feature.</span>
+      </div>
+    </div>
+    <div class="tick">
+      <div class="when">1 Oct 2026<span class="days">~7 weeks</span></div>
+      <div class="what">
+        <b>LINE公式アカウント Standard plan overage repricing</b>
+        <span>Additional messages go to a flat ¥3 up to 200,000, then ¥2.5 above. The prior structure stepped down through ¥2.8, ¥2.6 and ¥2.4, so mid-volume senders face roughly a 10&ndash;15% increase in variable messaging cost. Any client whose LP funnel ends in a LINE friend-add needs their unit economics rerun before this lands.</span>
+      </div>
+    </div>
+    <div class="tick">
+      <div class="when">Late Oct 2026<span class="days">~10 weeks</span></div>
+      <div class="what">
+        <b>LINE広告 delivery stops entirely</b>
+        <span>LINE広告 and Yahoo!広告 display merged into LINEヤフー広告 ディスプレイ広告 on 1 April 2026. LINE Tag is discontinued and migration to the new 計測タグ is mandatory. Yahoo! display campaigns migrate automatically; LINE広告 does not. The merged platform runs on Yahoo!'s 審査基準, so creative that passed LINE review may now fail.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wide">
+  <p class="sec-label">What to change</p>
+  <h2>Ranked by expected impact per unit of effort.</h2>
+
+  <div class="moves">
+    <div class="move">
+      <div class="body">
+        <b>Publish a client floor and compute it in every proposal</b>
+        <span>Minimum ad spend of 20x target CPA with an absolute floor near ¥300,000/month, and a six-month minimum term. Below that, sell the diagnostic and the build, and decline the performance retainer explicitly, or sell it as operations and hygiene rather than as improvement. This removes the pilot problem structurally, because there is no sub-floor entry point left.</span>
+        <span class="cost">Costs nothing &middot; Do this first</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>Build the offline conversion import pipeline</b>
+        <span>The single largest capability gap on the machine. <em class="term">gads.py</em> has no upload path, and searching the whole ads tree for gclid, wbraid, gbraid or ConversionUploadService returns nothing. Without it the optimiser buys the cheapest form fills, which is the exact failure mode of JP SMB lead generation. Google publishes no minimum volume for enhanced conversions for leads, so this works from day one even on small accounts, and its first benefit is not bidding but calibration: it tells you the observed 資料請求 to 商談 rate per campaign, converting an assumed proxy into a measured one. Your own <em class="term">jp-lp</em> reference warns the LP-side click-ID capture cannot be retrofitted, so this gap compounds with every page you ship without it.</span>
+        <span class="cost">Highest lift per hour</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>Make first-view exit rate the headline KPI on every LP</b>
+        <span>Ptengine's benchmark of 1,716 Japanese sites over one year puts the bottom 75% near 40% first-view exit and the top quartile under 20%. State the caveats whenever you cite it: the methodology is not public, it is site-wide rather than LP-specific, and it comes from the vendor's own customers, so it skews toward companies that already bought analytics. Clarity is free and unlimited. Reporting "your first view loses 38% before anyone reads a word, against a top quartile under 20%" reframes the conversation and points straight at ad-to-LP message match, which is the cheapest fix available. One case Ptengine documents went from 33% to 16% purely by aligning page messaging with the ad creative.</span>
+        <span class="cost">Half a day per client</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>Audit every client form against the four WACUL findings</b>
+        <span>Field count against pass rate correlates at &minus;0.757, roughly two percentage points per field removed. Button text matching the form title: 21.7% versus 16.6%. Marking fields required or optional measured as no difference, which contradicts standard EFO vendor advice, so cut the field instead. Benchmark against 20.4% average and a 25% target. Caveats stated plainly: n=21, 2019, B2B SaaS, PC only. Trust the directions, not the effect sizes.</span>
+        <span class="cost">Half a day per client</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>Invert the specialisation: narrow the industry, widen the scope</b>
+        <span>Pick one Japanese vertical and broaden what you own inside each client rather than staying a paid-media specialist across all industries. Size the vertical before committing; if it holds fewer than roughly 200 addressable companies at your price, pick another. This is the highest-confidence strategic change available and it requires no new skill.</span>
+        <span class="cost">Quarters, not weeks</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>Reprice the LP build as onboarding inside a minimum-term retainer</b>
+        <span>The build becomes a non-refundable setup fee attached to a six-month minimum, not a standalone deliverable. Right now the cash event and the value event are inverted: you are paid most at the moment you know least about the account, and the retainer is priced as a residual so it gets scoped as keeping the lights on. Project revenue also means every month starts near zero, which consumes exactly the hours that would otherwise go into retained accounts.</span>
+        <span class="cost">Next contract cycle</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>Ship the substantiation file as a chargeable deliverable</b>
+        <span>Since the 景表法 amendment took effect on 1 October 2024 there is both a faster off-ramp (確約手続) and a direct criminal penalty route (直罰). When a client is approached they need 合理的根拠資料 quickly. Make a claims register with a source for every efficacy statement a standard line item at LP-build time. It differentiates you from studios that only ship design, and it protects you when your copy is what is under review.</span>
+        <span class="cost">Add to the build scope</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>Generate the LINE-versus-form comparison nobody has published</b>
+        <span>No public data exists comparing form-submit CVR against LINE friend-add CVR on the same LP, same traffic, same offer, not from LY Corporation, not from any Japanese agency, not from any LINE MA vendor. After years of the technique being treated as standard, that absence is itself informative. You have multiple clients and can run the same offer to both endpoints on split traffic. Even three clients with real numbers would put you ahead of every published Japanese source, and it is directly saleable as positioning.</span>
+        <span class="cost">Slow, but it compounds</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">Hygiene</p>
+  <h2>Statistics to remove from your decks.</h2>
+
+  <p>Each of these failed a source check. Several are in wide circulation and will be quoted at you.</p>
+
+  <ul>
+    <li><strong>"Creative drives 56% of auction outcomes."</strong> Traceable only to a secondary writeup citing an unpublished conference slide. No primary source exists.</li>
+    <li><strong>"Advantage+ delivers 22% lower CPA."</strong> No primary Meta source located.</li>
+    <li><strong>"CAPI gives 13% better cost per result."</strong> Superseded. Meta's live page now states 17.8%, with no visible methodology. The traceable 13% came from 28 experiments run May&ndash;August 2022.</li>
+    <li><strong>Nielsen's "creative is 47% of sales lift."</strong> Real and traceable, but it is CPG only, TV plus digital, from 2017, and predates Advantage+ and PMax entirely. It is evidence about brand advertising sales lift, routinely misapplied to direct-response auctions.</li>
+    <li><strong>"Platform ROAS is 3&ndash;5x incremental ROAS."</strong> There is no established universal multiple. The defensible claim is directional only.</li>
+    <li><strong>"業界平均CVR は2%."</strong> No traceable primary study in any Japanese source.</li>
+    <li><strong>The search-versus-GDN industry CVR table circulating in Japanese.</strong> It is US WordStream data, republished in Japanese without a country label.</li>
+    <li><strong>Contentsquare's benchmark presented as Japanese data.</strong> It is global, and Japan is not broken out. A Japanese-language edition exists, which is why the mistake is common. If a competitor quotes it as Japanese data, that tells you something about their rigour.</li>
+    <li><strong>Anonymous Japanese "LPO case studies"</strong> with figures but no client name, no date and no sample size. Two of the most prominent are editorial-team-authored SEO content with illustrative numbers presented as results. They rank well, get cited by other Japanese blogs, and now feed back into AI search answers.</li>
+  </ul>
+
+  <p>Two more worth knowing. Consent Mode v2 is scoped to the EEA, UK and Switzerland, so for domestic JP traffic it is unenforced, and effort spent there should go to CAPI and offline import instead. And the 薬機法 課徴金 had, as of March 2025, no confirmed application case; live enforcement risk for supplement and cosmetic LPs runs through 景表法 優良誤認 instead.</p>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">Standing on</p>
+  <h2>How much of this you should trust.</h2>
+
+  <p>The Japanese LP practitioner literature is close to evidence-free. The research turned up exactly two Japanese studies with a disclosed sample size, period and methodology, both from WACUL, both 2019, n=30 and n=21, PC-only, B2B. Everything else in circulation is vendor marketing, US data relabelled as Japanese, or anonymised case studies written by an editorial team. Treat the WACUL findings as directions, not effect sizes.</p>
+
+  <p>The strongest numbers here are the arithmetic ones, because they are computed rather than cited: the Poisson intervals, the two-Poisson comparison thresholds, and the conversion counts required for a given lift. Those do not depend on anyone's dataset.</p>
+
+  <p>The business-model figures come from sources with disclosed samples where possible, Promethean at n=119, AgencyAnalytics at n=494, and Dentsu's official release. The churn-by-model table describes its methodology only in general terms, so it is directional. Roughly half the "agency benchmark" material on this topic is vendor content marketing with no method at all, and the widely circulated verticalisation numbers (specialists charge 2&ndash;3x more, close 40% more proposals) trace to blogs with no sample and no attribution. They are not used here.</p>
+
+  <p>Seven substantive questions have no answer in the literature at all: 資料請求 versus demo offer performance, JP B2B committee size, 診断コンテンツ CVR, chatbot form completion, swipe and survey LP lift, video LP lift, and LINE friend-add versus form CVR. That is the actual state of the art, and the last of them is the one you are positioned to answer yourself.</p>
+
+  <details class="sources">
+    <summary>Primary sources worth opening yourself</summary>
+    <div class="inner">
+      <p><strong>Platform documentation</strong><br>
+      Google bid strategy learning: <a href="https://support.google.com/google-ads/answer/13020501">support.google.com/google-ads/answer/13020501</a><br>
+      Google Target CPA evaluation minimum: <a href="https://support.google.com/google-ads/answer/6268632">answer/6268632</a><br>
+      Google budget-change bidding update, 17 Aug 2026: <a href="https://support.google.com/google-ads/answer/17125145">answer/17125145</a><br>
+      Meta learning phase: <a href="https://www.facebook.com/business/help/942374239243867">facebook.com/business/help/942374239243867</a><br>
+      Meta EMQ parameters: <a href="https://developers.facebook.com/docs/marketing-api/conversions-api/dataset-quality-api/">developers.facebook.com/docs/marketing-api/conversions-api/dataset-quality-api/</a></p>
+      <hr class="div">
+      <p><strong>Japan</strong><br>
+      LINEヤフー広告 merger and LINE Tag migration: <a href="https://www.lycbiz.com/jp/column/ly-ads/service-information/yahoo_ads_matome_202507/">lycbiz.com</a><br>
+      LINE公式アカウント October repricing: <a href="https://www.lycbiz.com/jp/news/line-official-account/20260216/">lycbiz.com/jp/news/line-official-account/20260216/</a><br>
+      電通 2025年 日本の広告費: <a href="https://www.dentsu.co.jp/news/release/2026/0305-011004.html">dentsu.co.jp</a><br>
+      景表法 令和5年改正 explainer (CAA): <a href="https://www.caa.go.jp/policies/policy/representation/fair_labeling/movie_explanation/assets/representation_cms216_240917_02.pdf">caa.go.jp</a><br>
+      ステマ規制: <a href="https://www.caa.go.jp/policies/policy/representation/fair_labeling/stealth_marketing">caa.go.jp/.../stealth_marketing</a><br>
+      医療広告 事例解説書 第6版: <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryou/kokokukisei/index.html">mhlw.go.jp</a></p>
+      <hr class="div">
+      <p><strong>The two real JP LP studies</strong><br>
+      WACUL 縦長LP study (n=30): <a href="https://wacul.co.jp/lab/posts/b2b-lp-best-practice">wacul.co.jp/lab/posts/b2b-lp-best-practice</a><br>
+      WACUL form study (n=21): <a href="https://wacul.co.jp/lab/posts/b2b-form-best-practice">wacul.co.jp/lab/posts/b2b-form-best-practice</a><br>
+      Ptengine first-view benchmark (n=1,716): <a href="https://www.ptengine.jp/blog/howto/fv-improvement/">ptengine.jp</a></p>
+      <hr class="div">
+      <p><strong>Business model</strong><br>
+      Promethean 2026 State of Digital Services (n=119): <a href="https://prometheanresearch.com/2026-state-of-digital-services-digital-agency-industry-research/">prometheanresearch.com</a><br>
+      AgencyAnalytics 2026 benchmarks (n=494): <a href="https://agencyanalytics.com/agency-benchmarks-2026">agencyanalytics.com</a><br>
+      Focus Digital churn study: <a href="https://focus-digital.co/average-marketing-agency-churn/">focus-digital.co</a><br>
+      内製化 survey (n=500): <a href="https://www.fujifilm.com/fb/ja/solutions/columns/marketing-6541">fujifilm.com</a></p>
+      <hr class="div">
+      <p><strong>Experimentation</strong><br>
+      Georgiev, what 1,001 A/B tests show: <a href="https://blog.analytics-toolkit.com/2022/what-can-be-learned-from-1001-a-b-tests/">blog.analytics-toolkit.com</a>. Median lift across all tests 0.08%, mean 2.08%, and nearly half of tested interventions have no impact or a negative one.<br>
+      Evan Miller on peeking: <a href="https://www.evanmiller.org/how-not-to-run-an-ab-test.html">evanmiller.org</a></p>
+    </div>
+  </details>
+</section>
+
+<footer class="wrap">
+  <p>Synthesised from five parallel research agents: JP LP conversion evidence, the 2026 paid-ads frontier, agency business-model economics, small-budget measurement methods, and a read-only audit of the tooling installed on this machine.</p>
+  <p>Internal working document. No client is named anywhere in it.</p>
+</footer>

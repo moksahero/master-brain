@@ -1,0 +1,759 @@
+<title>The Capture Ceiling</title>
+<style>
+  :root {
+    --paper: #F6F7F9;
+    --surface: #FFFFFF;
+    --ink: #14181D;
+    --ink-soft: #4A5560;
+    --muted: #6B7783;
+    --indigo: #234A73;
+    --indigo-soft: #E8EDF4;
+    --shu: #B83400;
+    --shu-soft: #FBEDE8;
+    --rule: #DDE2E8;
+    --rule-strong: #C3CBD4;
+
+    --measure: 68ch;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0F1319;
+      --surface: #161B22;
+      --ink: #E4E9EF;
+      --ink-soft: #B3BDC8;
+      --muted: #8A95A2;
+      --indigo: #86AEDA;
+      --indigo-soft: #1B2939;
+      --shu: #E97A55;
+      --shu-soft: #2E1810;
+      --rule: #242C36;
+      --rule-strong: #37414E;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0F1319;
+    --surface: #161B22;
+    --ink: #E4E9EF;
+    --ink-soft: #B3BDC8;
+    --muted: #8A95A2;
+    --indigo: #86AEDA;
+    --indigo-soft: #1B2939;
+    --shu: #E97A55;
+    --shu-soft: #2E1810;
+    --rule: #242C36;
+    --rule-strong: #37414E;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.75;
+    margin: 0;
+    padding: 0 clamp(1.1rem, 5vw, 3rem) 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 82ch; margin: 0 auto; }
+
+  header.masthead {
+    padding: clamp(3rem, 9vw, 6rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.3rem, 7vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    font-size: 1.12rem;
+    line-height: 1.72;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .verdict {
+    margin: clamp(2.5rem, 7vw, 4rem) 0 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 2rem 0 2.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .verdict p {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 3.4vw, 1.6rem);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+
+  .verdict p em { font-style: normal; color: var(--indigo); font-weight: 600; }
+
+  .verdict .sub {
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+  }
+
+  section {
+    margin-top: clamp(3.2rem, 8vw, 5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .sec-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    margin: 0;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 4.2vw, 2rem);
+    line-height: 1.35;
+    letter-spacing: -0.008em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-weight: 650;
+    font-size: 1.02rem;
+    line-height: 1.5;
+    letter-spacing: 0.005em;
+    margin: 1.2rem 0 0;
+    color: var(--ink);
+  }
+
+  p { margin: 0; }
+
+  a {
+    color: var(--indigo);
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  strong { font-weight: 650; }
+
+  em.term {
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 0.9em;
+    color: var(--ink-soft);
+  }
+
+  ul, ol {
+    margin: 0;
+    padding-left: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  li { padding-left: 0.2rem; }
+
+  .tablewrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.93rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--muted);
+    padding: 0.7rem 0.9rem 0.2rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.62rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  thead th {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    border-bottom: 1px solid var(--rule-strong);
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td { border-bottom: none; }
+
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  tbody th { font-weight: 600; }
+  tr.flag td, tr.flag th { background: var(--shu-soft); }
+
+  .note {
+    border-left: 2px solid var(--indigo);
+    background: var(--indigo-soft);
+    padding: 1.1rem 1.25rem;
+    border-radius: 0 3px 3px 0;
+    font-size: 0.97rem;
+    line-height: 1.72;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .note .h {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--indigo);
+  }
+
+  .clock {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .tick {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 0 1.4rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+
+  .tick .when {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    color: var(--shu);
+    padding-top: 0.15rem;
+  }
+
+  .tick .when .days {
+    display: block;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+  }
+
+  .tick .what { display: flex; flex-direction: column; gap: 0.35rem; }
+  .tick .what b { font-weight: 650; font-size: 1rem; }
+
+  .tick .what span {
+    font-size: 0.94rem;
+    line-height: 1.68;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 34rem) {
+    .tick { grid-template-columns: 1fr; gap: 0.5rem; }
+    .tick .when { display: flex; gap: 0.7rem; align-items: baseline; }
+    .tick .when .days { display: inline; }
+  }
+
+  .moves {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    counter-reset: move;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .move {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 0 1.1rem;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .move::before {
+    counter-increment: move;
+    content: counter(move);
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--indigo);
+    padding-top: 0.1rem;
+  }
+
+  .move .body { display: flex; flex-direction: column; gap: 0.45rem; }
+  .move b { font-weight: 650; font-size: 1.04rem; line-height: 1.5; }
+
+  .move span {
+    font-size: 0.96rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .move .cost {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  details.sources {
+    margin-top: 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+  }
+
+  details.sources summary {
+    cursor: pointer;
+    padding: 0.85rem 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  details.sources[open] summary { border-bottom: 1px solid var(--rule); }
+
+  details.sources .inner {
+    padding: 1.1rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    color: var(--ink-soft);
+  }
+
+  details.sources .inner a { word-break: break-word; }
+
+  footer {
+    margin-top: clamp(3.5rem, 9vw, 5.5rem);
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.86rem;
+    line-height: 1.7;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  hr.div { border: none; border-top: 1px solid var(--rule); margin: 0.6rem 0; }
+</style>
+
+<header class="masthead wrap">
+  <div class="eyebrow">
+    <span>Internal diagnosis</span>
+    <span>2026年8月18日</span>
+    <span>The Arithmetic Floor の続編</span>
+  </div>
+  <h1>The Capture Ceiling</h1>
+  <p class="standfirst">LP制作とGoogle広告最適化というパッケージは、どこで効き、どこで構造的に効かないのか。効かないとき、代わりに何があるのか。</p>
+</header>
+
+<div class="wrap verdict">
+  <p>この組み合わせは有効です。ただし「マーケティング戦略」ではなく、<em>すでに存在する需要を刈り取るための装置</em>です。</p>
+  <p class="sub">装置には作動域があります。下限は前回のレポートで扱いました。月間コンバージョンが少なすぎると、成果が出ていても測定できないという床です。上限は今回扱う天井です。市場に存在する検索需要を取り切ってしまうと、それ以上は予算を積んでもCPAが悪化するだけで、最適化という商品の価値説明が成立しなくなります。床と天井のあいだが、この装置が働く範囲のすべてです。範囲の外にいるクライアントに対して、効かない理由は運用の腕ではありません。そして重要なのは、どちらの境界も提案書を書く前に計算できるということです。</p>
+</div>
+
+<section class="wrap">
+  <p class="sec-label">前提</p>
+  <h2>検索広告は需要を作らない。すでにある需要を捕まえるだけです。</h2>
+
+  <p>当たり前に聞こえますが、パッケージの限界はほぼすべてここから導けます。検索連動型広告が反応できるのは、誰かがすでに言葉にして検索窓に打ち込んだ需要だけです。まだ困っていることを自覚していない人、自覚していても言葉にできていない人、自覚も言語化もできているが今は買う時期ではない人には、この装置は触れません。</p>
+
+  <p>日本市場の資金の流れは、そのことを反映して動いています。2025年のインターネット広告費は4兆459億円、前年比110.8%で、総広告費に占める比率が初めて50%を超えて50.2%になりました。その内側の媒体費3兆3,093億円の構成は次のとおりです。</p>
+
+  <div class="tablewrap wide">
+    <table>
+      <caption>電通「2025年 日本の広告費 インターネット広告媒体費 詳細分析」（2026年3月5日）。上4行は広告種別の分類で、合計が媒体費全体になります。ソーシャル広告は媒体特性別という別軸の集計で、上の分類と重複します。ディスプレイ広告の金額のみ、公表された他3種別との差分からの推計です。</caption>
+      <thead>
+        <tr><th>区分</th><th class="num">2025年</th><th class="num">前年比</th><th class="num">構成比</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>検索連動型広告</th><td class="num">1兆2,793億円</td><td class="num">非公表</td><td class="num">38.7%</td></tr>
+        <tr><th>ディスプレイ広告</th><td class="num">約9,300億円（推計）</td><td class="num">運用型111.5%</td><td class="num">約28%</td></tr>
+        <tr><th>ビデオ（動画）広告</th><td class="num">1兆275億円</td><td class="num">121.8%</td><td class="num">31.0%</td></tr>
+        <tr><th>成果報酬型広告</th><td class="num">699億円</td><td class="num">96.1%</td><td class="num">2.1%</td></tr>
+        <tr class="flag"><th>ソーシャル広告（別軸）</th><td class="num">1兆3,067億円</td><td class="num">118.7%</td><td class="num">39.5%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>読み方を間違えないでください。検索広告が縮んでいるわけではありません。Alphabetの2026年第2四半期決算では Google Search &amp; other の広告収益が633億ドル、前年同期比17%増で、AI OverviewsとAI Modeの展開後も伸びています。縮んでいるのではなく、<strong>検索以外が速く伸びている</strong>のです。動画が前年比121.8%、ソーシャルが118.7%、成果報酬型だけが96.1%と縮小しています。</p>
+
+  <div class="note">
+    <span class="h">ここから出る示唆</span>
+    <p>「検索広告はもう終わり」は誤りです。正しくは「検索広告だけ、が終わった」です。日本の広告主が実際に払っている金額の内訳を見ると、需要を刈り取る側と需要を作る側がほぼ同じ規模になっています。片方だけを商品にしている限り、提案できる案件はクライアントの予算全体の4割弱に張り付き、しかもそれは最も自動化圧力が強い領域です。</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">適用判定</p>
+  <h2>効くかどうかは、運用を始める前に計算で分かります。</h2>
+
+  <p>提案の前に通すべきゲートが3つあります。1つでも落ちる案件は、LP制作とGoogle広告というパッケージが「効かない」のではなく、そもそも<strong>適用外</strong>です。この区別は営業上も精神衛生上も重要です。</p>
+
+  <h3>ゲート1　需要量の天井</h3>
+  <p>対象キーワード群の月間検索ボリュームに、実現しうるクリック率と、その業種で妥当なコンバージョン率をかけます。出てくるのは「この市場で検索広告が取り得るリードの上限」です。クライアントの新規獲得目標がこの上限を超えているなら、検索広告は主力になり得ません。予算がいくらあっても関係ありません。市場に存在しない検索は買えないからです。</p>
+
+  <h3>ゲート2　単価の成立</h3>
+  <p>クリック単価をコンバージョン率で割ればCPAです。それが粗利の許容範囲に収まるか。収まらない場合、改善で埋められる幅には限りがあります。CPAを半分にするには、CPCを半分にするかCVRを2倍にするしかなく、どちらも運用で日常的に起きることではありません。実測に基づく上限値があるわけではありませんが、CPCもCVRも桁では動かないという事実から、CPAの改善余地は数割の範囲だと見積もっておくのが安全です。</p>
+
+  <h3>ゲート3　学習量の床</h3>
+  <p>前回のレポートで扱った部分です。月間コンバージョン数が20件を下回るアカウントでは、成果について何も主張できません。プラットフォームの自動入札も安定しません。</p>
+
+  <div class="tablewrap wide">
+    <table>
+      <caption>3ゲートの記入例。数字は計算の形を示すための仮の値で、実データではありません。提案書には案件ごとの実測値を入れてください。月間CV上限は 月間検索数 × CTR × CVR です。</caption>
+      <thead>
+        <tr><th>案件タイプ</th><th class="num">月間検索数</th><th class="num">CTR</th><th class="num">CPC</th><th class="num">CVR</th><th class="num">月間CV上限</th><th>判定</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>地域密着の緊急対応サービス</th><td class="num">8,000</td><td class="num">20%</td><td class="num">¥350</td><td class="num">6%</td><td class="num">96</td><td>3ゲート通過。主力にできる</td></tr>
+        <tr><th>中堅BtoBのニッチ製品</th><td class="num">400</td><td class="num">25%</td><td class="num">¥900</td><td class="num">3%</td><td class="num">3</td><td>需要量で落ちる。予算を積んでも増えない</td></tr>
+        <tr class="flag"><th>競合過密の士業・高額サービス</th><td class="num">20,000</td><td class="num">15%</td><td class="num">¥4,500</td><td class="num">2%</td><td class="num">60</td><td>単価で落ちる。CPAが22.5万円</td></tr>
+        <tr><th>新カテゴリの商品</th><td class="num">30</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">1未満</td><td>需要が存在しない。適用外</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="h">提案書に入れる</span>
+    <p>この計算を提案書の最初の1ページに置くと、商談の性質が変わります。「御社の腕を信じてよいか」という判断が、「この市場に取れる需要がどれだけあるか」という検算可能な事実の確認に変わるからです。落ちた案件は断る、ではなく、落ちた理由に応じて別の商品を出す。何を出すかは後半にまとめました。</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">天井</p>
+  <h2>検索広告は、うまくいくと止まります。それが本当の問題です。</h2>
+
+  <p>この装置には他の広告手法にない性質があります。<strong>成功が上限を持っている</strong>ことです。運用がうまくいくほど、取れる需要は減っていきます。市場に存在する検索の総量が固定されているからです。</p>
+
+  <p>ディスプレイやソーシャルには、この意味での天井がありません。リーチを広げれば効率は落ちますが、配信先は残っています。検索は違います。インプレッションシェアが9割に近づいた時点で、追加予算の行き先は残りの1割と、意図の薄い周辺キーワードしかありません。そこから先、予算を増やせばCPAは必ず悪化します。</p>
+
+  <p>ここが、リテイナー契約が静かに死ぬ場所です。天井に達したアカウントで「最適化」を続けても、動く数字は月ごとのブレの範囲に収まります。クライアントから見ると、初月に大きく改善して、そのあと何も起きていないように見えます。実際には、天井まで取り切った状態を維持するという仕事をしているのですが、それは維持であって改善ではなく、改善として値付けした商品では説明できません。</p>
+
+  <h3>天井に当たっているかの見分け方</h3>
+
+  <div class="tablewrap wide">
+    <table>
+      <caption>Google広告の管理画面から取れる指標だけで判定できます。所要時間は1アカウントあたり10分程度です。しきい値の数字（85%、半分、3か月）は、公表された基準ではなく判断の目安です。自分のアカウント群で天井に達した実例が溜まったら、実測値に置き換えてください。</caption>
+      <thead>
+        <tr><th>見る指標</th><th>天井の合図</th><th>そのとき正しい行動</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>検索インプレッションシェア</th><td>85%を超えている</td><td>予算追加を提案しない。別チャネルの話に移る</td></tr>
+        <tr><th>インプレッションシェア損失（予算）</th><td>ほぼゼロ</td><td>予算は制約になっていない。増やしても取れない</td></tr>
+        <tr><th>インプレッションシェア損失（ランク）</th><td>まだ大きい</td><td>天井ではない。品質と入札に伸びしろが残っている</td></tr>
+        <tr><th>指名検索の比率</th><td>全体の半分を超えている</td><td>すでに知られている人を買い直しているだけの可能性がある</td></tr>
+        <tr><th>新規キーワードの追加余地</th><td>3か月間、有効な追加がない</td><td>語彙が尽きている。需要側の枯渇</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="h">床と天井</span>
+    <p>前回のレポートと合わせると、このパッケージの作動域が定義できます。下限は月間20コンバージョン、そこを下回ると成果を測れません。上限は検索インプレッションシェア85%前後、そこを超えると成果を伸ばせません。この2つの境界のあいだにいるクライアントだけが、月額の最適化フィーを払う合理的な理由を持っています。既存クライアントを今日この2軸で並べてみてください。作動域の外にいる分については、いま売っている商品が間違っています。</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">取り逃す層</p>
+  <h2>今この瞬間に検索している人は、買い手全体のごく一部です。</h2>
+
+  <p>Ehrenberg-Bass研究所のJohn Dawesが2021年にLinkedIn向けに書いた文章が「95対5の法則」として広く引用されています。ある時点で購買検討に入っているBtoBの買い手は最大でも5%程度で、残りは市場の外にいる、というものです。</p>
+
+  <p>この数字を使うなら、出どころを正確に理解しておいてください。Dawes自身の表現は「up to 95%」で、常に95%だとは言っていません。導出も実測ではなく<strong>購買サイクル長からの推定</strong>です。買い替え周期が5年のカテゴリなら、1四半期に市場内にいるのは5分の1の5分の1で約5%になる、という計算です。したがって、この比率はカテゴリの購買頻度で決まります。ここが実務的に一番重要な分岐点になります。</p>
+
+  <div class="tablewrap wide">
+    <table>
+      <caption>購買頻度と検討の性質から見た、検索広告の適合度。Dawesの導出（購買サイクル長からの推定）をそのまま業種に当てはめた整理で、日本市場の実測値ではありません。</caption>
+      <thead>
+        <tr><th>需要の性質</th><th>例</th><th>検索広告の適合</th><th>理由</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>緊急・即時型</th><td>鍵、水漏れ、レッカー、葬儀、急な片付け</td><td>ほぼ最適解</td><td>市場内比率がほぼ100%。困った瞬間に検索し、その日に決める。ブランド構築の効きが薄い</td></tr>
+        <tr><th>期日駆動型</th><td>引越、車検、季節商材、年度末需要</td><td>強い</td><td>時期が来れば必ず検索する。刈り取りと期日前の再訪促進の組み合わせが効く</td></tr>
+        <tr><th>検討・比較型</th><td>リフォーム、住宅設備、保険、士業</td><td>必要だが不十分</td><td>検索時点ではすでに候補が絞られている。検索より前に想起されているかで勝負が決まる</td></tr>
+        <tr class="flag"><th>低頻度・高額BtoB</th><td>基幹システム、生産設備、コンサルティング</td><td>単独では成立しにくい</td><td>市場内比率が最も低い。検索広告だけだと、常時5%を高い単価で奪い合う構造になる</td></tr>
+        <tr><th>需要創出型</th><td>新カテゴリ、代替品のない新商品</td><td>適用外</td><td>検索語が存在しない。認知を作るまで刈り取る対象がない</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Les BinetとPeter Fieldの60対40（ブランド構築6割、販売促進4割）は、この文脈でよく持ち出されます。ただし、あの配分はIPAの事例データベースに登録された、相応の予算規模を持つブランドの分析から出たものです。広告予算が月数十万円の中小企業にそのまま適用できる根拠はありません。中小企業にとっての現実的な読み替えは、予算配分比ではなく順序です。<strong>刈り取れるものを刈り取り切ってから、天井の上に手を出す</strong>。逆順は資金が持ちません。</p>
+</section>
+
+<section class="wrap wide">
+  <p class="sec-label">代替手法</p>
+  <h2>3ゲートのどこで落ちたかによって、次の手が決まります。</h2>
+
+  <p>「他にどんな手法があるか」という問いには、手法のリストを並べても答えになりません。順序が逆で、何が制約になっているかが分かれば手法は自動的に決まります。以下は制約から引く表です。</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>制約別の代替手法。日本市場の実態欄には、確認できた一次情報と、確認できなかったことの両方を書いています。</caption>
+      <thead>
+        <tr><th>落ちたゲート</th><th>代わりの手</th><th>日本市場での実態</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>需要量<br>（検索が少ない）</th>
+          <td>ソーシャル広告での需要創出。Meta、YouTube、TikTok</td>
+          <td>2025年のソーシャル広告は1兆3,067億円で前年比118.7%、動画は1兆275億円で121.8%。すでに検索連動型と並ぶ規模。ただし需要創出型の配信は成果が出るまでの期間が長く、前回レポートの測定の床がさらに厳しく効く</td>
+        </tr>
+        <tr>
+          <th>需要量</th>
+          <td>一括見積もり・マッチングポータルへの送客</td>
+          <td>課金は月額掲載型、リード課金型、成果報酬型の3種。公開情報から拾える相場はリード1件あたり5,000円から30,000円、成果報酬は成約額の5%から20%。ただしこれは解説記事経由の二次情報で、各社の実効単価と受注率は非公開。相見積もり前提のため価格競争に落ちやすく、粗利の薄い業種では検索広告より不利になることがある</td>
+        </tr>
+        <tr>
+          <th>需要量</th>
+          <td>オフラインとPR。展示会、地域媒体、業界紙</td>
+          <td>検索需要が存在しない新カテゴリでは、検索語を作る作業そのものが仕事になる。効果は指名検索数の推移で測れるので、測定は意外と素直</td>
+        </tr>
+        <tr>
+          <th>単価<br>（CPAが合わない）</th>
+          <td>MEOとGoogleビジネスプロフィール</td>
+          <td>地域密着業種では広告費ゼロで露出が取れる。ただし<strong>日本市場の一次データが存在しません</strong>。中小企業のプロフィール整備率、口コミ件数と問い合わせ数の相関、いずれも公的調査でも民間の大規模調査でも確認できませんでした。流通している数字はほぼベンダー記事の孫引きです</td>
+        </tr>
+        <tr>
+          <th>単価</th>
+          <td>SEOとコンテンツ</td>
+          <td>単価は下がるが、上流の環境が変わっている。Pew Research Centerの行動観測（2025年3月、米国成人900人、検索セッション68,879件）では、AI要約が表示された検索で従来の検索結果リンクがクリックされた割合は8%、非表示時は15%。AI要約内の参照リンクのクリックは1%。米国データで日本の数字ではないが、情報探索型クエリでの流入前提が崩れつつあることは織り込む必要がある</td>
+        </tr>
+        <tr>
+          <th>単価</th>
+          <td>紹介と既存顧客からの再購入</td>
+          <td>獲得原価が最も低い経路だが、<strong>日本の中小企業の受注経路の内訳を示す公的統計を見つけられませんでした</strong>。中小企業白書にも小規模企業白書にも、紹介・既存顧客・ネット・営業を横並びで示した図表は確認できていません</td>
+        </tr>
+        <tr>
+          <th>学習量<br>（CV数が足りない）</th>
+          <td>オフラインコンバージョンの取り込み</td>
+          <td>前回レポートの最優先項目。資料請求から商談への実測率が取れるようになり、少ない件数でも意味のある指標に変わる。件数の下限要件はない</td>
+        </tr>
+        <tr>
+          <th>学習量</th>
+          <td>LTV側への移動。単価と再購入で稼ぐ</td>
+          <td>獲得件数が伸ばせないとき、売上を伸ばす残りの経路はここだけ。月10件の獲得しかない事業でも、客単価と再購入率は動かせる</td>
+        </tr>
+        <tr class="flag">
+          <th>どのゲートも通ったのに売上にならない</th>
+          <td>リード処理側の改善。対応速度、商談化プロセス、LINEやメールでの再接触</td>
+          <td>次節で扱います。ここが一番見落とされていて、一番効きます</td>
+        </tr>
+        <tr>
+          <th>天井に当たった</th>
+          <td>指名検索を増やす施策全般</td>
+          <td>天井そのものを押し上げる唯一の方法。指名検索の月次推移が、そのまま効果測定になる</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="h">日程が決まっているもの</span>
+    <div class="clock">
+      <div class="tick">
+        <div class="when">2026年10月1日<span class="days">約6週間後</span></div>
+        <div class="what">
+          <b>LINE公式アカウント 従量料金の改定</b>
+          <span>追加メッセージが20万通まで一律3円、超過分2.5円になります。従来は2.8円、2.6円、2.4円と逓減していたため、中量帯の送信者は変動費が1割から1.5割上がります。LPの着地点を友だち追加にしている案件は、単位経済を計算し直す必要があります。国内MAUは2025年12月末時点で1億を超えたとLY Corporationが発表しており、チャネルとしての規模は十分です。</span>
+        </div>
+      </div>
+      <div class="tick">
+        <div class="when">2026年10月下旬<span class="days">約10週間後</span></div>
+        <div class="what">
+          <b>LINE広告の配信停止</b>
+          <span>2026年4月1日にLINE広告とYahoo!広告ディスプレイがLINEヤフー広告ディスプレイ広告へ統合済みで、移行期間は10月中旬まで、旧LINE広告の配信は10月下旬に止まります。レポート閲覧は残りますが、提供そのものは2027年3月末に終了します。Yahoo!側は自動移行されますが、LINE側は自動移行されません。LINE Tagも廃止で、新しい計測タグへの移行が必須です。審査基準がYahoo!側に寄るため、これまで通っていたクリエイティブが落ちる可能性があります。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">見落とされている手</p>
+  <h2>広告費を1円も動かさずに効く介入が、たぶん一番大きい。</h2>
+
+  <p>2007年のLead Response Managementの調査（James Oldroyd）が、いまも引用され続けています。ウェブ経由の問い合わせに対して、5分以内に反応した場合と30分後に反応した場合を比べると、接触できるオッズが約100倍、商談として有効化するオッズが約21倍違う、という内容です。最初の1時間のあいだに、接触のオッズは10倍以上、有効化のオッズは6倍以上下がります。</p>
+
+  <p>この数字を使うときの但し書きを先に書いておきます。2007年の観察研究で、実験ではありません。標本数は公開資料から確認できませんでした。2020年代に同等の効果量を再現した厳密な研究は見つかりませんでした。日本市場のデータは、探した範囲では<strong>存在しません</strong>。二次情報として流通している「78%が最初に返信した会社から買う」という数字は、原典で裏が取れなかったので使わないでください。</p>
+
+  <h3>それでも、これを最優先で試すべき理由</h3>
+
+  <p>前回のレポートの結論は、小さいアカウントでは小さい改善を検出できない、というものでした。CTRの2割改善もROASの2割改善も、月20件のコンバージョンでは統計的に見えません。この制約を唯一すり抜けるのが、<strong>効果量が桁で違う介入</strong>です。21倍という主張が仮に5分の1に割り引かれて4倍だったとしても、それは月20件規模でも見える大きさです。</p>
+
+  <p>さらに、この介入には広告費がかかりません。クライアント側の運用変更なので、こちらの原価もほぼゼロです。そして日本市場の一次データが存在しないということは、数社分でも実測すれば、公表されている誰よりも正確な数字を持てるということでもあります。</p>
+
+  <div class="note">
+    <span class="h">測り方</span>
+    <p>フォーム送信の時刻と、クライアントが最初に架電またはメールした時刻の差を記録するだけです。ほとんどの中小企業では、この差が数時間から翌営業日になっています。分布を出して見せるところまでが、無償でできる診断です。改善のためにこちらがやることは、通知の設定と初動テンプレートの用意くらいで、半日もかかりません。獲得したリードの質を語る前に、届いたリードがどう扱われているかを見る。順序はこちらが先です。</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">空白</p>
+  <h2>日本市場について、誰も持っていないデータの一覧。</h2>
+
+  <p>今回の調査で「探したが見つからなかった」ものを列挙します。これは調査の失敗ではなく、営業上の資産です。存在しないなら、自分で作れば独占できます。前回のレポートで指摘したLINE友だち追加とフォーム送信のCVR比較に加えて、以下が空白です。</p>
+
+  <ul>
+    <li><strong>日本の中小企業のGoogleビジネスプロフィール整備率。</strong>公的調査にも民間の大規模調査にも見当たりません。流通しているのはベンダー記事の孫引きです。</li>
+    <li><strong>口コミの件数・評点と問い合わせ数の相関。</strong>相関係数、n数、対象業種を明示した検証データが日本市場に存在しません。</li>
+    <li><strong>日本のリード対応速度と商談化率の関係。</strong>ゼロです。引用されているのはすべて2007年の米国データです。</li>
+    <li><strong>一括見積もりサイトの実効送客単価と受注率。</strong>各社とも非公開で、公開されているのは解説記事の相場観だけです。複数クライアントで同時に使えば、比較可能な実測値が取れます。</li>
+    <li><strong>日本国内の主要SNSの公式利用者数。</strong>LINEだけが2025年12月末時点で1億超という公式発表を持っています。Instagram、YouTube、X、TikTok、Facebookについて、同じ粒度の国内公式MAUの最新値は確認できませんでした。媒体提案で国内リーチ数を語るときは、この点を正直に扱ってください。</li>
+    <li><strong>日本の中小企業の受注経路の内訳。</strong>紹介、既存顧客、ネット、営業を横並びで示した公的統計を確認できませんでした。</li>
+  </ul>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">結論</p>
+  <h2>商品の形を変える。手法を増やすのはそのあとです。</h2>
+
+  <div class="moves">
+    <div class="move">
+      <div class="body">
+        <b>3ゲートの計算を提案書の1ページ目に置く</b>
+        <span>需要量、単価、学習量。この3つを案件ごとの実数で書き、通過したゲートと落ちたゲートを明示します。落ちた案件で検索広告を提案しない理由が、こちらの都合ではなく市場の事実になります。前回のレポートで決めた最低出稿額の床と、同じページに同居させてください。</span>
+        <span class="cost">費用ゼロ　最初にやる</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>既存クライアント全社を、床と天井の2軸で並べる</b>
+        <span>横軸に月間コンバージョン数、縦軸に検索インプレッションシェア。作動域の内側にいる社だけが、最適化フィーの合理的な支払い理由を持っています。外にいる社は解約予備軍ではなく、売る商品を間違えている社です。天井に達している社には需要創出を、床の下にいる社には測定基盤の構築を売ります。</span>
+        <span class="cost">半日　いますぐ検算できる</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>リード対応速度の計測を、全クライアントの標準診断にする</b>
+        <span>フォーム送信時刻と初回接触時刻の差を記録するだけ。効果量が桁で違うので、小さいアカウントでも唯一検出できる介入です。日本市場のデータが存在しないため、数社分の実測が公表されている何よりも正確な資料になります。</span>
+        <span class="cost">クライアント1社あたり半日　効果対工数が最大</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>需要の性質による業種の絞り込みを、前回の業種特化の判断材料に加える</b>
+        <span>前回のレポートの結論は、チャネルではなく業種で絞れ、でした。どの業種を選ぶかの基準がこれです。緊急型と期日駆動型の業種は、検索広告というパッケージのままで最も成果が出ます。低頻度・高額のBtoBを選ぶなら、需要創出とナーチャリングを商品に含める前提で選ぶ必要があります。同じ業種特化でも、必要な能力が変わります。</span>
+        <span class="cost">四半期単位の判断</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>天井に達したアカウント向けの二番目の商品を用意する</b>
+        <span>いま在庫がありません。指名検索を増やす施策、ソーシャルでの需要創出、LTV側の改善。どれか1つでよいので、天井の話をした直後に出せる商品を作ってください。作らない限り、成功したアカウントほど解約に向かいます。</span>
+        <span class="cost">次の契約更新まで</span>
+      </div>
+    </div>
+    <div class="move">
+      <div class="body">
+        <b>10月の2件の期日を、いま棚卸しする</b>
+        <span>LINE公式アカウントの従量料金改定（10月1日）と、LINE広告の配信停止（10月下旬）。友だち追加を着地点にしているLPと、LINE広告を配信中のアカウントを洗い出してください。前者は単位経済の再計算、後者は移行作業と審査基準の変更への備えが要ります。どちらも猶予は2か月ほどです。</span>
+        <span class="cost">今週　期日が動かせない</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="sec-label">まとめ</p>
+  <h2>問いへの直接の答え</h2>
+
+  <p><strong>効果的かどうかは、案件によって決まっていて、提案前に計算できます。</strong>緊急型・期日駆動型の需要があり、検索ボリュームが目標を満たし、CPAが粗利に収まり、月20件以上のコンバージョンが出る案件では、LP制作とGoogle広告最適化はいまでも最も確実な手法です。日本のインターネット広告媒体費の38.7%がここに流れているのは理由のあることです。</p>
+
+  <p><strong>そして、それだけでは事業として足りません。</strong>この装置には床と天井があり、そのあいだにいるクライアントしか対象にできません。そして日本のインターネット広告媒体費のうち、検索連動型が占めるのは38.7%です。残りの6割は、刈り取り以外の場所に流れています。片側だけを売っている限り、届く案件はクライアント予算の一部に限られ、成功した案件ほど天井に当たって解約に向かいます。</p>
+
+  <p>やるべきことは、手法を増やすことではありません。<strong>どの制約で落ちたかを診断できるようになり、制約ごとに出す商品を持つこと</strong>です。そして診断そのものを、最初に渡す商品にしてください。</p>
+</section>
+
+<div class="wrap">
+  <details class="sources">
+    <summary>出典</summary>
+    <div class="inner">
+      <p>電通「2025年 日本の広告費」（2026年3月5日）。インターネット広告費4兆459億円、前年比110.8%、総広告費構成比50.2%。<a href="https://www.dentsu.co.jp/news/release/2026/0305-011003.html">dentsu.co.jp/news/release/2026/0305-011003.html</a></p>
+      <p>電通「2025年 日本の広告費 インターネット広告媒体費 詳細分析」（2026年3月5日）。媒体費3兆3,093億円、検索連動型構成比38.7%、ビデオ1兆275億円、ソーシャル1兆3,067億円、運用型2兆9,352億円、成果報酬型699億円。<a href="https://www.dentsu.co.jp/news/release/2026/0305-011004.html">dentsu.co.jp/news/release/2026/0305-011004.html</a> および <a href="https://www.dentsudigital.co.jp/news/release/services/2026-0305-000300">dentsudigital.co.jp/news/release/services/2026-0305-000300</a></p>
+      <p>Alphabet 2026年第2四半期決算。Google Search &amp; other 広告収益633億ドル、前年同期比17%増。<a href="https://www.sec.gov/Archives/edgar/data/1652044/000165204426000066/googexhibit991q22026.htm">sec.gov Exhibit 99.1 Q2 2026</a></p>
+      <p>Pew Research Center「Google users are less likely to click on links when an AI summary appears in the results」（2025年7月22日）。米国成人900人、Google検索セッション68,879件、2025年3月の行動観測。<a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/">pewresearch.org</a></p>
+      <p>John Dawes「Advertising effectiveness and the 95-5 rule」（2021年、LinkedIn B2B Institute）。<a href="https://johndawes.info/the-955-rule/">johndawes.info/the-955-rule/</a>。導出は購買サイクル長からの推定であり、実測ではありません。原文の表現は「up to 95%」です。</p>
+      <p>Lead Response Management Study（James Oldroyd、2007年）。5分対30分で接触オッズ約100倍、有効化オッズ約21倍。<a href="https://www.leadresponsemanagement.org/lrm_study/">leadresponsemanagement.org/lrm_study/</a>。標本数は公開資料から確認できませんでした。関連するHarvard Business Reviewの記事「The Short Life of Online Sales Leads」（2011年3月）は本文を取得できず、数値の検証には使っていません。</p>
+      <p>LINE国内月間利用者数1億超（2025年12月末時点、LY Corporation発表、2026年1月29日）。</p>
+      <p>Les Binet &amp; Peter Field「The 5 Principles of Growth in B2B Marketing」（2019年、LinkedIn B2B Institute / IPA）。60対40の配分はIPA事例データベースの分析に基づくもので、小予算事業者への適用可能性は原典では検証されていません。</p>
+      <p>一括見積もり・マッチングポータルの課金相場（リード1件5,000円から30,000円、成果報酬5%から20%）は解説記事経由の二次情報です。各社の実効単価と受注率は公開されていません。</p>
+      <p>LINE公式アカウント従量料金改定（2026年10月1日）およびLINE広告からLINEヤフー広告への統合と配信停止（2026年10月下旬）は、前回のレポート「The Arithmetic Floor」で検証済みの内容を再掲しています。</p>
+    </div>
+  </details>
+</div>
+
+<footer class="wrap">
+  <p>社内向け。クライアントに渡す資料ではありません。仮の数値を使った表は、その旨を表内に明記しています。</p>
+  <hr class="div">
+  <p>前回のレポート「The Arithmetic Floor」が扱ったのは測定の床でした。本レポートは需要の天井を扱っています。2つを合わせて、いま売っているパッケージの作動域が定義されます。</p>
+  <p>2026年8月18日</p>
+</footer>
