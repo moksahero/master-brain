@@ -116,6 +116,14 @@ dashes. **If it fails, do not hand the vault over.** Show the failures and fix
 them, because a failure means something from the template author's machine, or
 from a previous client, survived the copy.
 
+**Before you build, check the system fits.** The source this vault implements is
+explicit that it does not suit every kind of work: someone running fifty client
+projects against strict service levels, or who needs location-based reminders,
+is better served by a dedicated task manager, and a vault built for them will be
+abandoned. Ask what the client actually needs to run. If the answer is contract
+delivery at volume, say so and do not scaffold. Compass is for the layer above
+that: journal, values, planning cadence, habits, people, writing.
+
 Then tell the user, in this order:
 
 1. Open the folder in Obsidian with **Open folder as vault**.
@@ -123,6 +131,9 @@ Then tell the user, in this order:
    saving** so the ten bundled plugins load.
 3. Open `00 Dashboards/Setup.md`, which checks itself and reports what is left.
 4. Delete the `example`-tagged seed notes once real entries exist.
+5. Read them `Guide/11 Build Order.md` and hand the vault over with **one
+   workflow live, not nine**. See the next section; this is the step most likely
+   to be skipped and the one that decides whether the vault survives.
 
 Note the licence position when you hand a vault to a client: the ten Obsidian
 plugins ship inside `.obsidian/plugins/` as binaries, with their licences. That
@@ -190,7 +201,54 @@ from `README.md`, whether `python3` is present, the resolved vault if any,
 whether that vault has `.mcp.json` and whether the endpoint answers, and whether
 the `obsidian` MCP tools are actually available in this session.
 
-## 3. Running the prompts from a terminal
+## 3. Hand it over one layer at a time
+
+A Compass vault ships with nine folders and a full dashboard, so it looks like
+something to adopt all at once. It is not, and the vault says so itself. The
+system it implements took its author five years to build, and his own warning is
+that copying it in a weekend is "a fantastic way to bounce off of Obsidian
+entirely." A client who opens all nine folders on day one stops within a month
+and concludes the tool failed them.
+
+`Guide/11 Build Order.md` is the staged rollout: journaling alone for 30 days,
+then habits and the weekly note, then the first retreat, then tasks, then
+writing, then the reading module. Each layer has a definition of done. **Read
+that note before you propose any new workflow to anyone**, and hold to its two
+stop rules:
+
+- **Do not add a layer while the previous one is below 80 percent consistency.**
+  This is checkable, not a slogan: count the daily notes in the target period,
+  count how many carry answered `dq_*` values, and say the number before
+  recommending anything new. A client asking for the habits dashboard in week
+  two needs to hear that their journaling is at nine days out of fourteen, not
+  a new dashboard.
+- **Delete what is unused.** A widget rendering nothing is a seam, and seams are
+  the thing the whole design exists to remove.
+
+`/compass run health --vault <path>` is where this check belongs on a recurring
+basis.
+
+`Guide/01 Principles.md` carries the reasoning behind each workflow, mapped to
+the source it came from, and `Guide/Source - Video Analysis.md` holds the
+original analysis with timestamps. Read the principle before coaching anyone on
+a workflow, because several of these designs look arbitrary until you know what
+they are for:
+
+- Daily questions score **effort, not outcome**. A short run done while ill can
+  be a ten. Never treat the numbers as performance, never average them into a
+  verdict, and never congratulate or admonish on a score.
+- Habits carry **no notifications and no streak shame**. The value is that a
+  missed day sits next to the journal entry explaining why. Report a gap with
+  its context or do not report it.
+- The task dashboard is a **recommendation engine, not the day**. Execution is
+  time blocked elsewhere. Do not try to run someone's day from it.
+- There is **no annual plan**, deliberately. The cadence stops at the quarter
+  because ninety days is long enough to matter and short enough to correct. If
+  someone asks for a yearly plan, offer the life theme and core values instead.
+- The master task list in `08 Tasks/Tasks.md` is **captured to, never read by
+  hand**. Query it; do not present it.
+
+## 4. Running the prompts from a terminal
 
 The prompt library was written for an agent holding the `obsidian` MCP tools,
 through the Agent Client panel inside Obsidian. From Claude Code in a terminal
@@ -220,7 +278,7 @@ So when a prompt needs a periodic note that does not exist: **stop and ask the
 user to create it in Obsidian** (Ctrl/Cmd+Shift+D for today's note), then
 continue. Do not fabricate the note. Do not write a partial one.
 
-## 4. Non-negotiables inside a vault
+## 5. Non-negotiables inside a vault
 
 These come from the vault's own `AGENTS.md` and every prompt repeats them. They
 hold whether or not you have the MCP tools:
@@ -248,7 +306,7 @@ hold whether or not you have the MCP tools:
     (`/claude-obsidian:save`, `wiki-query`, `wiki-ingest`, `wiki-lint`), never
     with `--force`, and only if that plugin is installed.
 
-## 5. Report back
+## 6. Report back
 
 After any run, say plainly: which vault you worked in (path, not client name, if
 the transcript may be shared), which prompt you ran, what you read, what you

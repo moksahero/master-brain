@@ -128,7 +128,9 @@ be there and not here.
   planning, habits, tasks, people, writing boards. `/compass new <slug>` builds
   one clean vault per client; `/compass run <job> --vault <path>` runs its
   prompt library (morning, end of day, weekly review, retreat, task triage,
-  vault health). One vault, one client, always.
+  vault health). One vault, one client, always. Hand a new vault over with one
+  workflow live, not nine: the staged build order is in the vault's own
+  `Guide/11 Build Order.md`, and skipping it is how a client abandons it.
 
 ### Always-on, whatever else runs
 
