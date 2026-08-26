@@ -109,6 +109,15 @@ Create only what the answers call for:
   markers; everything you write outside those markers is project-owned and is
   never touched by later syncs.
 
+  That same managed block also carries the **brain-routing map**: the standing
+  instruction that a *topic mention* is enough to invoke a fleet skill, plus the
+  topic-to-skill table covering the whole installed fleet (ads platforms, SEO,
+  content, email, social, video, site capture, vault). So once it is synced, a
+  session in this project runs `ads-reddit` when the user says "our Reddit ads"
+  without anyone typing the slash command. Tell the user this during the wrap-up
+  in step 5 — it is the difference between owning 300 commands and having to
+  remember 300 commands.
+
 - Register the project and seed the current `todos/` tooling so it starts on the
   canonical version and is reachable by `/mb:update` fan-out later:
 

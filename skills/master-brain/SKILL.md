@@ -105,6 +105,14 @@ reminds you of the open count. You can also add your own follow-ups manually. Us
 
 ## Routing cheat-sheet (which brain for the job)
 
+**In an `/mb:init` project, routing is automatic.** The `mb:managed` block that
+`scripts/claude-md.sh` writes into every project's `CLAUDE.md` carries a full
+topic-to-skill map plus the rule that a *mention* is the trigger: "our Reddit
+ads" runs `ads-reddit`, no slash command required. Most specific skill wins, and
+the session names the skill before running it. `/mb:update` retrofits that block
+into projects scaffolded before the map existed. The cheat-sheet below is the
+conductor's own shorthand for the brain-level choice.
+
 - "Capture / understand a website" → **website-brain**
 - "Find competitors & keywords, build an SEO plan" → **marketing-brain**
 - "Rank a local business / map pack / GBP" → **local-seo-brain**
