@@ -25,6 +25,7 @@ and tells you the next step.
 | `/mb:idk <goal>` | Any time you're unsure. Routes you to the right brain/command for what you're trying to do. |
 | `/mb:init <goal>` | Starting a new client/project — scaffolds the workspace (`wiki/`, `data/`, `todos/`, `CLAUDE.md`), wires the right brains, and queues the first TODOs from the blessed prompts. |
 | `/mb:website-audit <url>` | When someone asks "what is wrong with my website". The evidence-only teardown: five parallel specialist lanes, annotated screenshots, validated charts, and an owner-ready Times New Roman PDF verified page by page. Also runs bare as `/website-audit`. |
+| `/compass new <slug>` | Standing up a planning/journaling Obsidian vault for a client: daily questions, quarterly retreats, multi-scale planning, habits, tasks, people, writing boards. Then `/compass run <job> --vault <path>` for its 16 prompt jobs. One vault per client, always. |
 | `/mb:report <url>` | When you want the fused multi-brain client intelligence report (the agency-grade bilingual PDF) for a site. |
 | `/mb:ads-google [client] [mode]` | Operating a live Google Ads account week to week. Phase-gated (launch-check / watch / optimize / audit), budget-calibrated, and it trains itself via a playbook + experiment ledger in your workspace. |
 

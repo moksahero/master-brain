@@ -75,6 +75,12 @@ Four rules settle the usual cases:
    do the work. `find-skills` is the escape hatch when you suspect a skill
    exists but can't name it.
 
+The map below is curated, so it lags the fleet. `/mb:update` regenerates a
+complete inventory of every installed skill at `~/.claude/master-brain-fleet.md`,
+one line each with its owning brain and what it does. **Read that file before
+concluding no skill fits**. A brain installed after this block was written will
+be there and not here.
+
 ### Topic → skill
 
 - **A named ad platform** → `ads-google` · `ads-meta` (Facebook, Instagram) ·
@@ -117,6 +123,12 @@ Four rules settle the usual cases:
   `client-intelligence-report` / `/mb:report` (the fused PDF).
 - **Knowledge and vault** → `wiki`, `wiki-ingest`, `wiki-query`, `wiki-lint`,
   `wiki-fold`, `save`. This is the machinery behind the Persistence rule above.
+- **Planning, journaling, a client's own operating system** → `compass`. An
+  Obsidian vault template: daily questions, quarterly retreats, multi-scale
+  planning, habits, tasks, people, writing boards. `/compass new <slug>` builds
+  one clean vault per client; `/compass run <job> --vault <path>` runs its
+  prompt library (morning, end of day, weekly review, retreat, task triage,
+  vault health). One vault, one client, always.
 
 ### Always-on, whatever else runs
 

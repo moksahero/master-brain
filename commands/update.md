@@ -43,6 +43,37 @@ as plain `skills/` clones (which otherwise expose no slash commands) get theirs
 wired up here. Last writer wins on a name clash and each collision is logged in
 the update output. Set `CLAUDE_SKIP_CMD_REGISTER=1` to opt out.
 
+Then it **digests the fleet**. Cloning a repo is not the same as making it
+usable, and the gap between the two is where new brains go to die. Two outputs:
+
+1. `~/.claude/master-brain-fleet.md`, a full inventory of every registered
+   command with its owning brain and description. Projects scaffolded by
+   `/mb:init` point at this file in their managed `CLAUDE.md` block, so a brain
+   installed today is discoverable from a project scaffolded months ago without
+   resyncing that project.
+2. An **UNDIGESTED** list: cloned repos that expose no `commands/`, no `SKILL.md`
+   at a scanned depth, and no plugin manifest. Those reach no project at all.
+   The report says what each repo looks like (Obsidian vault, node package,
+   prompt library) so it can be handled rather than ignored.
+
+An undigested repo needs one of three things, and the choice is a judgement call
+that belongs to a person, not the sweep:
+
+- **a wrapper command** in `master-brain/commands/`, added to
+  `MB_BRAIN_COMMANDS` in `brains.sh` so it registers system-wide (this is how
+  `/compass` drives an Obsidian vault template that ships no skill);
+- **an entry in the topic map** in `scripts/claude-md.sh`, so projects route to
+  it on a topic mention rather than on someone remembering it exists;
+- **removal**, when it is a dataset, a docs site, or an n8n workflow that was
+  never meant to be a Claude capability.
+
+Work the list down rather than letting it grow. Run the digest alone, without a
+network sweep, with:
+
+```bash
+bash "$SCRIPTS/brains.sh" digest
+```
+
 To preview what discovery would add before updating, run:
 
 ```bash
