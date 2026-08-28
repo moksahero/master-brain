@@ -119,6 +119,14 @@ run "claude plugin update '$PLUGIN_REF'"
 echo "ship: register commands + bare skill aliases system-wide"
 run "bash '$SRC/scripts/brains.sh' register"
 
+# The mb plugin lives at a version-pinned cache path, so any doc that cites a
+# master-brain reference file by an absolute path would rot on the next bump.
+# Link the skill surface (SKILL.md + references/) to the stable well-known
+# location instead, the same shape the rest of the fleet uses.
+echo "ship: link master-brain skill surface into ~/.claude/skills"
+run "mkdir -p '$HOME/.claude/skills'"
+run "ln -sfn '$SRC/skills/master-brain' '$HOME/.claude/skills/master-brain'"
+
 # --- 4. git: only if a commit message was given ---
 if [ -n "$msg" ]; then
   echo "ship: commit + push"
