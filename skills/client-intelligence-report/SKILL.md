@@ -164,8 +164,8 @@ writes a scorecard to `wiki/meta`, and lists fixes for your approval.
 > Desktop.
 
 The **executive scorecard is mandatory** — it is the first thing the owner reads
-and the one slide they remember. It must appear in the executive summary of every
-report and always include:
+and the one slide they remember. It is **page 1 of the body**, straight after the
+cover and contents, ahead of the executive-summary prose, and it always includes:
 
 - **One overall letter rank** (A / B / C / D / F) with a 0–100 score, shown as a
   prominent badge.
@@ -179,8 +179,18 @@ report and always include:
 - Grade bands stated once: A 90+ / B 80+ / C 60+ / D 40+ / F <40.
 
 Ground every dimension score in that chapter's real findings — never invent a
-grade the body does not support. If a dimension's data is degraded (e.g. a missing
-API), score what you have and say so in the note, don't omit the row.
+grade the body does not support. Build each dimension the reconstructible way:
+start at 100 and deduct against the findings in that chapter (Critical 25, High
+15, Medium 7, Low 3), cap any dimension holding an unresolved Critical at 60, and
+put the deduction ledger in the appendix so the badge is auditable. If a
+dimension's data is degraded (e.g. a missing API), score what you have and say so
+in the note; if it could not be measured at all, keep the row, mark it `no data`,
+exclude it from the weighting and renormalize the rest to 100. Never omit the row
+and never score an unmeasured dimension 0.
+
+The rule, the default dimension sets for other report types, and the Japanese
+labels are shared fleet-wide in
+`~/.claude/skills/master-brain/references/report-scorecard.md`.
 
 Under the hood: scripts own the page layout so nothing overflows; the model writes
 the words, grounded only in the real numbers.
@@ -211,9 +221,10 @@ That is the whole thing. Swap the placeholders, paste, approve.
    two languages as separate PDFs.
 6. **Ground every number.** If it is not in the data, it does not go in the
    report. No guarantees, no guessing.
-7. **Always lead with the scorecard.** Every report opens its executive summary
-   with the graded scorecard above: one overall letter rank, a graded row per
-   dimension, and the weighted overall. It is non-optional.
+7. **Always lead with the scorecard.** Every report opens page 1 of its body with
+   the graded scorecard above: one overall score out of 100 with its letter rank,
+   a graded row per dimension with its weight, and the weighted overall. Before
+   the summary prose, before any chapter. It is non-optional.
 8. **Always include the PageSpeed Insights / Core Web Vitals chapter.** Every
    report has a Google-performance section built from the PageSpeed Insights API,
    and it **leads with real-user (CrUX field) data** — LCP, INP, CLS for mobile

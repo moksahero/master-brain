@@ -151,9 +151,21 @@ the complete style spec are in [`references/report-spec.md`](references/report-s
 the stylesheet itself is ready to include at [`assets/report.css`](assets/report.css).
 
 Structure (adapt titles to the actual findings, keep the shape): cover, contents,
-**The Verdict in One Page**, **The Big Picture**, one chapter per root cause,
-**Risks**, **The Plan** (P0 this week / P1 next 30 days / P2 days 30 to 90),
-**What Is Already Good**, appendix.
+**The Score**, **The Verdict in One Page**, **The Big Picture**, one chapter per
+root cause, **Risks**, **The Plan** (P0 this week / P1 next 30 days / P2 days 30
+to 90), **What Is Already Good**, appendix.
+
+**The Score is page 1 of the body and it is not optional.** Overall out of 100
+with its letter rank, one graded row per dimension with its printed weight, the
+overall as their weighted average, and the biggest drag named. It stays inside
+the evidence-only rule because it is computed from the findings, not felt: each
+dimension starts at 100 and loses points only to findings that appear in the body
+(Critical 25 / High 15 / Medium 7 / Low 3), any dimension holding an unresolved
+Critical caps at 60, a lane that returned nothing gets a `no data` row excluded
+from the weighting rather than a guessed grade, and the deduction ledger goes in
+the appendix so the badge is auditable. Recompute the weighted average from the
+printed rows before rendering. Contract and default dimension sets:
+`~/.claude/skills/master-brain/references/report-scorecard.md`.
 
 ```bash
 bash "$SKILL/scripts/render.sh" render report.html "<Client>-Website-Audit-Report.pdf"

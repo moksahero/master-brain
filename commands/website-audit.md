@@ -44,7 +44,15 @@ until the final PDF has been rendered *and* visually verified page by page.
 Close with the TLDR: what is wrong in priority order, plus the deliverable list
 (`findings/`, `screenshots/`, `annotated/`, the PDF path).
 
-Ground rules that are not negotiable: evidence only (unverifiable is written
-"no data", never estimated), reconcile lane conflicts explicitly, include a
-"What is already good" section, never use em dashes, and write the body for a
-non-technical owner.
+Ground rules that are not negotiable: **the PDF opens with a score out of 100**
+(page 1 of the body, per
+[`../skills/master-brain/references/report-scorecard.md`](../skills/master-brain/references/report-scorecard.md)),
+evidence only (unverifiable is written "no data", never estimated), reconcile
+lane conflicts explicitly, include a "What is already good" section, never use
+em dashes, and write the body for a non-technical owner.
+
+The score does not weaken the evidence-only rule, it summarises it: each
+dimension starts at 100 and loses points only to findings that appear in the
+body (Critical 25 / High 15 / Medium 7 / Low 3), the deduction ledger goes in the
+appendix so the badge is auditable, and a lane that came back with no data gets a
+`no data` row excluded from the weighting rather than a guessed grade.

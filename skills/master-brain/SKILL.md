@@ -138,6 +138,30 @@ conductor's own shorthand for the brain-level choice.
   pull (step 0) is mandatory — a store is audited from its SKUs, not its homepage.
   Skip `local-seo-brain` unless there are physical stores.
 
+## The scoring rule — every report opens with a score out of 100
+
+Any client-facing report this fleet renders (`/mb:report`, `/website-audit`, ads
+audits, LP and SEO reports) puts a score out of 100 on page 1 of the body, right
+after the cover: the overall with its letter rank, one graded row per dimension
+with its printed weight, the overall as their weighted average, and one line
+naming the dimension dragging it down.
+
+The number has to be reconstructible, not felt. Each dimension starts at 100 and
+loses points only to findings that appear in the body (Critical 25, High 15,
+Medium 7, Low 3); a dimension holding an unresolved Critical caps at 60; an
+unmeasured dimension is marked `no data` and dropped from the weighting rather
+than scored 0; the deduction ledger goes in the appendix so the badge is
+auditable.
+
+The full contract, default dimension sets per report type, and the Japanese
+labels live in one place:
+[`references/report-scorecard.md`](references/report-scorecard.md). It is quoted
+by the mb-managed `CLAUDE.md` block, so every registered project inherits it on
+the next `/mb:update`.
+
+This is not the same axis as anti-slop below. This scores the client's asset.
+Anti-slop scores nothing, by design.
+
 ## The delivery rule — substance before style
 
 Every prose deliverable a Hub brain produces (reports, marketing copy, emails,

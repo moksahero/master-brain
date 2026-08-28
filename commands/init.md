@@ -231,6 +231,12 @@ whole pipeline end-to-end automatically:
    multi-brain report via **`/client-intelligence-report`** (`/mb:report`) over the
    primary URL, writing the rendered **PDF** into `reports/`. Write it in
    **Japanese** (the project default) unless `CLAUDE.md` records another language.
+   **Page 1 of the body is the score out of 100** (overall plus letter rank, a
+   graded row per dimension with its weight, the weighted overall, the biggest
+   drag named) per
+   `skills/master-brain/references/report-scorecard.md`. Same for the website
+   audit PDF in step 2. A report that opens with prose instead of the score is
+   not finished.
 
 Only at the very end, show what was created (tree), which brains ran, the
 completed todos, and the path to the delivered PDF report.

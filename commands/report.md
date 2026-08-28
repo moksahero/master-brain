@@ -26,6 +26,14 @@ package); your job is to gather inputs, confirm scope, and run it.
 
 ## 3. Run the report
 
+**The report opens with a score out of 100.** Page 1 of the body, straight after
+the cover: overall score plus letter rank, one graded row per dimension with its
+weight, the overall as their weighted average, and the biggest drag named. The
+full contract (deduction rubric, `no data` handling, Japanese labels, the
+appendix ledger) is in
+[`../skills/master-brain/references/report-scorecard.md`](../skills/master-brain/references/report-scorecard.md).
+Read it before writing the executive summary, not after.
+
 Invoke the `client-intelligence-report` skill with the gathered scope. Let that
 brain own the crawl, the three brains, the audit, the layout, and the safe-zip
 packaging — it is the source of truth for that workflow. Run it in the current

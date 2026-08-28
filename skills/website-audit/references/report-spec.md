@@ -7,17 +7,28 @@ analogies for technical concepts, technical proof in `findings/`. No em dashes.
 
 1. **Cover page** (no page number): title, site, client, scope, date, evidence counts.
 2. **Contents.**
-3. **The Verdict in One Page** — the honest headline first (what is genuinely real
+3. **The Score** (mandatory, and it comes before the verdict): the overall score
+   out of 100 as a badge with its letter rank, one row per dimension with that
+   dimension's score, rank, bar and printed weight, the overall stated as their
+   weighted average, and one line naming the dimension that costs the most
+   points. Bands: A 90+, B 80+, C 60+, D 40+, F under 40. Every dimension starts
+   at 100 and loses points only to findings that appear later in this report
+   (Critical 25, High 15, Medium 7, Low 3); a dimension with an unresolved
+   Critical caps at 60; an unmeasured dimension is marked `no data` and dropped
+   from the weighting, never scored 0. The full contract, including the default
+   dimension set and the Japanese labels, is in
+   `~/.claude/skills/master-brain/references/report-scorecard.md`.
+4. **The Verdict in One Page** — the honest headline first (what is genuinely real
    and good), then the 3 to 5 compounding problems as numbered plain-language
    points, then the sequencing logic, then a "How to read this report" box.
-4. **The Big Picture** — scores chart, severity chart, and a 4-tile row of the most
+5. **The Big Picture** — scores chart, severity chart, and a 4-tile row of the most
    damning numbers.
-5. **One chapter per root-cause problem** (typically 5 to 7). Annotated screenshots
+6. **One chapter per root-cause problem** (typically 5 to 7). Annotated screenshots
    and/or a chart as evidence, plain-language narrative, and a **"What this means"**
    box closing each chapter with the takeaway and the fix.
-6. **Risks** — anything with legal or platform-penalty exposure gets a red **"Risk"**
+7. **Risks** — anything with legal or platform-penalty exposure gets a red **"Risk"**
    box with the defusal step.
-7. **The Plan** — three tables:
+8. **The Plan** — three tables:
    - **P0 this week** (quick high-impact fixes)
    - **P1 next 30 days** (foundation rebuild)
    - **P2 days 30 to 90** (growth engine)
@@ -25,8 +36,10 @@ analogies for technical concepts, technical proof in `findings/`. No em dashes.
    Columns: `#`, `Action`, `Who` (Developer / Designer / Copywriter / Marketing /
    Owner), `Fixes` (section reference). Close with a **"Why this order"** box
    explaining why spending on marketing before the fixes wastes money.
-8. **What Is Already Good** — genuine positives, stated plainly.
-9. **Appendix** — evidence-file table, methodology summary, and a
+9. **What Is Already Good** — genuine positives, stated plainly.
+10. **Appendix** — evidence-file table, methodology summary, the score
+   deduction ledger (every dimension, every finding that cost it points, the
+   severity, the points, so the badge on page 1 is auditable), and a
    verification-limits paragraph listing every "no data" item and every reconciled
    source conflict.
 
@@ -69,6 +82,23 @@ Markup the CSS expects:
 
 ```html
 <div class="cover">…</div>
+<div class="scorecard">
+  <div class="badge">
+    <span class="score c">62<span class="out-of">/100</span></span>
+    <span class="rank c">RANK C</span>
+    <span class="bands">A 90+ / B 80+ / C 60+ / D 40+ / F under 40</span>
+  </div>
+  <table class="scores">
+    <tr><th>Dimension</th><th class="n">Score</th><th>Rank</th><th class="bar"></th><th class="n">Weight</th></tr>
+    <tr><td>Technical foundation</td><td class="n">40</td><td>D</td>
+        <td class="bar"><div class="track"><div class="fill" style="width:40%"></div></div></td>
+        <td class="n">25</td></tr>
+    <tr class="nodata"><td>Measurement</td><td class="n">no data</td><td>-</td>
+        <td class="bar"></td><td class="n">excluded</td></tr>
+  </table>
+  <p class="drag">Weights shown sum to 100 after excluding "no data" rows.
+     Biggest drag: technical foundation, 15 points of the 38 lost.</p>
+</div>
 <h1>3. Google receives an empty page</h1>
 <figure><img src="annotated/home-mobile.png"><figcaption>
   <b>1</b> the hero never renders, <b>2</b> the cookie wall covers the only CTA.

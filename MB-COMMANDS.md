@@ -29,6 +29,18 @@ and tells you the next step.
 | `/mb:report <url>` | When you want the fused multi-brain client intelligence report (the agency-grade bilingual PDF) for a site. |
 | `/mb:ads-google [client] [mode]` | Operating a live Google Ads account week to week. Phase-gated (launch-check / watch / optimize / audit), budget-calibrated, and it trains itself via a playbook + experiment ledger in your workspace. |
 
+## Every report opens with a score out of 100
+
+Any PDF these commands render (`/mb:report`, `/mb:website-audit`, the ads and LP
+reports) puts the score on page 1 of the body, before the prose: the overall out
+of 100 with its letter rank (A 90+ / B 80+ / C 60+ / D 40+ / F under 40), one
+graded row per dimension with its weight, the overall as their weighted average,
+and one line naming what drags it down. Each dimension starts at 100 and loses
+points only to findings that are actually in the report, and the deduction
+ledger sits in the appendix so the badge can be checked. The contract is
+`skills/master-brain/references/report-scorecard.md`, quoted into every
+project's `CLAUDE.md` by `/mb:update`.
+
 ## Inside `/mb:init` — what it actually does
 
 `/mb:init <goal>` is the workhorse. It turns a few answers into a fully wired

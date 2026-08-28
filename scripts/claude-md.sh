@@ -134,6 +134,16 @@ be there and not here.
 
 ### Always-on, whatever else runs
 
+- **Every client-facing report opens with a score out of 100.** First page of the
+  body, right after the cover: an overall score with its letter rank (A 90+,
+  B 80+, C 60+, D 40+, F under 40), one graded row per dimension with its own
+  score and printed weight, the overall as their weighted average, and one line
+  naming the dimension dragging it down. Ground every dimension in findings that
+  are actually in the report, start each at 100 and deduct against them
+  (Critical 25 / High 15 / Medium 7 / Low 3), and put the deduction ledger in the
+  appendix. A dimension that could not be measured is marked `no data` and
+  dropped from the weighting, never scored 0. Full contract:
+  `~/.claude/skills/master-brain/references/report-scorecard.md`.
 - **Every prose deliverable** goes through substance then style:
   `slop-review` → `slop-rewrite` → `slop-verify`, then `humanizer`. Not only on
   request. Skip both only for code, raw data, or verbatim output.

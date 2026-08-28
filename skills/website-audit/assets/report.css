@@ -82,6 +82,33 @@ code { font-family: "DejaVu Sans Mono", monospace; font-size: 9.5pt; }
 .sev-medium   { color: #8a6d00; }
 .sev-low      { color: #3f6b3f; }
 
+/* --- Scorecard (page 1 of the body, always) -------------------------------- */
+.scorecard { page-break-inside: avoid; margin: 0 0 16px; }
+.scorecard .badge {
+  border: 2px solid #111;
+  padding: 12px 10px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.scorecard .badge .score { font-size: 40pt; font-weight: bold; line-height: 1; }
+.scorecard .badge .out-of { font-size: 14pt; font-weight: normal; color: #444; }
+.scorecard .badge .rank { display: block; font-size: 13pt; font-weight: bold; margin-top: 6px; letter-spacing: 0.08em; }
+.scorecard .badge .bands { display: block; font-size: 8.5pt; color: #555; margin-top: 5px; }
+.scorecard .score.a, .scorecard .rank.a { color: #3f6b3f; }
+.scorecard .score.b, .scorecard .rank.b { color: #4a6b2f; }
+.scorecard .score.c, .scorecard .rank.c { color: #8a6d00; }
+.scorecard .score.d, .scorecard .rank.d { color: #a53f35; }
+.scorecard .score.f, .scorecard .rank.f { color: #7f1d1d; }
+table.scores { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+table.scores th, table.scores td { border-bottom: 1px solid #ddd; padding: 5px 6px; text-align: left; vertical-align: middle; }
+table.scores th { border-bottom: 1px solid #999; font-weight: bold; font-size: 9pt; }
+table.scores td.n, table.scores th.n { text-align: right; white-space: nowrap; }
+table.scores td.bar { width: 38%; }
+table.scores .track { background: #eee; height: 9px; width: 100%; }
+table.scores .fill { background: #3b6fb5; height: 9px; }
+table.scores tr.nodata td { color: #777; font-style: italic; }
+.scorecard .drag { font-size: 9pt; color: #333; margin-top: 8px; }
+
 /* --- Stat tiles ----------------------------------------------------------- */
 table.tiles { width: 100%; border-collapse: collapse; margin: 14px 0; page-break-inside: avoid; }
 table.tiles td {
